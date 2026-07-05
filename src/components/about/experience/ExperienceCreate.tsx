@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from 'framer-motion'
 import { refreshLocomotiveScroll } from '../../../lib/locomotive'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -63,7 +64,7 @@ function StepPanel({ step, index }: { step: (typeof STEPS)[number]; index: numbe
           <h3
             className={isDark ? 'text-white' : 'text-sz-dark'}
             style={{
-              fontFamily: 'Anton, sans-serif',
+              fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(3.5rem, 12vw, 9rem)',
               lineHeight: 0.9,
               letterSpacing: '-0.02em',
@@ -87,8 +88,41 @@ function StepPanel({ step, index }: { step: (typeof STEPS)[number]; index: numbe
 }
 
 export default function ExperienceCreate() {
+  const { t } = useLocale()
   const rootRef = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
+  const steps = [
+    {
+      ...STEPS[0],
+      title: t('experience.create.steps.research.title'),
+      desc: t('experience.create.steps.research.desc'),
+    },
+    {
+      ...STEPS[1],
+      title: t('experience.create.steps.strategy.title'),
+      desc: t('experience.create.steps.strategy.desc'),
+    },
+    {
+      ...STEPS[2],
+      title: t('experience.create.steps.design.title'),
+      desc: t('experience.create.steps.design.desc'),
+    },
+    {
+      ...STEPS[3],
+      title: t('experience.create.steps.build.title'),
+      desc: t('experience.create.steps.build.desc'),
+    },
+    {
+      ...STEPS[4],
+      title: t('experience.create.steps.launch.title'),
+      desc: t('experience.create.steps.launch.desc'),
+    },
+    {
+      ...STEPS[5],
+      title: t('experience.create.steps.grow.title'),
+      desc: t('experience.create.steps.grow.desc'),
+    },
+  ] as const
 
   useEffect(() => {
     if (reduce || !rootRef.current) return
@@ -136,19 +170,19 @@ export default function ExperienceCreate() {
       <div className="section-surface py-16 lg:py-20 border-b border-sz-border">
         <div className="section-container">
           <h2 className="heading-lg text-sz-dark max-w-3xl">
-            The Way We Create
+            {t('experience.create.title')}
           </h2>
           <p
             className="mt-5 text-sz-primary/55 max-w-xl"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            Ideas do not arrive finished. They evolve through six deliberate passes.
+            {t('experience.create.subtitle')}
           </p>
         </div>
       </div>
 
       <div ref={rootRef} className="relative">
-        {STEPS.map((step, i) => (
+        {steps.map((step, i) => (
           <StepPanel key={step.title} step={step} index={i} />
         ))}
       </div>

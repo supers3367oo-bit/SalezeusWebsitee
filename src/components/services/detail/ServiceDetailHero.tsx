@@ -7,12 +7,14 @@ import Button from '../../ui/Button'
 import Aurora from '../../ui/Aurora'
 import DotGrid from '../../ui/backgrounds/DotGrid'
 import { refreshLocomotiveScroll } from '../../../lib/locomotive'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   service: ServiceDetail
 }
 
 export default function ServiceDetailHero({ service }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   useLayoutEffect(() => {
@@ -59,7 +61,7 @@ export default function ServiceDetailHero({ service }: Props) {
           className="inline-flex items-center text-white/45 hover:text-white text-sm mb-10 lg:mb-12 transition-colors"
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          ← All services
+          {t('serviceDetail.allServices')}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-end">
@@ -97,7 +99,7 @@ export default function ServiceDetailHero({ service }: Props) {
             </p>
 
             <Button to="/contact" size="sm">
-              Start a project
+              {t('serviceDetail.startProject')}
             </Button>
           </motion.div>
 

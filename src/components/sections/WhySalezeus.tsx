@@ -4,6 +4,7 @@ import Button from '../ui/Button'
 import Aurora from '../ui/Aurora'
 import Particles from '../ui/backgrounds/Particles'
 import Threads from '../ui/backgrounds/Threads'
+import { useLocale } from '../../providers/LocaleProvider'
 
 const CARDS = [
   {
@@ -24,6 +25,12 @@ const CARDS = [
 ]
 
 const EASE = [0.22, 1, 0.36, 1] as const
+
+type WhyCard = {
+  variant: 'dark' | 'light'
+  title: readonly [string, string]
+  footnote: string
+}
 
 function CardBackground({ variant, index }: { variant: 'dark' | 'light'; index: number }) {
   if (index === 0) {
@@ -106,7 +113,7 @@ function DarkFactCard({
   card,
   index,
 }: {
-  card: (typeof CARDS)[number]
+  card: WhyCard
   index: number
 }) {
   const isBrandBlue = index === 2
@@ -152,7 +159,7 @@ function LightFactCard({
   card,
   index,
 }: {
-  card: (typeof CARDS)[number]
+  card: WhyCard
   index: number
 }) {
   return (
@@ -188,6 +195,25 @@ type WhySalezeusProps = {
 }
 
 export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
+  const { t } = useLocale()
+  const cards = [
+    {
+      ...CARDS[0],
+      title: [t('why.cards.strategy.title1'), t('why.cards.strategy.title2')] as const,
+      footnote: t('why.cards.strategy.footnote'),
+    },
+    {
+      ...CARDS[1],
+      title: [t('why.cards.creative.title1'), t('why.cards.creative.title2')] as const,
+      footnote: t('why.cards.creative.footnote'),
+    },
+    {
+      ...CARDS[2],
+      title: [t('why.cards.business.title1'), t('why.cards.business.title2')] as const,
+      footnote: t('why.cards.business.footnote'),
+    },
+  ] as const
+
   return (
     <section className="bg-sz-dark section-padding" id={sectionId}>
       <div className="section-container">
@@ -199,11 +225,11 @@ export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
           className="section-header mx-auto mb-10 max-w-3xl text-center lg:mb-12"
         >
           <span className="label-tag mb-3 block text-white/45">
-            Why Salezeus
+            {t('why.label')}
           </span>
           <h2 className="heading-lg mb-4 overflow-visible text-center text-white">
             <SplitText
-              text="What Makes Us Different"
+              text={t('why.title')}
               wrap
               repeat
               stagger={0.1}
@@ -214,15 +240,14 @@ export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
             className="mx-auto max-w-md text-white/50"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
           >
-            A snapshot of how we think, create, and deliver: strategy, creativity, and business impact in one
-            partnership.
+            {t('why.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
-          <DarkFactCard card={CARDS[0]} index={0} />
-          <LightFactCard card={CARDS[1]} index={1} />
-          <DarkFactCard card={CARDS[2]} index={2} />
+          <DarkFactCard card={cards[0]} index={0} />
+          <LightFactCard card={cards[1]} index={1} />
+          <DarkFactCard card={cards[2]} index={2} />
         </div>
 
         <motion.div
@@ -236,11 +261,10 @@ export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
             className="text-white/45 mb-6 max-w-lg"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
           >
-            Ready to turn strategy, creativity, and focus into real growth? Let&apos;s build something
-            remarkable together.
+            {t('why.closing')}
           </p>
           <Button to="/#contact">
-            Get A Consultation Now!
+            {t('why.cta')}
           </Button>
         </motion.div>
       </div>

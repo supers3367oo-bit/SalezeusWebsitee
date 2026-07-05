@@ -8,6 +8,7 @@ import {
   resolveInitialContactEmail,
   setStoredContactEmail,
 } from '../../lib/contactFormStorage'
+import { useLocale } from '../../providers/LocaleProvider'
 
 export type ContactReason = 'service' | 'join'
 
@@ -36,10 +37,7 @@ function createFreshForm(preserveEmail = true): FormState {
   }
 }
 
-const REASONS: { value: ContactReason; label: string }[] = [
-  { value: 'service', label: 'Service request' },
-  { value: 'join', label: 'Join us' },
-]
+const REASON_VALUES: ContactReason[] = ['service', 'join']
 
 const fieldClass =
   'w-full rounded-[10px] bg-white/[0.04] px-4 py-3 text-white placeholder:text-white/35 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#3258A4]/30'
@@ -51,7 +49,7 @@ function RequiredLabel({ htmlFor, children }: { htmlFor?: string; children: stri
   return (
     <label htmlFor={htmlFor} className={labelClass} style={labelStyle}>
       {children}
-      <span className="text-[#F0B80D] ml-0.5" aria-hidden>
+      <span className="text-[#F0B80D] ms-0.5" aria-hidden>
         *
       </span>
     </label>
@@ -59,11 +57,17 @@ function RequiredLabel({ htmlFor, children }: { htmlFor?: string; children: stri
 }
 
 export default function ContactForm() {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
   const [form, setForm] = useState<FormState>(() => createFreshForm())
   const [submitted, setSubmitted] = useState(false)
   const [phoneError, setPhoneError] = useState('')
   const [showEmailAutoHint, setShowEmailAutoHint] = useState(() => Boolean(resolveInitialContactEmail()))
+
+  const reasonLabels: Record<ContactReason, string> = {
+    service: t('contact.form.serviceRequest'),
+    join: t('contact.form.joinUs'),
+  }
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -76,7 +80,7 @@ export default function ContactForm() {
 
     const phoneDigits = form.phoneNational.replace(/\D/g, '')
     if (phoneDigits.length < 6) {
-      setPhoneError('Please enter a valid phone number.')
+      setPhoneError(t('contact.form.phoneError'))
       return
     }
 
@@ -103,11 +107,10 @@ export default function ContactForm() {
             letterSpacing: '-0.02em',
           }}
         >
-          Message received
+          {t('contact.form.successTitleAlt')}
         </h2>
         <p className="text-white/50 mb-6" style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}>
-          Thanks, {form.name.split(' ')[0] || 'there'}. We will get back to you shortly at {form.email}
-          {fullPhone ? ` or ${fullPhone}` : ''}.
+          {t('contact.form.successBody')}
         </p>
         <Button
           type="button"
@@ -119,7 +122,7 @@ export default function ContactForm() {
             setShowEmailAutoHint(Boolean(resolveInitialContactEmail()))
           }}
         >
-          Send another
+          {t('contact.form.sendAnotherAlt')}
         </Button>
       </motion.div>
     )
@@ -137,7 +140,7 @@ export default function ContactForm() {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
         <div>
-          <RequiredLabel htmlFor="contact-name">Full name</RequiredLabel>
+          <RequiredLabel htmlFor="contact-name">{t('contact.form.name')}</RequiredLabel>
           <input
             id="contact-name"
             type="text"
@@ -147,12 +150,12 @@ export default function ContactForm() {
             onChange={(e) => update('name', e.target.value)}
             className={fieldClass}
             style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
-            placeholder="Your name"
+            placeholder={t('contact.form.namePlaceholder')}
           />
         </div>
 
         <div>
-          <RequiredLabel htmlFor="contact-email">Email</RequiredLabel>
+          <RequiredLabel htmlFor="contact-email">{t('contact.form.email')}</RequiredLabel>
           <input
             id="contact-email"
             name="email"
@@ -164,18 +167,18 @@ export default function ContactForm() {
             onBlur={(e) => setStoredContactEmail(e.target.value)}
             className={fieldClass}
             style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
-            placeholder="you@company.com"
+            placeholder={t('contact.form.emailPlaceholder')}
           />
           {showEmailAutoHint && (
             <p className="mt-2 text-xs text-white/35" style={{ fontFamily: 'var(--font-body)' }}>
-              Auto-filled for you — change it anytime.
+              {t('contact.form.autoFillHint')}
             </p>
           )}
         </div>
       </div>
 
       <div className="mb-5">
-        <RequiredLabel htmlFor="contact-phone">Phone number</RequiredLabel>
+        <RequiredLabel htmlFor="contact-phone">{t('contact.form.phone')}</RequiredLabel>
         <PhoneCountryInput
           inputId="contact-phone"
           required
@@ -193,10 +196,10 @@ export default function ContactForm() {
 
       <fieldset className="mb-5 border-0 p-0 m-0">
         <legend className={labelClass} style={labelStyle}>
-          Reason for contacting
+          {t('contact.form.reasonLegend')}
         </legend>
         <div className="flex flex-wrap gap-2">
-          {REASONS.map(({ value, label }) => {
+          {REASON_VALUES.map((value) => {
             const active = form.reason === value
             return (
               <button
@@ -212,7 +215,7 @@ export default function ContactForm() {
                 )}
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                {label}
+                {reasonLabels[value]}
               </button>
             )
           })}
@@ -221,7 +224,7 @@ export default function ContactForm() {
 
       <div className="mb-8">
         <label htmlFor="contact-message" className={labelClass} style={labelStyle}>
-          Message
+          {t('contact.form.message')}
         </label>
         <textarea
           id="contact-message"
@@ -231,12 +234,12 @@ export default function ContactForm() {
           onChange={(e) => update('message', e.target.value)}
           className={clsx(fieldClass, 'resize-y min-h-[140px]')}
           style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.6 }}
-          placeholder="Tell us about your project or how you would like to join the team."
+          placeholder={t('contact.form.messagePlaceholder')}
         />
       </div>
 
       <Button type="submit" className="w-full sm:w-auto justify-center">
-        Send message
+        {t('contact.form.submitAlt')}
       </Button>
     </motion.form>
   )

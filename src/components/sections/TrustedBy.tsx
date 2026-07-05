@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import DotGrid from '../ui/backgrounds/DotGrid'
 import Button from '../ui/Button'
 import { refreshLocomotiveScroll } from '../../lib/locomotive'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type Client = {
   name: string
@@ -90,6 +91,7 @@ function MarqueeRow({
   return (
     <div className="overflow-hidden py-3">
       <motion.div
+        key={direction}
         className="flex w-max"
         animate={{
           x: direction === 'left' ? ['0%', '-50%'] : ['-50%', '0%'],
@@ -113,7 +115,7 @@ function MarqueeRow({
               >
                 <ClientMark client={client} />
                 <span
-                  className="ml-4 sm:ml-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
+                  className="ms-4 sm:ms-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
                   aria-hidden
                 >
                   ·
@@ -141,7 +143,7 @@ function MarqueeRow({
                 {label}
               </span>
               <span
-                className="ml-4 sm:ml-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
+                className="ms-4 sm:ms-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
                 aria-hidden
               >
                 ·
@@ -191,6 +193,8 @@ function StaticFallback() {
 }
 
 export default function TrustedBy() {
+  const { t, dir } = useLocale()
+  const isRtl = dir === 'rtl'
   const prefersReducedMotion = useReducedMotion()
   const [paused, setPaused] = useState(false)
 
@@ -224,7 +228,7 @@ export default function TrustedBy() {
         <div className="flex flex-col items-center px-1 text-center sm:px-2 lg:flex-1 lg:justify-center">
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center">
             <span className="mb-4 block font-body text-xs font-medium uppercase tracking-widest text-sz-primary/75">
-              Partnerships
+              {t('trustedBy.label')}
             </span>
             <h2
               className="mb-5 text-sz-dark leading-[1.08]"
@@ -235,9 +239,7 @@ export default function TrustedBy() {
                 letterSpacing: '-0.025em',
               }}
             >
-              Leading brands
-              <br />
-              across the region
+              {t('trustedBy.title')}
             </h2>
             <p
               className="mx-auto mb-8 max-w-lg text-sz-dark/75"
@@ -247,13 +249,13 @@ export default function TrustedBy() {
                 lineHeight: 1.7,
               }}
             >
-              From startups to established enterprises — we build lasting partnerships that drive measurable growth.
+              {t('trustedBy.subtitle')}
             </p>
 
             <div className="mb-8 flex flex-wrap items-center justify-center gap-10 sm:gap-14">
               {[
-                { value: '120+', label: 'Clients' },
-                { value: '08', label: 'Industries' },
+                { value: '120+', label: t('trustedBy.stats.clients') },
+                { value: '08', label: t('trustedBy.stats.industries') },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p
@@ -275,7 +277,7 @@ export default function TrustedBy() {
             </div>
 
             <Button href="#contact" data-scroll-to>
-              Start a Project
+              {t('trustedBy.cta')}
             </Button>
           </div>
         </div>
@@ -285,14 +287,26 @@ export default function TrustedBy() {
             <StaticFallback />
           ) : (
             <div className="relative -mx-6 lg:-mx-8">
-              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-sz-surface to-transparent sm:w-24" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-sz-surface to-transparent sm:w-24" />
+              <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-12 bg-gradient-to-r from-sz-surface to-transparent sm:w-24" />
+              <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-12 bg-gradient-to-l from-sz-surface to-transparent sm:w-24" />
 
-              <MarqueeRow variant="logo" clients={CLIENTS} direction="left" speed={36} paused={paused} />
-              <MarqueeRow variant="industry" industries={INDUSTRIES} direction="right" speed={48} paused={paused} />
+              <MarqueeRow
+                variant="logo"
+                clients={CLIENTS}
+                direction={isRtl ? 'right' : 'left'}
+                speed={36}
+                paused={paused}
+              />
+              <MarqueeRow
+                variant="industry"
+                industries={INDUSTRIES}
+                direction={isRtl ? 'left' : 'right'}
+                speed={48}
+                paused={paused}
+              />
 
               <p className="mt-4 hidden text-center font-body text-[10px] uppercase tracking-[0.25em] text-sz-secondary/40 lg:block">
-                Hover to explore
+                {t('trustedBy.hoverHint')}
               </p>
             </div>
           )}

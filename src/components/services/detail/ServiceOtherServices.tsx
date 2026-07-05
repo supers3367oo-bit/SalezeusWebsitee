@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import ServiceCard from '../ServiceCard'
 import type { Service } from '../../../types/services'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   services: Service[]
@@ -8,6 +9,7 @@ type Props = {
 }
 
 export default function ServiceOtherServices({ services, currentTitle }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   if (services.length === 0) return null
@@ -23,7 +25,7 @@ export default function ServiceOtherServices({ services, currentTitle }: Props) 
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="max-w-xl">
-            <span className="label-tag mb-3 block">More from Salezeus</span>
+            <span className="label-tag mb-3 block">{t('serviceDetail.moreFromSalezeus')}</span>
             <h2
               className="text-sz-dark"
               style={{
@@ -34,14 +36,13 @@ export default function ServiceOtherServices({ services, currentTitle }: Props) 
                 letterSpacing: '-0.02em',
               }}
             >
-              Explore other services
+              {t('serviceDetail.exploreOtherServices')}
             </h2>
             <p
               className="text-sz-secondary mt-4"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
             >
-              You viewed {currentTitle.toLowerCase()}. Continue with another capability from our
-              full stack.
+              {t('serviceDetail.youViewed').replace('{service}', currentTitle.toLowerCase())}
             </p>
           </div>
         </motion.div>

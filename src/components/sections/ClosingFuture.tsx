@@ -5,12 +5,14 @@ import SplitText from '../ui/SplitText'
 import ScrollReveal from '../ui/ScrollReveal'
 import Particles from '../ui/backgrounds/Particles'
 import { CONTACT_EMAIL } from '../../data/contact'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type ClosingFutureProps = {
   sectionId?: string
 }
 
 export default function ClosingFuture({ sectionId = 'contact' }: ClosingFutureProps) {
+  const { t } = useLocale()
   const reduce = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -49,7 +51,7 @@ export default function ClosingFuture({ sectionId = 'contact' }: ClosingFuturePr
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
         >
-          The Future
+          {t('closing.label')}
         </motion.p>
 
         <h2
@@ -62,7 +64,7 @@ export default function ClosingFuture({ sectionId = 'contact' }: ClosingFuturePr
             letterSpacing: '-0.03em',
           }}
         >
-          <SplitText text="Let's build what comes next." repeat stagger={0.08} duration={0.9} />
+          <SplitText text={t('closing.title')} repeat stagger={0.08} duration={0.9} />
         </h2>
 
         <ScrollReveal
@@ -73,7 +75,7 @@ export default function ClosingFuture({ sectionId = 'contact' }: ClosingFuturePr
           scrollStart="top bottom-=8%"
           scrollEnd="top center+=5%"
         >
-          The brands that win tomorrow are being shaped today. We want to shape them with you.
+          {t('closing.subtitle')}
         </ScrollReveal>
 
         <motion.div
@@ -84,10 +86,10 @@ export default function ClosingFuture({ sectionId = 'contact' }: ClosingFuturePr
           transition={{ duration: 0.5, delay: 0.15 }}
         >
           <Button href={`mailto:${CONTACT_EMAIL}`}>
-            Start a Conversation
+            {t('closing.startConversation')}
           </Button>
           <Button to="/portfolio">
-            View Our Work
+            {t('closing.viewWork')}
           </Button>
         </motion.div>
       </div>

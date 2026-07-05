@@ -1,16 +1,19 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import MouseSpotlight from '../ui/MouseSpotlight'
-import { TEAM } from '../../data/team'
-
-const N = TEAM.length
+import { useLocale } from '../../providers/LocaleProvider'
+import { useTeamMembers } from '../../i18n/useLocalizedData'
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E")`
 
 const HERO_DOTS_PATTERN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='5' cy='7' r='1.15' fill='%23040508' fill-opacity='0.06'/%3E%3Ccircle cx='17' cy='4' r='1' fill='%23040508' fill-opacity='0.12'/%3E%3Ccircle cx='26' cy='11' r='1.1' fill='%23040508' fill-opacity='0.05'/%3E%3Ccircle cx='9' cy='19' r='1' fill='%23040508' fill-opacity='0.14'/%3E%3Ccircle cx='22' cy='21' r='1.2' fill='%23040508' fill-opacity='0.08'/%3E%3Ccircle cx='14' cy='28' r='0.95' fill='%23040508' fill-opacity='0.16'/%3E%3Ccircle cx='28' cy='27' r='1' fill='%23040508' fill-opacity='0.07'/%3E%3Ccircle cx='3' cy='24' r='0.85' fill='%23040508' fill-opacity='0.1'/%3E%3C/svg%3E")`
 
 export default function Hero() {
+  const { t, dir } = useLocale()
+  const isRtl = dir === 'rtl'
+  const team = useTeamMembers()
+  const N = team.length
   const [activeIndex, setActiveIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
@@ -19,34 +22,36 @@ export default function Hero() {
   )
 
   useEffect(() => {
-    TEAM.forEach((t) => {
+    team.forEach((member) => {
       const img = new window.Image()
-      img.src = t.src
+      img.src = member.src
     })
     const onResize = () => setIsMobile(window.innerWidth < 640)
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
-  }, [])
+  }, [team])
 
   useEffect(() => {
     const id = setInterval(() => {
       if (!isAnimating) {
         setIsAnimating(true)
-        setActiveIndex((p) => (p + 1) % N)
+        setActiveIndex((p) => (isRtl ? (p - 1 + N) % N : (p + 1) % N))
         setTimeout(() => setIsAnimating(false), 650)
       }
     }, 1500)
     return () => clearInterval(id)
-  }, [isAnimating])
+  }, [isAnimating, isRtl, N])
 
   const navigate = useCallback(
-    (dir: 'next' | 'prev') => {
+    (direction: 'next' | 'prev') => {
       if (isAnimating) return
+      const step = direction === 'next' ? 1 : -1
+      const signedStep = isRtl ? -step : step
       setIsAnimating(true)
-      setActiveIndex((p) => (dir === 'next' ? (p + 1) % N : (p - 1 + N) % N))
+      setActiveIndex((p) => (p + signedStep + N) % N)
       setTimeout(() => setIsAnimating(false), 650)
     },
-    [isAnimating]
+    [isAnimating, isRtl, N]
   )
 
   const centerIdx = activeIndex
@@ -57,8 +62,10 @@ export default function Hero() {
   const TRANSITION = 'transform 650ms cubic-bezier(0.4,0,0.2,1), filter 650ms cubic-bezier(0.4,0,0.2,1), opacity 650ms cubic-bezier(0.4,0,0.2,1), left 650ms cubic-bezier(0.4,0,0.2,1), bottom 650ms cubic-bezier(0.4,0,0.2,1)'
 
   const getRoleStyle = (idx: number): React.CSSProperties => {
-    const parallaxX = idx === centerIdx && !isMobile ? mouse.x * 12 : 0
+    const parallaxX = idx === centerIdx && !isMobile ? mouse.x * 12 * (isRtl ? -1 : 1) : 0
     const parallaxY = idx === centerIdx && !isMobile ? mouse.y * 8 : 0
+    const isLeftSlot = isRtl ? idx === rightIdx : idx === leftIdx
+    const isRightSlot = isRtl ? idx === leftIdx : idx === rightIdx
 
     if (isMobile) {
       if (idx === centerIdx) return {
@@ -67,14 +74,14 @@ export default function Hero() {
         opacity: 1,
         zIndex: 30,
         left: '50%',
-        width: '76%',
-        height: '62%',
+        width: '82%',
+        height: '68%',
         bottom: '0%',
         overflow: 'hidden',
         transition: TRANSITION,
         willChange: 'transform, filter, opacity',
       }
-      if (idx === leftIdx) return {
+      if (isLeftSlot) return {
         transform: 'translateX(-50%)',
         filter: 'blur(2px)',
         opacity: 0.55,
@@ -86,7 +93,7 @@ export default function Hero() {
         transition: TRANSITION,
         willChange: 'transform, filter, opacity',
       }
-      if (idx === rightIdx) return {
+      if (isRightSlot) return {
         transform: 'translateX(-50%)',
         filter: 'blur(2px)',
         opacity: 0.55,
@@ -111,18 +118,18 @@ export default function Hero() {
     }
 
     if (idx === centerIdx) return {
-      transform: `translateX(calc(-50% + ${parallaxX}px)) translateY(${parallaxY}px) scale(1.75)`,
+      transform: `translateX(calc(-50% + ${parallaxX}px)) translateY(${parallaxY}px) scale(1.9)`,
       filter: 'none',
       opacity: 1,
       zIndex: 20,
       left: '50%',
-      height: '52%',
+      height: '56%',
       bottom: '0',
       overflow: 'hidden',
       transition: TRANSITION,
       willChange: 'transform, filter, opacity',
     }
-    if (idx === leftIdx) return {
+    if (isLeftSlot) return {
       transform: 'translateX(-50%) scale(1)',
       filter: 'blur(1.5px)',
       opacity: 0.7,
@@ -133,7 +140,7 @@ export default function Hero() {
       transition: TRANSITION,
       willChange: 'transform, filter, opacity',
     }
-    if (idx === rightIdx) return {
+    if (isRightSlot) return {
       transform: 'translateX(-50%) scale(1)',
       filter: 'blur(1.5px)',
       opacity: 0.7,
@@ -182,7 +189,7 @@ export default function Hero() {
     flexShrink: 0,
   }
 
-  const activeMember = TEAM[activeIndex]
+  const activeMember = team[activeIndex]
 
   const teamPanel = (
     <>
@@ -194,14 +201,14 @@ export default function Hero() {
           style={{
             fontSize: 10,
             fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
+            textTransform: isRtl ? 'none' : 'uppercase',
+            letterSpacing: isRtl ? '0.04em' : '0.2em',
             color: 'rgba(4,5,8,0.35)',
             marginBottom: isMobile ? 4 : 6,
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'var(--font-body)',
           }}
         >
-          Our Team
+          {t('hero.ourTeam')}
         </p>
 
         <AnimatePresence mode="wait">
@@ -215,11 +222,11 @@ export default function Hero() {
           >
             <p
               style={{
-                fontFamily: 'Familjen Grotesk, sans-serif',
+                fontFamily: 'var(--font-heading)',
                 fontSize: isMobile ? 16 : 24,
                 fontWeight: 700,
                 color: '#040508',
-                letterSpacing: '-0.01em',
+                letterSpacing: isRtl ? 0 : '-0.01em',
                 lineHeight: 1.2,
                 marginBottom: 4,
               }}
@@ -231,7 +238,7 @@ export default function Hero() {
                 display: 'inline-block',
                 fontSize: isMobile ? 11 : 12,
                 fontWeight: 500,
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'var(--font-body)',
                 color: '#3258A4',
                 background: 'rgba(50,88,164,0.1)',
                 border: '1px solid rgba(50,88,164,0.18)',
@@ -246,7 +253,7 @@ export default function Hero() {
               <p
                 style={{
                   marginTop: 10,
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'var(--font-body)',
                   fontSize: 13,
                   fontWeight: 400,
                   color: 'rgba(4,5,8,0.55)',
@@ -301,13 +308,13 @@ export default function Hero() {
         data-scroll-to
         className="flex shrink-0 items-center gap-1.5 sm:gap-2"
         style={{
-          fontFamily: 'Anton, sans-serif',
+          fontFamily: isRtl ? 'var(--font-heading)' : 'var(--font-display)',
           fontSize: isMobile ? 'clamp(15px, 4.5vw, 22px)' : 'clamp(18px, 3vw, 44px)',
-          fontWeight: 400,
+          fontWeight: isRtl ? 700 : 400,
           color: 'rgba(4,5,8,0.7)',
-          letterSpacing: '-0.02em',
+          letterSpacing: isRtl ? 0 : '-0.02em',
           lineHeight: 1,
-          textTransform: 'uppercase',
+          textTransform: isRtl ? 'none' : 'uppercase',
           textDecoration: 'none',
           transition: 'color 200ms ease',
           alignSelf: 'flex-end',
@@ -316,9 +323,10 @@ export default function Hero() {
         onMouseEnter={(e) => { e.currentTarget.style.color = '#040508' }}
         onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(4,5,8,0.7)' }}
       >
-        EXPLORE
+        {t('hero.explore')}
         <ArrowRight
           strokeWidth={2.25}
+          className={isRtl ? 'scale-x-[-1]' : undefined}
           style={{
             width: isMobile ? 'clamp(14px, 4vw, 20px)' : 'clamp(16px, 2.5vw, 36px)',
             height: isMobile ? 'clamp(14px, 4vw, 20px)' : 'clamp(16px, 2.5vw, 36px)',
@@ -387,7 +395,7 @@ export default function Hero() {
           >
             <span
               style={{
-                fontFamily: 'Anton, sans-serif',
+                fontFamily: "'Anton', sans-serif",
                 fontSize: isMobile
                   ? activeMember.heroNameSize === 'compact'
                     ? 'clamp(32px, 10vw, 56px)'
@@ -415,7 +423,7 @@ export default function Hero() {
           className="absolute top-[76px] sm:top-[88px] right-4 sm:right-8 flex gap-1.5"
           style={{ zIndex: 60 }}
         >
-          {TEAM.map((_, i) => (
+          {team.map((_, i) => (
             <button
               key={i}
               onClick={() => {
@@ -443,7 +451,7 @@ export default function Hero() {
           className="absolute inset-0"
           style={{ zIndex: 3, overflow: isMobile ? 'visible' : 'hidden' }}
         >
-          {TEAM.map((member, idx) => {
+          {team.map((member, idx) => {
             const isCenter = idx === centerIdx
             const isVisibleOnMobile =
               !isMobile || idx === centerIdx || idx === leftIdx || idx === rightIdx
@@ -474,7 +482,7 @@ export default function Hero() {
                       height: '100%',
                       objectFit: 'contain',
                       objectPosition: 'top center',
-                      transform: 'scale(3.1)',
+                      transform: 'scale(3.25)',
                       transformOrigin: 'top center',
                       userSelect: 'none',
                     }}
@@ -487,7 +495,7 @@ export default function Hero() {
                   draggable={false}
                   style={{
                     width: '100%',
-                    height: isCenter ? '210%' : '100%',
+                    height: isCenter ? '160%' : '100%',
                     objectFit: 'contain',
                     objectPosition: isCenter ? 'bottom center' : 'bottom center',
                     userSelect: 'none',

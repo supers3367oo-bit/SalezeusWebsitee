@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Star } from 'lucide-react'
 import VoiceNotePlayer from '../../ui/VoiceNotePlayer'
 import type { ServiceReview } from '../../../types/services'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   serviceTitle: string
@@ -9,8 +10,9 @@ type Props = {
 }
 
 function StarRating({ rating }: { rating: number }) {
+  const { t } = useLocale()
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-0.5" aria-label={t('reviews.starsAria').replace('{rating}', String(rating))}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
@@ -23,6 +25,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function ServiceReviews({ serviceTitle, reviews }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   if (reviews.length === 0) return null
@@ -37,7 +40,7 @@ export default function ServiceReviews({ serviceTitle, reviews }: Props) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="label-tag mb-3 block">Client feedback</span>
+          <span className="label-tag mb-3 block">{t('serviceDetail.clientFeedback')}</span>
           <h2
             className="text-sz-dark"
             style={{
@@ -48,14 +51,13 @@ export default function ServiceReviews({ serviceTitle, reviews }: Props) {
               letterSpacing: '-0.02em',
             }}
           >
-            Reviews for {serviceTitle.toLowerCase()}
+            {t('serviceDetail.reviewsFor').replace('{service}', serviceTitle.toLowerCase())}
           </h2>
           <p
             className="text-sz-secondary mt-4"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            Real outcomes from clients who engaged us for this service — including written
-            testimonials and voice notes.
+            {t('serviceDetail.reviewsSummary')}
           </p>
         </motion.div>
 
@@ -106,7 +108,7 @@ export default function ServiceReviews({ serviceTitle, reviews }: Props) {
                       className="text-sz-secondary text-sm"
                       style={{ fontFamily: 'var(--font-body)', lineHeight: 1.6 }}
                     >
-                      Voice note from {review.author.split(' ')[0]}
+                      {t('serviceDetail.voiceNoteFrom').replace('{name}', review.author.split(' ')[0])}
                     </p>
                     <VoiceNotePlayer
                       src={review.voiceNoteUrl}

@@ -6,10 +6,12 @@ import Aurora from '../ui/Aurora'
 import DotGrid from '../ui/backgrounds/DotGrid'
 import LogoOrb from '../ui/LogoOrb'
 import { refreshLocomotiveScroll } from '../../lib/locomotive'
+import { useLocale } from '../../providers/LocaleProvider'
 
 const HERO_IMAGE = '/images/about/hero-team-collab.png'
 
 export default function ServicesHero() {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   useLayoutEffect(() => {
@@ -79,7 +81,7 @@ export default function ServicesHero() {
         >
           <img
             src={HERO_IMAGE}
-            alt="Salezeus team collaborating"
+            alt={t('experience.opening.heroAlt')}
             className="w-[84px] sm:w-[96px] lg:w-[108px] rounded-card border border-white/[0.12] shadow-[0_16px_40px_rgba(0,0,0,0.4)] object-cover aspect-square"
             loading="eager"
           />
@@ -91,7 +93,7 @@ export default function ServicesHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
         >
-          <span className="label-tag">Our Services</span>
+          <span className="label-tag">{t('solutions.label')}</span>
         </motion.div>
 
         <h1
@@ -104,12 +106,12 @@ export default function ServicesHero() {
             letterSpacing: '-0.025em',
           }}
         >
-          <SplitText text="End-to-End Solutions." wrap stagger={0.06} duration={0.75} />
+          <SplitText text={t('solutions.title')} wrap stagger={0.06} duration={0.75} />
         </h1>
 
         <div className="mt-8 max-w-md">
           <BlurText
-            text="From strategy to execution, we cover every aspect of brand growth under one roof."
+            text={t('solutions.subtitleDetailed')}
             className="text-white/45"
             animateBy="words"
             delay={35}

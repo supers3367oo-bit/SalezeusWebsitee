@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { ZoomIn } from 'lucide-react'
 import type { ProjectVisual } from '../../../types/projectDetail'
 import { useProjectGallery } from './ProjectGalleryContext'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 const ASPECT_CLASS: Record<NonNullable<ProjectVisual['aspect']>, string> = {
   '1/1': 'aspect-square',
@@ -18,6 +19,7 @@ type Props = {
 }
 
 export function ProjectVisualFrame({ visual, className, framed = true }: Props) {
+  const { t } = useLocale()
   const aspect = visual.aspect ?? '4/3'
   const gallery = useProjectGallery()
 
@@ -37,7 +39,7 @@ export function ProjectVisualFrame({ visual, className, framed = true }: Props) 
           framed && 'border border-sz-border',
           gallery ? 'cursor-zoom-in' : 'cursor-default'
         )}
-        aria-label={gallery ? `View larger: ${visual.alt}` : visual.alt}
+        aria-label={gallery ? `${t('projectDetail.viewLarger')}: ${visual.alt}` : visual.alt}
       >
         <img
           src={visual.src}

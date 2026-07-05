@@ -2,11 +2,14 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import WhatsAppIcon from './WhatsAppIcon'
 import { WHATSAPP_URL } from '../../data/contact'
+import { useLocale } from '../../providers/LocaleProvider'
 import './FloatingActions.css'
 
 export default function FloatingActions() {
+  const { t } = useLocale()
+
   return (
-    <div className="fixed bottom-6 right-6 z-40" role="group" aria-label="Quick actions">
+    <div className="floating-actions-wrap fixed bottom-6 end-6 z-40" role="group" aria-label={t('floating.groupAria')}>
       <div className="floating-dual-btn">
         <div className="floating-dual-btn__slant" aria-hidden />
 
@@ -15,9 +18,9 @@ export default function FloatingActions() {
           target="_blank"
           rel="noopener noreferrer"
           className="floating-dual-btn__segment floating-dual-btn__segment--whatsapp group"
-          aria-label="Chat on WhatsApp"
+          aria-label={t('floating.whatsappAria')}
         >
-          <span>WhatsApp</span>
+          <span>{t('floating.whatsapp')}</span>
           <span className="floating-dual-btn__icon">
             <WhatsAppIcon className="h-[15px] w-[15px]" />
           </span>
@@ -26,11 +29,11 @@ export default function FloatingActions() {
         <Link
           to="/contact"
           className="floating-dual-btn__segment floating-dual-btn__segment--start group"
-          aria-label="Start now - contact us"
+          aria-label={t('floating.startNowAria')}
         >
-          <span>Start Now!</span>
+          <span>{t('floating.startNow')}</span>
           <span className="floating-dual-btn__icon">
-            <ArrowUpRight className="h-[15px] w-[15px]" strokeWidth={2.25} />
+            <ArrowUpRight className="h-[15px] w-[15px] rtl:-scale-x-100" strokeWidth={2.25} />
           </span>
         </Link>
       </div>

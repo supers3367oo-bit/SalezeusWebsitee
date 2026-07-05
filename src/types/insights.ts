@@ -50,8 +50,8 @@ export type InsightArticle = {
   publishedAt: string
   readingTimeMinutes: number
   author: { name: string; role: string }
-  service: ServiceCategory
-  industry: IndustryCategory
+  service: string
+  industry: string
   topics: string[]
   featured?: boolean
   layout: ArticleLayout

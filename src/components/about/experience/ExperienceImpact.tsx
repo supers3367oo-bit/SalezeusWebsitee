@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import CountUp from '../../ui/CountUp'
 import ScrollFloat from '../../ui/ScrollFloat'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 const METRICS = [
   { value: 7, suffix: '+', label: 'Years', sub: 'Building since 2017' },
@@ -34,7 +35,7 @@ function MetricBlock({
           <span
             className="text-white tabular-nums"
             style={{
-              fontFamily: 'Anton, sans-serif',
+              fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(4rem, 14vw, 11rem)',
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
@@ -71,6 +72,13 @@ function MetricBlock({
 }
 
 export default function ExperienceImpact() {
+  const { t } = useLocale()
+  const metrics = [
+    { ...METRICS[0], label: t('experience.impact.metrics.years.label'), sub: t('experience.impact.metrics.years.sub') },
+    { ...METRICS[1], label: t('experience.impact.metrics.projects.label'), sub: t('experience.impact.metrics.projects.sub') },
+    { ...METRICS[2], label: t('experience.impact.metrics.clients.label'), sub: t('experience.impact.metrics.clients.sub') },
+    { ...METRICS[3], label: t('experience.impact.metrics.countries.label'), sub: t('experience.impact.metrics.countries.sub') },
+  ]
   return (
     <section className="bg-sz-dark relative overflow-hidden py-20 lg:py-28" id="impact-story">
       <div
@@ -91,18 +99,18 @@ export default function ExperienceImpact() {
             animationDuration={1}
             stagger={0.025}
           >
-            Our Impact
+            {t('experience.impact.title')}
           </ScrollFloat>
           <p
             className="mt-6 text-white/40 max-w-md"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            The numbers are not the story. They are proof the story works.
+            {t('experience.impact.subtitle')}
           </p>
         </div>
 
         <div className="space-y-4 lg:space-y-2">
-          {METRICS.map((metric, i) => (
+          {metrics.map((metric, i) => (
             <MetricBlock key={metric.label} metric={metric} index={i} />
           ))}
         </div>

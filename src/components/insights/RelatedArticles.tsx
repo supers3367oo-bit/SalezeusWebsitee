@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { InsightArticle } from '../../types/insights'
 import { formatArticleDate } from '../../data/insights'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type RelatedArticlesProps = {
   articles: InsightArticle[]
 }
 
 export default function RelatedArticles({ articles }: RelatedArticlesProps) {
+  const { locale, t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   if (articles.length === 0) return null
@@ -24,7 +26,7 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
             letterSpacing: '-0.02em',
           }}
         >
-          Related reading
+          {t('insightsPage.relatedReading')}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -70,7 +72,7 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
                     className="text-sz-primary/40 text-xs mt-auto pt-4 border-t border-sz-border"
                     style={{ fontFamily: 'var(--font-body)' }}
                   >
-                    {formatArticleDate(article.publishedAt)}
+                    {formatArticleDate(article.publishedAt, locale)}
                   </p>
                 </div>
               </Link>

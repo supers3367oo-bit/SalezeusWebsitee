@@ -4,67 +4,76 @@ import SplitText from '../ui/SplitText'
 import Button from '../ui/Button'
 import PortfolioProjectCard from '../portfolio/PortfolioProjectCard'
 import { getAllProjects } from '../../data/projectDetails'
-import type { ProjectServiceLabel } from '../../types/projectDetail'
-
-const SERVICE_FILTERS = ['All', 'Branding', 'Marketing', 'Social Media', 'Consulting', 'Web', 'Apps'] as const
+import { useLocale } from '../../providers/LocaleProvider'
 
 const EASE = [0.22, 1, 0.36, 1] as const
-
-const ALL_PROJECTS = getAllProjects().map((p) => ({
-  id: p.id,
-  slug: p.slug,
-  client: p.client,
-  field: p.field,
-  services: [p.serviceLabel],
-  summary: p.summary,
-  image: p.image,
-}))
-
-function matchesServiceFilter(serviceLabel: ProjectServiceLabel, filter: string) {
-  if (filter === 'All') return true
-  return serviceLabel === filter
-}
-
 const PREVIEW_LIMIT = 4
 
 export default function PortfolioPreview() {
+  const { locale, t } = useLocale()
   const [activeFilter, setActiveFilter] = useState<string>('All')
 
+  const allProjects = useMemo(
+    () =>
+      getAllProjects(locale).map((p) => ({
+        id: p.id,
+        slug: p.slug,
+        client: p.client,
+        field: p.field,
+        services: [p.serviceLabel],
+        summary: p.summary,
+        image: p.image,
+      })),
+    [locale]
+  )
+
+  const serviceFilters = useMemo(() => {
+    const labels = [...new Set(allProjects.map((p) => p.services[0]))]
+    return [t('portfolio.filterAll'), ...labels]
+  }, [allProjects, t])
+
   const filtered = useMemo(() => {
-    return ALL_PROJECTS.filter((project) => {
-      const label = project.services[0] as ProjectServiceLabel
-      return matchesServiceFilter(label, activeFilter)
-    }).slice(0, PREVIEW_LIMIT)
-  }, [activeFilter])
+    return allProjects
+      .filter((project) => {
+        if (activeFilter === 'All' || activeFilter === t('portfolio.filterAll')) return true
+        return project.services[0] === activeFilter
+      })
+      .slice(0, PREVIEW_LIMIT)
+  }, [activeFilter, allProjects, t])
+
+  const isFilterActive = (filter: string) =>
+    filter === t('portfolio.filterAll')
+      ? activeFilter === 'All' || activeFilter === t('portfolio.filterAll')
+      : activeFilter === filter
 
   return (
     <section className="section-surface section-padding" id="portfolio">
       <div className="section-container">
         <div className="section-header section-header-row">
           <div>
-            <span className="label-tag mb-3 block">Portfolio</span>
+            <span className="label-tag mb-3 block">{t('portfolio.label')}</span>
             <h2 className="heading-lg text-sz-dark">
-              <SplitText text="Portfolio Preview" repeat stagger={0.1} duration={1} />
+              <SplitText text={t('portfolio.previewTitle')} repeat stagger={0.1} duration={1} />
             </h2>
           </div>
           <Button href="/portfolio" size="sm" className="hidden lg:inline-flex">
-            View Full Portfolio
+            {t('portfolio.viewFull')}
           </Button>
         </div>
 
         <div className="mb-8 flex flex-wrap gap-1.5">
-          {SERVICE_FILTERS.map((filter) => (
+          {serviceFilters.map((filter) => (
             <button
               key={filter}
               type="button"
-              onClick={() => setActiveFilter(filter)}
+              onClick={() => setActiveFilter(filter === t('portfolio.filterAll') ? 'All' : filter)}
               className="transition-all duration-200"
               style={{
                 padding: '6px 14px',
                 borderRadius: 6,
-                border: `1px solid ${activeFilter === filter ? '#3258A4' : '#E8E4DE'}`,
-                background: activeFilter === filter ? '#3258A4' : 'transparent',
-                color: activeFilter === filter ? '#FFFFFF' : '#303640',
+                border: `1px solid ${isFilterActive(filter) ? '#3258A4' : '#E8E4DE'}`,
+                background: isFilterActive(filter) ? '#3258A4' : 'transparent',
+                color: isFilterActive(filter) ? '#FFFFFF' : '#303640',
                 fontSize: 12,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -97,7 +106,7 @@ export default function PortfolioPreview() {
 
         <div className="mt-8 text-center lg:hidden">
           <Button href="/portfolio" size="sm">
-            View Full Portfolio
+            {t('portfolio.viewFull')}
           </Button>
         </div>
       </div>

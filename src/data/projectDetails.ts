@@ -1,4 +1,7 @@
 import type { ProjectDetail, ProjectListItem, ProjectServiceSlug, ProjectServiceLabel } from '../types/projectDetail'
+import type { Locale } from '../i18n/types'
+import { pickLocale } from '../i18n/pickLocale'
+import { PROJECT_DETAILS_AR } from './localized/projectDetails.ar'
 
 export const PROJECT_DETAILS: ProjectDetail[] = [
   {
@@ -416,19 +419,23 @@ export const PROJECT_DETAILS: ProjectDetail[] = [
   },
 ]
 
-export function getAllProjects(): ProjectListItem[] {
-  return PROJECT_DETAILS.map(
+function getProjectDetails(locale: Locale = 'en'): ProjectDetail[] {
+  return pickLocale(locale, PROJECT_DETAILS, PROJECT_DETAILS_AR)
+}
+
+export function getAllProjects(locale: Locale = 'en'): ProjectListItem[] {
+  return getProjectDetails(locale).map(
     ({ work: _work, relatedSlugs: _related, deliverables: _d, challenge: _c, approach: _a, result: _r, outcomeLine: _o, heroImage: _h, year: _y, ...list }) => list
   )
 }
 
-export function getProjectBySlug(slug: string): ProjectDetail | undefined {
-  return PROJECT_DETAILS.find((p) => p.slug === slug)
+export function getProjectBySlug(slug: string, locale: Locale = 'en'): ProjectDetail | undefined {
+  return getProjectDetails(locale).find((p) => p.slug === slug)
 }
 
-export function getRelatedProjects(project: ProjectDetail): ProjectDetail[] {
+export function getRelatedProjects(project: ProjectDetail, locale: Locale = 'en'): ProjectDetail[] {
   return project.relatedSlugs
-    .map((s) => getProjectBySlug(s))
+    .map((s) => getProjectBySlug(s, locale))
     .filter((p): p is ProjectDetail => Boolean(p))
 }
 
@@ -441,21 +448,21 @@ const SERVICE_MATCH: Record<string, ProjectServiceSlug> = {
   'mobile-apps': 'mobile-apps',
 }
 
-export function getProjectsForService(slug: string): ProjectListItem[] {
+export function getProjectsForService(slug: string, locale: Locale = 'en'): ProjectListItem[] {
   const service = SERVICE_MATCH[slug]
-  if (!service) return getAllProjects().slice(0, 4)
-  return getAllProjects().filter((p) => p.service === service)
+  if (!service) return getAllProjects(locale).slice(0, 4)
+  return getAllProjects(locale).filter((p) => p.service === service)
 }
 
-export function getProjectsByService(service: ProjectServiceSlug): ProjectListItem[] {
-  return getAllProjects().filter((p) => p.service === service)
+export function getProjectsByService(service: ProjectServiceSlug, locale: Locale = 'en'): ProjectListItem[] {
+  return getAllProjects(locale).filter((p) => p.service === service)
 }
 
-export function getProjectServiceOptions(): { slug: ProjectServiceSlug; label: ProjectServiceLabel }[] {
+export function getProjectServiceOptions(locale: Locale = 'en'): { slug: ProjectServiceSlug; label: ProjectServiceLabel }[] {
   const seen = new Set<ProjectServiceSlug>()
   const options: { slug: ProjectServiceSlug; label: ProjectServiceLabel }[] = []
 
-  for (const project of getAllProjects()) {
+  for (const project of getAllProjects(locale)) {
     if (seen.has(project.service)) continue
     seen.add(project.service)
     options.push({ slug: project.service, label: project.serviceLabel })
@@ -464,8 +471,8 @@ export function getProjectServiceOptions(): { slug: ProjectServiceSlug; label: P
   return options.sort((a, b) => a.label.localeCompare(b.label))
 }
 
-export function getProjectFieldOptions(): string[] {
-  const fields = new Set(getAllProjects().map((p) => p.field))
+export function getProjectFieldOptions(locale: Locale = 'en'): string[] {
+  const fields = new Set(getAllProjects(locale).map((p) => p.field))
   return [...fields].sort((a, b) => a.localeCompare(b))
 }
 

@@ -5,6 +5,7 @@ import {
   getArticleShareUrl,
   openShareWindow,
 } from '../../lib/shareArticle'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type Props = {
   slug: string
@@ -28,6 +29,7 @@ const PLATFORMS = [
 ]
 
 export default function ArticleShare({ slug, title, variant = 'light', className }: Props) {
+  const { t } = useLocale()
   const shareUrl = getArticleShareUrl(slug)
   const links = getArticleShareLinks(shareUrl, title)
 
@@ -42,7 +44,7 @@ export default function ArticleShare({ slug, title, variant = 'light', className
         )}
         style={{ fontFamily: 'var(--font-body)' }}
       >
-        Share article
+        {t('insightsPage.shareArticle')}
       </p>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -57,8 +59,8 @@ export default function ArticleShare({ slug, title, variant = 'light', className
                 ? 'border-white/15 bg-white/5 text-white/75 hover:border-white/30 hover:bg-white/10 hover:text-white'
                 : 'border-sz-border bg-white text-sz-secondary hover:border-sz-interaction hover:text-sz-interaction'
             )}
-            aria-label={`Share on ${label}`}
-            title={`Share on ${label}`}
+            aria-label={`${t('insightsPage.shareOn')} ${label}`}
+            title={`${t('insightsPage.shareOn')} ${label}`}
           >
             {isCustom ? (
               <Icon className="h-4 w-4" />

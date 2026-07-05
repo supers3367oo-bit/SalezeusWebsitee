@@ -1,11 +1,13 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ServiceDetail } from '../../../types/services'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   service: ServiceDetail
 }
 
 export default function ServiceIncluded({ service }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -18,7 +20,7 @@ export default function ServiceIncluded({ service }: Props) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="label-tag mb-3 block">Deliverables</span>
+          <span className="label-tag mb-3 block">{t('serviceDetail.deliverablesLabel')}</span>
           <h2
             className="text-sz-dark"
             style={{
@@ -29,14 +31,15 @@ export default function ServiceIncluded({ service }: Props) {
               letterSpacing: '-0.02em',
             }}
           >
-            What&apos;s included
+            {t('serviceDetail.whatsIncluded')}
           </h2>
           <p
             className="text-sz-secondary mt-4"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            {service.included.length} scoped deliverables for {service.title.toLowerCase()}{' '}
-            engagements — from kickoff through handoff.
+            {t('serviceDetail.includedSummary')
+              .replace('{count}', String(service.included.length))
+              .replace('{service}', service.title.toLowerCase())}
           </p>
         </motion.div>
 

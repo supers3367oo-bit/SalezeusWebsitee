@@ -4,30 +4,37 @@ import FeaturedInsight from '../components/insights/FeaturedInsight'
 import InsightsFilters from '../components/insights/InsightsFilters'
 import ArticlesGrid from '../components/insights/ArticlesGrid'
 import InsightsHubCTA from '../components/insights/InsightsHubCTA'
-import { INSIGHT_ARTICLES, getFeaturedArticle } from '../data/insights'
-import type { IndustryCategory } from '../types/insights'
+import { getFeaturedArticle, getInsightArticles } from '../data/insights'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
-
-const SUGGESTED_INDUSTRIES: IndustryCategory[] = [
-  'Technology',
-  'Healthcare',
-  'E-commerce',
-  'Tourism',
-]
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function InsightsPage() {
-  const [activeIndustry, setActiveIndustry] = useState<IndustryCategory | null>(null)
+  const { locale, t } = useLocale()
+  const [activeIndustry, setActiveIndustry] = useState<string | null>(null)
+
+  const allArticles = useMemo(() => getInsightArticles(locale), [locale])
 
   const filteredArticles = useMemo(() => {
-    if (!activeIndustry) return INSIGHT_ARTICLES
-    return INSIGHT_ARTICLES.filter((article) => article.industry === activeIndustry)
-  }, [activeIndustry])
+    if (!activeIndustry) return allArticles
+    return allArticles.filter((article) => article.industry === activeIndustry)
+  }, [activeIndustry, allArticles])
+
+  const suggestedIndustries = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const article of allArticles) {
+      counts.set(article.industry, (counts.get(article.industry) ?? 0) + 1)
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([industry]) => industry)
+  }, [allArticles])
 
   const spotlightArticle = useMemo(() => {
     if (filteredArticles.length === 0) return null
-    if (!activeIndustry) return getFeaturedArticle()
+    if (!activeIndustry) return getFeaturedArticle(locale)
     return filteredArticles.find((a) => a.featured) ?? filteredArticles[0]
-  }, [filteredArticles, activeIndustry])
+  }, [filteredArticles, activeIndustry, locale])
 
   const gridArticles = useMemo(() => {
     if (!spotlightArticle) return []
@@ -47,11 +54,12 @@ export default function InsightsPage() {
       {spotlightArticle && (
         <FeaturedInsight
           article={spotlightArticle}
-          label={activeIndustry ? 'Selected for you' : "Editor's pick"}
+          label={activeIndustry ? t('insightsPage.selectedForYou') : t('insightsPage.editorsPick')}
         />
       )}
 
       <InsightsFilters
+        articles={allArticles}
         activeIndustry={activeIndustry}
         onIndustryChange={setActiveIndustry}
         onClearAll={clearFilter}
@@ -61,7 +69,7 @@ export default function InsightsPage() {
         articles={gridArticles}
         showEmptyState={filteredArticles.length === 0}
         onClearFilters={clearFilter}
-        suggestedIndustries={SUGGESTED_INDUSTRIES}
+        suggestedIndustries={suggestedIndustries}
         onIndustrySelect={setActiveIndustry}
       />
 

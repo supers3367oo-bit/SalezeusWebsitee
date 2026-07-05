@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
 import type { ProjectServiceSlug } from '../../types/projectDetail'
@@ -6,6 +6,7 @@ import {
   getProjectFieldOptions,
   getProjectServiceOptions,
 } from '../../data/projectDetails'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type Panel = 'service' | 'field' | null
 
@@ -55,9 +56,10 @@ export default function PortfolioFiltersSidebar({
   resultCount,
   totalCount,
 }: Props) {
+  const { locale, t } = useLocale()
   const [openPanel, setOpenPanel] = useState<Panel>(null)
-  const serviceOptions = getProjectServiceOptions()
-  const fieldOptions = getProjectFieldOptions()
+  const serviceOptions = useMemo(() => getProjectServiceOptions(locale), [locale])
+  const fieldOptions = useMemo(() => getProjectFieldOptions(locale), [locale])
   const hasActiveFilters = Boolean(serviceFilter || fieldFilter)
 
   const togglePanel = (panel: Exclude<Panel, null>) => {
@@ -76,7 +78,7 @@ export default function PortfolioFiltersSidebar({
             className="text-sm font-medium"
             style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.02em' }}
           >
-            Filters
+            {t('portfolioPage.filters')}
           </p>
         </div>
 
@@ -94,7 +96,7 @@ export default function PortfolioFiltersSidebar({
               )}
               style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600 }}
             >
-              <span>Filter by service</span>
+              <span>{t('portfolioPage.filterByService')}</span>
               <ChevronDown
                 size={15}
                 className={clsx('shrink-0 transition-transform duration-200', openPanel === 'service' && 'rotate-180')}
@@ -104,7 +106,7 @@ export default function PortfolioFiltersSidebar({
             {openPanel === 'service' && (
               <div className="mt-2 space-y-1.5 pl-1">
                 <FilterOption
-                  label="All services"
+                  label={t('portfolioPage.allServices')}
                   active={!serviceFilter}
                   onClick={() => onServiceChange(null)}
                 />
@@ -135,7 +137,7 @@ export default function PortfolioFiltersSidebar({
               )}
               style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600 }}
             >
-              <span>Filter by field</span>
+              <span>{t('portfolioPage.filterByField')}</span>
               <ChevronDown
                 size={15}
                 className={clsx('shrink-0 transition-transform duration-200', openPanel === 'field' && 'rotate-180')}
@@ -145,7 +147,7 @@ export default function PortfolioFiltersSidebar({
             {openPanel === 'field' && (
               <div className="mt-2 space-y-1.5 pl-1">
                 <FilterOption
-                  label="All fields"
+                  label={t('portfolioPage.allFields')}
                   active={!fieldFilter}
                   onClick={() => onFieldChange(null)}
                 />
@@ -171,7 +173,7 @@ export default function PortfolioFiltersSidebar({
                   <button
                     type="button"
                     onClick={() => onServiceChange(null)}
-                    aria-label={`Remove ${activeServiceLabel} filter`}
+                    aria-label={`${t('portfolioPage.removeFilter')} ${activeServiceLabel}`}
                     className="opacity-70 hover:opacity-100"
                   >
                     <X size={12} />
@@ -184,7 +186,7 @@ export default function PortfolioFiltersSidebar({
                   <button
                     type="button"
                     onClick={() => onFieldChange(null)}
-                    aria-label={`Remove ${fieldFilter} filter`}
+                    aria-label={`${t('portfolioPage.removeFilter')} ${fieldFilter}`}
                     className="opacity-70 hover:opacity-100"
                   >
                     <X size={12} />
@@ -199,7 +201,7 @@ export default function PortfolioFiltersSidebar({
               className="text-sm text-sz-interaction transition-colors hover:text-sz-interaction-hover"
               style={{ fontFamily: 'var(--font-body)', fontWeight: 500 }}
             >
-              Clear all
+              {t('portfolioPage.clearAll')}
             </button>
           </div>
         )}
@@ -208,7 +210,9 @@ export default function PortfolioFiltersSidebar({
           className="mt-4 text-xs text-sz-primary/45"
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          Showing {resultCount} of {totalCount} projects
+          {t('portfolioPage.showingResults')
+            .replace('{count}', String(resultCount))
+            .replace('{total}', String(totalCount))}
         </p>
       </div>
     </aside>

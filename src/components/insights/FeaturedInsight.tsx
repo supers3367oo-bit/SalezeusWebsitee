@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { InsightArticle } from '../../types/insights'
 import Button from '../ui/Button'
 import { formatArticleDate } from '../../data/insights'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type FeaturedInsightProps = {
   article: InsightArticle
@@ -13,6 +14,7 @@ export default function FeaturedInsight({
   article,
   label = "Editor's pick",
 }: FeaturedInsightProps) {
+  const { locale, t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -104,11 +106,11 @@ export default function FeaturedInsight({
                     className="text-sz-primary/45"
                     style={{ fontFamily: 'var(--font-body)', fontSize: 13 }}
                   >
-                    {formatArticleDate(article.publishedAt)} · {article.readingTimeMinutes} min read
+                    {formatArticleDate(article.publishedAt, locale)} · {article.readingTimeMinutes} {t('insightsPage.minRead')}
                   </p>
                 </div>
                 <Button as="span" size="sm" className="shrink-0 pointer-events-none">
-                  Read
+                  {t('insightsPage.read')}
                 </Button>
               </div>
             </div>

@@ -1,15 +1,16 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import ServiceCard from './ServiceCard'
-import { SERVICES } from '../../data/services'
+import { useLocalizedServices } from '../../i18n/useLocalizedServices'
 
 export default function ServicesGrid() {
   const reduce = useReducedMotion() ?? false
+  const services = useLocalizedServices()
 
   return (
     <section className="section-surface section-padding">
       <div className="section-container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12">
-          {SERVICES.map((service, i) => (
+          {services.map((service, i) => (
             <motion.div
               key={service.title}
               initial={reduce ? false : { opacity: 0, y: 24 }}

@@ -1,9 +1,12 @@
+import { useMemo } from 'react'
 import clsx from 'clsx'
-import { INDUSTRY_CATEGORIES, type IndustryCategory } from '../../types/insights'
+import type { InsightArticle } from '../../types/insights'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type InsightsFiltersProps = {
-  activeIndustry: IndustryCategory | null
-  onIndustryChange: (industry: IndustryCategory | null) => void
+  articles: InsightArticle[]
+  activeIndustry: string | null
+  onIndustryChange: (industry: string | null) => void
   onClearAll: () => void
 }
 
@@ -35,16 +38,24 @@ function FilterChip({
 }
 
 export default function InsightsFilters({
+  articles,
   activeIndustry,
   onIndustryChange,
   onClearAll,
 }: InsightsFiltersProps) {
+  const { t } = useLocale()
+
+  const industries = useMemo(() => {
+    const unique = [...new Set(articles.map((article) => article.industry))]
+    return unique.sort((a, b) => a.localeCompare(b, 'ar'))
+  }, [articles])
+
   return (
     <section id="insights-articles" className="section-surface scroll-mt-28 pb-8 lg:pb-10">
       <div className="section-container">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-wrap gap-2 flex-1">
-            {INDUSTRY_CATEGORIES.map((industry) => (
+            {industries.map((industry) => (
               <FilterChip
                 key={industry}
                 label={industry}
@@ -63,7 +74,7 @@ export default function InsightsFilters({
               className="shrink-0 text-sm text-sz-interaction hover:text-sz-interaction-hover transition-colors self-start"
               style={{ fontFamily: 'var(--font-body)', fontWeight: 500 }}
             >
-              Clear
+              {t('insightsPage.clear')}
             </button>
           )}
         </div>

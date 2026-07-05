@@ -5,10 +5,12 @@ import { useReducedMotion } from 'framer-motion'
 import ScrollReveal from '../../ui/ScrollReveal'
 import PresenceMap from './PresenceMap'
 import { refreshLocomotiveScroll } from '../../../lib/locomotive'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function ExperienceBorders() {
+  const { t } = useLocale()
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const mapWrapRef = useRef<HTMLDivElement>(null)
@@ -83,7 +85,7 @@ export default function ExperienceBorders() {
             letterSpacing: '-0.02em',
           }}
         >
-          We are located in
+          {t('experience.borders.title')}
         </h2>
 
         <ScrollReveal
@@ -94,7 +96,7 @@ export default function ExperienceBorders() {
           scrollStart="top bottom-=8%"
           scrollEnd="top center"
         >
-          Connecting Turkey and Syria through design, development and digital experiences.
+          {t('experience.borders.subtitle')}
         </ScrollReveal>
       </div>
 

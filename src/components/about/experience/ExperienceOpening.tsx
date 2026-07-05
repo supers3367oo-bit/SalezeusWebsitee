@@ -5,10 +5,12 @@ import BlurText from '../../ui/BlurText'
 import Aurora from '../../ui/Aurora'
 import DotGrid from '../../ui/backgrounds/DotGrid'
 import { refreshLocomotiveScroll } from '../../../lib/locomotive'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 const HERO_IMAGE = '/images/about/hero-team-collab.png'
 
 export default function ExperienceOpening() {
+  const { t } = useLocale()
   const reduceMotion = useReducedMotion()
   const reduce = reduceMotion ?? false
 
@@ -67,7 +69,7 @@ export default function ExperienceOpening() {
         >
           <img
             src={HERO_IMAGE}
-            alt="Salezeus team collaborating"
+            alt={t('experience.opening.heroAlt')}
             className="w-[84px] sm:w-[96px] lg:w-[108px] rounded-card border border-white/[0.12] shadow-[0_16px_40px_rgba(0,0,0,0.4)] object-cover aspect-square"
             loading="eager"
           />
@@ -80,7 +82,7 @@ export default function ExperienceOpening() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
         >
-          Where creativity meets commercial instinct.
+          {t('experience.opening.kicker')}
         </motion.p>
 
         <h1
@@ -93,15 +95,15 @@ export default function ExperienceOpening() {
             letterSpacing: '-0.025em',
           }}
         >
-          <SplitText text="We don't decorate brands." stagger={0.06} duration={0.75} />
+          <SplitText text={t('experience.opening.titleLine1')} stagger={0.06} duration={0.75} />
           <span className="block mt-1 text-white/75">
-            <SplitText text="We grow them." stagger={0.06} duration={0.75} delay={0.3} />
+            <SplitText text={t('experience.opening.titleLine2')} stagger={0.06} duration={0.75} delay={0.3} />
           </span>
         </h1>
 
         <div className="mt-8 max-w-md">
           <BlurText
-            text="Salezeus is a growth studio for ambitious businesses across Turkey, Syria, and beyond."
+            text={t('experience.opening.description')}
             className="text-white/45"
             animateBy="words"
             delay={35}

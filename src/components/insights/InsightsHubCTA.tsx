@@ -1,8 +1,10 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Button from '../ui/Button'
 import ScrollReveal from '../ui/ScrollReveal'
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function InsightsHubCTA() {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -25,7 +27,7 @@ export default function InsightsHubCTA() {
               lineHeight: 1.12,
             }}
           >
-            Ready to put these ideas to work?
+            {t('insightsPage.hubTitle')}
           </h2>
 
           <ScrollReveal
@@ -34,14 +36,13 @@ export default function InsightsHubCTA() {
             blurStrength={3}
             baseOpacity={0.12}
           >
-            Strategy only matters when it ships. When you are ready to build, we are here to help you
-            move from insight to impact.
+            {t('insightsPage.hubSubtitle')}
           </ScrollReveal>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button to="/#contact">Start a conversation</Button>
+            <Button to="/#contact">{t('insightsPage.startConversation')}</Button>
             <Button to="/portfolio" size="sm">
-              View our work
+              {t('insightsPage.viewWork')}
             </Button>
           </div>
         </motion.div>

@@ -1,8 +1,11 @@
 import React, { useLayoutEffect, useRef, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { getLocomotiveInstance, getScrollTop } from '../../lib/locomotive';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export interface ScrollStackItemProps {
   itemClassName?: string;
@@ -63,6 +66,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   const cardsRef = useRef<HTMLElement[]>([]);
   const layoutTopsRef = useRef<number[]>([]);
   const endLayoutTopRef = useRef(0);
+  const stackStartRef = useRef(0);
+  const stackEndRef = useRef(0);
   const lastTransformsRef = useRef(new Map<number, { translateY: number; scale: number; rotation: number; blur: number; zIndex: number }>());
   const isUpdatingRef = useRef(false);
 
@@ -111,6 +116,11 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     if (endElement instanceof HTMLElement) {
       endLayoutTopRef.current = endElement.getBoundingClientRect().top + scrollTop;
     }
+
+    const firstTop = layoutTopsRef.current[0] ?? 0;
+    const lastTop = layoutTopsRef.current[layoutTopsRef.current.length - 1] ?? firstTop;
+    stackStartRef.current = firstTop - window.innerHeight * 0.5;
+    stackEndRef.current = endLayoutTopRef.current + window.innerHeight * 0.35;
   }, []);
 
   const updateCardTransforms = useCallback(() => {
@@ -122,6 +132,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
     const endElementTop = endLayoutTopRef.current;
+    const inStackZone = scrollTop >= stackStartRef.current && scrollTop <= stackEndRef.current;
 
     cardsRef.current.forEach((card, i) => {
       const cardTop = layoutTopsRef.current[i] ?? 0;
@@ -166,7 +177,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         scale: Math.round(scale * 1000) / 1000,
         rotation: Math.round(rotation * 10) / 10,
         blur: Math.round(blur * 10) / 10,
-        zIndex: 10 + i,
+        zIndex: inStackZone ? 10 + i : 1,
       };
 
       const lastTransform = lastTransformsRef.current.get(i);
@@ -287,6 +298,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     measureLayout();
 
+    const onRefresh = () => {
+      requestAnimationFrame(() => {
+        measureLayout();
+        updateCardTransforms();
+      });
+    };
+    ScrollTrigger.addEventListener('refresh', onRefresh);
+
     const cleanup = setupScroll();
     const onResize = () => {
       measureLayout();
@@ -297,6 +316,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     updateCardTransforms();
 
     return () => {
+      ScrollTrigger.removeEventListener('refresh', onRefresh);
       window.removeEventListener('resize', onResize);
       cleanup?.();
       stackCompletedRef.current = false;

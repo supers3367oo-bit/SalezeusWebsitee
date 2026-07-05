@@ -1,12 +1,14 @@
 import clsx from 'clsx'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ServiceDetail } from '../../../types/services'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   service: ServiceDetail
 }
 
 export default function ServiceProcess({ service }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
   const steps = service.process
 
@@ -20,7 +22,7 @@ export default function ServiceProcess({ service }: Props) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="label-tag mb-3 block">Our process</span>
+          <span className="label-tag mb-3 block">{t('serviceDetail.processLabel')}</span>
           <h2
             className="text-sz-dark"
             style={{
@@ -31,14 +33,13 @@ export default function ServiceProcess({ service }: Props) {
               letterSpacing: '-0.02em',
             }}
           >
-            How we work
+            {t('serviceDetail.howWeWork')}
           </h2>
           <p
             className="text-sz-secondary mt-4"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            A clear path from first conversation to delivery — with milestones you can track at
-            every stage.
+            {t('serviceDetail.processSummary')}
           </p>
         </motion.div>
 

@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Star } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SplitText from '../ui/SplitText'
-import Button from '../ui/Button'
+import { useLocale } from '../../providers/LocaleProvider'
 
 const REVIEWS = [
   {
-    quote: 'Salezeus completely transformed our brand identity. Our revenue grew 3× within six months of the rebrand launch.',
+    quoteKey: 'reviews.items.r1.quote',
     author: 'Mohammed Al-Rashid',
     company: 'TechVenture ME',
     role: 'CEO',
@@ -14,7 +14,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'Their data-driven marketing strategy delivered a 240% increase in qualified leads within the first quarter.',
+    quoteKey: 'reviews.items.r2.quote',
     author: 'Nour Khalil',
     company: 'Bloom Retail',
     role: 'Marketing Director',
@@ -22,7 +22,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'The web platform they built handles 50,000+ daily active users with zero downtime. Exceptional technical quality.',
+    quoteKey: 'reviews.items.r3.quote',
     author: 'Kerem Yilmaz',
     company: 'Ankara Digital',
     role: 'CTO',
@@ -30,7 +30,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'Working with Salezeus felt like having an elite in-house team. They genuinely care about our business outcomes.',
+    quoteKey: 'reviews.items.r4.quote',
     author: 'Dina Asaad',
     company: 'Luxe Events',
     role: 'Founder',
@@ -38,7 +38,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'Their social media management tripled our engagement in 60 days. The content quality is consistently outstanding.',
+    quoteKey: 'reviews.items.r5.quote',
     author: 'Tariq Mansour',
     company: 'FoodHub Group',
     role: 'Brand Manager',
@@ -46,7 +46,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'From strategy to execution, every deliverable was on brand and on time. Our product launch exceeded every KPI we set.',
+    quoteKey: 'reviews.items.r6.quote',
     author: 'Sara Haddad',
     company: 'Nova Health',
     role: 'Product Lead',
@@ -54,7 +54,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'The UI/UX redesign cut our checkout abandonment in half. Clear communication and sharp design thinking throughout.',
+    quoteKey: 'reviews.items.r7.quote',
     author: 'Omar Faisal',
     company: 'Cartly',
     role: 'COO',
@@ -62,7 +62,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'Salezeus helped us reposition in a crowded market. The new messaging resonated immediately with our audience.',
+    quoteKey: 'reviews.items.r8.quote',
     author: 'Layla Mansour',
     company: 'Verde Cosmetics',
     role: 'Founder',
@@ -70,7 +70,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&q=80',
   },
   {
-    quote: 'Reliable partners for complex builds. They anticipated issues early and kept stakeholders aligned every sprint.',
+    quoteKey: 'reviews.items.r9.quote',
     author: 'James Okonkwo',
     company: 'Stackline',
     role: 'Engineering Manager',
@@ -80,11 +80,13 @@ const REVIEWS = [
 ]
 
 const INITIAL_COUNT = 3
-const MORE_COUNT = 6
+const FIRST_MORE_COUNT = 6
+const NEXT_MORE_COUNT = 3
 
 function StarRating({ rating }: { rating: number }) {
+  const { t } = useLocale()
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-0.5" aria-label={t('reviews.starsAria').replace('{rating}', String(rating))}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star
           key={i}
@@ -97,23 +99,28 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function ClientReviews() {
-  const [expanded, setExpanded] = useState(false)
+  const { t } = useLocale()
+  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT)
+  const animateFromRef = useRef(INITIAL_COUNT)
 
-  const visibleReviews = expanded
-    ? REVIEWS.slice(0, INITIAL_COUNT + MORE_COUNT)
-    : REVIEWS.slice(0, INITIAL_COUNT)
+  const visibleReviews = REVIEWS.slice(0, visibleCount)
+  const canShowMore = visibleCount < REVIEWS.length
 
-  const canShowMore = REVIEWS.length > INITIAL_COUNT && !expanded
+  const handleShowMore = () => {
+    animateFromRef.current = visibleCount
+    const increment = visibleCount === INITIAL_COUNT ? FIRST_MORE_COUNT : NEXT_MORE_COUNT
+    setVisibleCount((prev) => Math.min(prev + increment, REVIEWS.length))
+  }
 
   return (
     <section className="bg-white section-padding" id="reviews">
       <div className="section-container">
         <div className="section-header section-header-row">
           <div>
-            <span className="label-tag mb-3 block">Client Reviews</span>
+            <span className="label-tag mb-3 block">{t('reviews.label')}</span>
             <h2 className="heading-lg text-sz-dark whitespace-nowrap">
               <SplitText
-                text="What Our Clients Say"
+                text={t('reviews.title')}
                 repeat
                 stagger={0.14}
                 duration={1.2}
@@ -125,7 +132,7 @@ export default function ClientReviews() {
             {Array(5).fill(0).map((_, i) => (
               <Star key={i} size={13} className="fill-sz-accent text-sz-accent" />
             ))}
-            <span className="text-sz-secondary text-xs ml-2">5.0 average</span>
+            <span className="text-sz-secondary text-xs ms-2">{t('reviews.average')}</span>
           </div>
         </div>
 
@@ -134,9 +141,13 @@ export default function ClientReviews() {
             <motion.div
               key={review.author}
               className="bg-sz-surface rounded-card overflow-hidden p-8 shadow-sm flex flex-col"
-              initial={i >= INITIAL_COUNT ? { opacity: 0, y: 16 } : false}
+              initial={i >= animateFromRef.current ? { opacity: 0, y: 16 } : false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: i >= INITIAL_COUNT ? (i - INITIAL_COUNT) * 0.06 : 0, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.35,
+                delay: i >= animateFromRef.current ? (i - animateFromRef.current) * 0.06 : 0,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <img
@@ -163,7 +174,7 @@ export default function ClientReviews() {
                 className="text-sz-primary font-body leading-relaxed flex-1 mt-4"
                 style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
               >
-                {review.quote}
+                {t(review.quoteKey)}
               </p>
             </motion.div>
           ))}
@@ -171,9 +182,14 @@ export default function ClientReviews() {
 
         {canShowMore && (
           <div className="flex justify-center mt-10">
-            <Button size="sm" showIcon={false} onClick={() => setExpanded(true)}>
-              More
-            </Button>
+            <button
+              type="button"
+              onClick={handleShowMore}
+              className="inline-flex min-w-[120px] items-center justify-center rounded-full border border-sz-interaction bg-white px-8 py-2.5 text-sm font-semibold text-sz-interaction transition-colors duration-200 hover:bg-sz-interaction-soft"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {t('reviews.more')}
+            </button>
           </div>
         )}
       </div>

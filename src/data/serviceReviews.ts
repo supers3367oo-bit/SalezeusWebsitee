@@ -1,4 +1,7 @@
 import type { ServiceReview } from '../types/services'
+import type { Locale } from '../i18n/types'
+import { pickLocale } from '../i18n/pickLocale'
+import { SERVICE_REVIEWS_AR } from './localized/serviceReviews.ar'
 
 /** Short CC0 speech sample for voice-note review demos */
 const VOICE_SAMPLE =
@@ -217,6 +220,7 @@ export const SERVICE_REVIEWS: Record<string, ServiceReview[]> = {
   ],
 }
 
-export function getReviewsForService(slug: string): ServiceReview[] {
-  return SERVICE_REVIEWS[slug] ?? []
+export function getReviewsForService(slug: string, locale: Locale = 'en'): ServiceReview[] {
+  const reviewsByLocale = pickLocale(locale, SERVICE_REVIEWS, SERVICE_REVIEWS_AR)
+  return reviewsByLocale[slug] ?? []
 }

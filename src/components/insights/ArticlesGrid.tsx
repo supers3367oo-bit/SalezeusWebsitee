@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
-import type { IndustryCategory, InsightArticle } from '../../types/insights'
+import type { InsightArticle } from '../../types/insights'
 import Button from '../ui/Button'
 import { formatArticleDate } from '../../data/insights'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type ArticlesGridProps = {
   articles: InsightArticle[]
   showEmptyState?: boolean
   onClearFilters?: () => void
-  suggestedIndustries?: IndustryCategory[]
-  onIndustrySelect?: (industry: IndustryCategory) => void
+  suggestedIndustries?: string[]
+  onIndustrySelect?: (industry: string) => void
 }
 
-function ArticleCard({ article, index }: { article: InsightArticle; index: number }) {
+function ArticleCard({ article, index, locale }: { article: InsightArticle; index: number; locale: 'en' | 'ar' }) {
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -45,7 +46,7 @@ function ArticleCard({ article, index }: { article: InsightArticle; index: numbe
               lineHeight: 1.4,
             }}
           >
-            {formatArticleDate(article.publishedAt)}
+            {formatArticleDate(article.publishedAt, locale)}
           </time>
 
           <h3
@@ -73,6 +74,7 @@ export default function ArticlesGrid({
   suggestedIndustries = [],
   onIndustrySelect,
 }: ArticlesGridProps) {
+  const { locale, t } = useLocale()
   if (showEmptyState) {
     return (
       <section className="section-surface pb-20 lg:pb-24">
@@ -86,18 +88,18 @@ export default function ArticlesGrid({
               letterSpacing: '-0.02em',
             }}
           >
-            No articles match
+            {t('insightsPage.noArticlesTitle')}
           </h2>
           <p
             className="text-sz-primary/55 mb-8"
             style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65 }}
           >
-            Try clearing your filter or pick another industry below.
+            {t('insightsPage.noArticlesSubtitle')}
           </p>
 
           {onClearFilters && (
             <Button type="button" size="sm" onClick={onClearFilters} className="mb-8">
-              Clear filter
+              {t('insightsPage.clearFilter')}
             </Button>
           )}
 
@@ -130,7 +132,7 @@ export default function ArticlesGrid({
       <div className="section-container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {articles.map((article, index) => (
-            <ArticleCard key={article.slug} article={article} index={index} />
+            <ArticleCard key={article.slug} article={article} index={index} locale={locale} />
           ))}
         </div>
       </div>

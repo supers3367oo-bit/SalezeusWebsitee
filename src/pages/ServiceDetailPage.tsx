@@ -27,22 +27,24 @@ import { getProjectsForService } from '../data/projects'
 import { getReviewsForService } from '../data/serviceReviews'
 
 import { refreshLocomotiveScroll } from '../lib/locomotive'
+import { useLocale } from '../providers/LocaleProvider'
 
 
 
 export default function ServiceDetailPage() {
+  const { locale, t } = useLocale()
 
   const { slug } = useParams<{ slug: string }>()
 
-  const service = getServiceBySlug(slug)
+  const service = getServiceBySlug(slug, locale)
 
-  const projects = slug ? getProjectsForService(slug) : []
+  const projects = slug ? getProjectsForService(slug, locale) : []
 
   const industries = service?.industries.map((item) => item.industry) ?? []
 
-  const reviews = slug ? getReviewsForService(slug) : []
+  const reviews = slug ? getReviewsForService(slug, locale) : []
 
-  const otherServices = slug ? getOtherServices(slug) : []
+  const otherServices = slug ? getOtherServices(slug, locale) : []
 
 
 
@@ -70,13 +72,13 @@ export default function ServiceDetailPage() {
 
           >
 
-            Service not found
+            {t('errors.serviceNotFound')}
 
           </h1>
 
           <Button to="/services" size="sm">
 
-            Back to services
+            {t('errors.backToServices')}
 
           </Button>
 

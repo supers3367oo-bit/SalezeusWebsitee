@@ -1,19 +1,21 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectDetail } from '../../../types/projectDetail'
 import { revealProps } from './shared'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   project: ProjectDetail
 }
 
 export default function ProjectSnapshot({ project }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   const items = [
-    { label: 'Client', value: project.client },
-    { label: 'Industry', value: project.industry },
-    { label: 'Service', value: project.serviceLabel },
-    { label: 'Year', value: String(project.year) },
+    { label: t('projectDetail.snapshot.client'), value: project.client },
+    { label: t('projectDetail.snapshot.industry'), value: project.industry },
+    { label: t('projectDetail.snapshot.service'), value: project.serviceLabel },
+    { label: t('projectDetail.snapshot.year'), value: String(project.year) },
   ]
 
   return (

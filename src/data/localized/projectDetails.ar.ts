@@ -1,0 +1,417 @@
+import type { ProjectDetail } from '../../types/projectDetail'
+
+export const PROJECT_DETAILS_AR: ProjectDetail[] = [
+  {
+    id: 1,
+    slug: 'medcare-travel',
+    client: 'MedCare Travel',
+    field: 'السياحة العلاجية',
+    industry: 'الرعاية الصحية',
+    service: 'branding',
+    serviceLabel: 'الهوية البصرية',
+    summary: 'هوية بصرية متكاملة لوكالة دولية متخصصة في السياحة العلاجية.',
+    image: '/images/services/branding-stationery.png',
+    year: 2024,
+    heroImage: '/images/services/branding-stationery.png',
+    outcomeLine: 'هوية موثوقة تدعم رعاية المرضى عبر الحدود.',
+    challenge:
+      'احتاجت MedCare إلى التميز في سوق مزدحم بالسياحة العلاجية مع الحفاظ على صورة تجمع بين الثقة الطبية والضيافة الراقية.',
+    approach:
+      'بدأنا بورشة تموضع، ثم بنينا نظام علامة يشمل الشعار والألوان والطباعة بما يلائم الحجز الرقمي والمواد المطبوعة.',
+    result:
+      'أُطلقت الهوية الجديدة عبر الموقع، وأدلة المرضى، ومواد الشركاء بلغة بصرية واحدة وواضحة.',
+    deliverables: [
+      'حزمة شعار كاملة مع نسخ متجاوبة',
+      'نظام ألوان وطباعة',
+      'دليل استخدام الهوية',
+      'قوالب قرطاسية ومطبوعات',
+      'حزمة ملفات السوشيال',
+    ],
+    work: {
+      type: 'branding',
+      title: 'تطبيق الهوية',
+      primaryLogo: {
+        src: '/images/services/branding-stationery.png',
+        alt: 'الشعار الرئيسي لعلامة MedCare Travel',
+        aspect: '16/9',
+      },
+      logoVariants: [
+        { src: '/images/services/branding-banners.png', alt: 'تطبيق أفقي للشعار', aspect: '4/3' },
+        { src: '/images/services/branding-stationery.png', alt: 'نسخة رأسية للشعار', aspect: '4/3' },
+        { src: '/images/services/social-branding.png', alt: 'رمز العلامة على الملف الشخصي', aspect: '1/1' },
+      ],
+      colorPalette: [
+        { name: 'أزرق عميق', hex: '#1A2D52' },
+        { name: 'أزرق العناية', hex: '#3258A4' },
+        { name: 'أبيض ناعم', hex: '#F8F7F4' },
+        { name: 'ذهبي الثقة', hex: '#F0B80D' },
+      ],
+      typography: { display: 'العناوين: PP Neue Montreal', body: 'النص: Inter' },
+      stationery: [
+        { src: '/images/services/branding-stationery.png', alt: 'بطاقة عمل وأوراق رسمية', aspect: '4/3' },
+        { src: '/images/services/branding-banners.png', alt: 'تصميم بنر فعاليات', aspect: '4/3' },
+      ],
+      inContext: {
+        src: '/images/services/web-development.png',
+        alt: 'تطبيق الهوية على موقع السياحة العلاجية',
+        aspect: '16/9',
+      },
+    },
+    relatedSlugs: ['wellness-retreat', 'annual-summit'],
+  },
+  {
+    id: 2,
+    slug: 'annual-summit',
+    client: 'Annual Summit',
+    field: 'المؤتمرات',
+    industry: 'التقنية',
+    service: 'marketing',
+    serviceLabel: 'التسويق',
+    summary: 'هوية ترويجية وحملة متكاملة لقمة قيادية.',
+    image: '/images/services/branding-banners.png',
+    year: 2024,
+    heroImage: '/images/services/branding-banners.png',
+    outcomeLine: 'حملة ملأت المقاعد قبل افتتاح الأبواب.',
+    challenge:
+      'امتلك فريق القمة متحدثين أقوياء، لكن الرسائل والحضور البصري كانا متشتتين بين المطبوع والرقمي وتجربة الموقع.',
+    approach:
+      'حددنا رسالة رئيسية واحدة، وبنينا نظامًا بصريًا للحدث، ثم طبقناه على كل القنوات خلال سبرنت مدته أربعة أسابيع.',
+    result:
+      'تحسن زخم التسجيل بفضل قصة متسقة من أول إعلان حتى لافتات القاعة.',
+    deliverables: [
+      'فكرة الحملة والمرئي الرئيسي',
+      'حزمة إعلانات رقمية',
+      'ملصقات وبنرات مطبوعة',
+      'قوالب بريد إلكتروني',
+      'حزمة لافتات داخل الموقع',
+    ],
+    work: {
+      type: 'marketing',
+      title: 'إطلاق الحملة',
+      heroVisual: {
+        src: '/images/services/branding-banners.png',
+        alt: 'المرئي الرئيسي لحملة Annual Summit',
+        aspect: '16/9',
+      },
+      keyMessage: 'هنا يصنع قادة القطاع ما سيأتي لاحقًا.',
+      audience: 'القيادات التنفيذية وكبار المدراء في التقنية والشركات الناشئة',
+      channels: ['LinkedIn', 'Email', 'Print', 'On-site'],
+      assets: [
+        { src: '/images/services/branding-banners.png', alt: 'ملصق الحدث', aspect: '4/3' },
+        { src: '/images/services/marketing-campaign.png', alt: 'حزمة إعلانات رقمية', aspect: '4/3' },
+        { src: '/images/services/social-branding.png', alt: 'تصميم ترويجي للسوشيال', aspect: '1/1' },
+        { src: '/images/services/web-shuaa.png', alt: 'لقطة من صفحة الهبوط', aspect: '16/9' },
+      ],
+    },
+    relatedSlugs: ['ark-oto', 'global-forum'],
+  },
+  {
+    id: 3,
+    slug: 'global-forum',
+    client: 'Global Forum',
+    field: 'المؤتمرات',
+    industry: 'التقنية',
+    service: 'social-media',
+    serviceLabel: 'السوشيال ميديا',
+    summary: 'نظام محتوى اجتماعي وتسويق حدث لمؤتمر أعمال سنوي.',
+    image: '/images/services/social-branding.png',
+    year: 2023,
+    heroImage: '/images/services/social-branding.png',
+    outcomeLine: 'خلاصة اجتماعية نابضة بالحياة قبل انطلاق الحدث.',
+    challenge:
+      'احتاج المنتدى إلى حضور اجتماعي قادر على دعم نشر يومي مستمر دون فقدان الجودة أو اتساق العلامة.',
+    approach:
+      'بنينا محاور محتوى، وقوالب تصميم، وإيقاع نشر مرتبط بإعلانات المتحدثين ومراحل بيع التذاكر.',
+    result:
+      'ارتفع التفاعل عبر لغة بصرية موحدة في الكاروسيل والقصص ومنشورات المتحدثين.',
+    deliverables: [
+      'تحديث الهوية للملف والغلاف',
+      'مكتبة قوالب منشورات',
+      'تنسيقات للكاروسيل والقصص',
+      'إطار موحد لكتابة النصوص',
+      'تقويم محتوى شهري',
+    ],
+    work: {
+      type: 'social',
+      title: 'نظام المحتوى',
+      profilePreview: {
+        src: '/images/services/social-branding.png',
+        alt: 'معاينة ملف Global Forum على السوشيال',
+        aspect: '4/5',
+      },
+      feedGrid: [
+        { src: '/images/services/social-branding.png', alt: 'منشور 1', aspect: '1/1' },
+        { src: '/images/services/marketing-campaign.png', alt: 'منشور 2', aspect: '1/1' },
+        { src: '/images/services/branding-banners.png', alt: 'منشور 3', aspect: '1/1' },
+        { src: '/images/cases/ark-oto.png', alt: 'منشور 4', aspect: '1/1' },
+      ],
+      postFormats: [
+        { src: '/images/services/social-branding.png', alt: 'تنسيق الكاروسيل', aspect: '4/5' },
+        { src: '/images/services/marketing-campaign.png', alt: 'تنسيق القصص', aspect: '9/16' },
+        { src: '/images/services/branding-banners.png', alt: 'قالب إبراز المتحدث', aspect: '4/5' },
+      ],
+      contentPillars: [
+        { title: 'الإعلان عن المتحدثين', description: 'مقدمات مختصرة ببطاقات عنوان متسقة.' },
+        { title: 'ما وراء الكواليس', description: 'محتوى المكان والفريق والتحضيرات لإضفاء طابع إنساني.' },
+        { title: 'زخم التذاكر', description: 'منشورات المواعيد النهائية مع دعوات إجراء واضحة ودليل اجتماعي.' },
+      ],
+      toneRules: 'عناوين جريئة، نصوص قصيرة، صور عالية التباين، ولون بارز واحد لكل منشور.',
+    },
+    relatedSlugs: ['wellness-retreat'],
+  },
+  {
+    id: 4,
+    slug: 'city-services-co',
+    client: 'City Services Co.',
+    field: 'الخدمات',
+    industry: 'التقنية',
+    service: 'web-development',
+    serviceLabel: 'الويب',
+    summary: 'موقع مؤسسي وتموضع رقمي لمجموعة خدمات إقليمية.',
+    image: '/images/services/web-shuaa.png',
+    year: 2024,
+    heroImage: '/images/services/web-shuaa.png',
+    outcomeLine: 'موقع مؤسسي يشرح الخدمات المعقدة بوضوح.',
+    challenge:
+      'تضم الشركة خطوط أعمال متعددة تحت علامة واحدة، وكان الموقع السابق يخفي الخدمات الرئيسية خلف تنقل معقد.',
+    approach:
+      'أعدنا بناء الهيكل المعلوماتي، وصممنا نظام صفحات مرن، وطوّرنا موقعًا متجاوبًا بمداخل خدمة واضحة.',
+    result:
+      'أصبح الزوار يصلون إلى الخدمة المناسبة أسرع، مع تجربة جوال تضاهي وضوح سطح المكتب.',
+    deliverables: [
+      'هيكل تجربة المستخدم والوايرفريم',
+      'نظام تصميم واجهات',
+      'تطوير موقع متجاوب',
+      'قوالب صفحات جاهزة لنظام إدارة المحتوى',
+      'اختبارات الإطلاق وتسليم المشروع',
+    ],
+    work: {
+      type: 'web',
+      title: 'التجربة المبنية',
+      homepage: {
+        src: '/images/services/web-shuaa.png',
+        alt: 'الصفحة الرئيسية لـ City Services داخل إطار متصفح',
+        aspect: '16/9',
+      },
+      responsivePair: {
+        desktop: { src: '/images/services/web-shuaa.png', alt: 'نسخة سطح المكتب لصفحة الخدمات', aspect: '16/9' },
+        mobile: { src: '/images/services/web-development.png', alt: 'نسخة الجوال للصفحة الرئيسية', aspect: '9/16' },
+      },
+      keyPages: [
+        { src: '/images/services/web-development.png', alt: 'صفحة من نحن', aspect: '4/3' },
+        { src: '/images/services/web-shuaa.png', alt: 'صفحة قائمة الخدمات', aspect: '4/3' },
+        { src: '/images/services/branding-stationery.png', alt: 'صفحة التواصل', aspect: '4/3' },
+      ],
+      uxCallouts: [
+        { label: 'مستكشف الخدمات', description: 'مداخل حسب القطاع تظهر أعلى الصفحة مباشرة.' },
+        { label: 'شريط الثقة', description: 'إبراز الاعتمادات وشعارات الشركاء دون ازدحام.' },
+        { label: 'نماذج العملاء المحتملين', description: 'نماذج قصيرة مرتبطة بكل خط خدمة.' },
+      ],
+    },
+    relatedSlugs: ['edutech-institute'],
+  },
+  {
+    id: 5,
+    slug: 'summit-academy',
+    client: 'Summit Academy',
+    field: 'التعليم',
+    industry: 'التعليم',
+    service: 'business-consulting',
+    serviceLabel: 'الاستشارات',
+    summary: 'تموضع استراتيجي وخطة تسجيل لمعهد تعليمي خاص.',
+    image: '/images/services/branding-stationery.png',
+    year: 2023,
+    heroImage: '/images/services/marketing-campaign.png',
+    outcomeLine: 'تموضع واضح وحّد الخطاب الأكاديمي والتسويقي.',
+    challenge:
+      'تنافس Summit Academy مع معاهد أكبر لكنه افتقد قصة مميزة يسهل على أولياء الأمور تذكرها والثقة بها.',
+    approach:
+      'راجعنا السوق والمنافسين، وأعدنا صياغة عرض القيمة، ثم بنينا خارطة رسائل تقود جهود التسجيل.',
+    result:
+      'أصبحت فرق القبول والتسويق تعمل بسردية واحدة عبر الأيام المفتوحة والكتيبات والحملات الرقمية.',
+    deliverables: [
+      'مراجعة السوق والمنافسين',
+      'صياغة بيان التموضع',
+      'خريطة رسائل الجمهور',
+      'خارطة طريق لحملات التسجيل',
+      'عرض تنفيذي موجز',
+    ],
+    work: {
+      type: 'consulting',
+      title: 'وضوح استراتيجي',
+      before:
+        'مؤسسة تعليمية قوية النتائج، لكنها تُعرض رقميًا كمركز تقليدي بلا سبب واضح للاختيار.',
+      after:
+        'وعد مركز: مجموعات صغيرة، مرشدون من السوق، وبرامج تؤهل لسوق العمل يمكن تلخيصها بجملة واحدة.',
+      frameworkSteps: [
+        { title: 'الاكتشاف', description: 'مقابلات أصحاب المصلحة وتحليل المنافسين على مستوى المنطقة.' },
+        { title: 'التحديد', description: 'تحديد مساحة التموضع ونقاط الإثبات مع اعتماد الإدارة.' },
+        { title: 'التوجيه', description: 'هرمية رسائل متسقة للويب والمطبوع ومحادثات القبول.' },
+        { title: 'التفعيل', description: 'خطة تنفيذ 90 يومًا تتضمن المسؤوليات والمحطات.' },
+      ],
+      keyDecisions: [
+        'تقديم نتائج الخريجين كرسالة أولى بدل التركيز على المرافق.',
+        'اعتبار أولياء أمور الطلاب المهنيين الشريحة الرئيسية في القرار.',
+        'توحيد النبرة البصرية واللفظية قبل دورة التسجيل القادمة.',
+      ],
+    },
+    relatedSlugs: ['medcare-travel'],
+  },
+  {
+    id: 6,
+    slug: 'edutech-institute',
+    client: 'EduTech Institute',
+    field: 'التعليم',
+    industry: 'التعليم',
+    service: 'mobile-apps',
+    serviceLabel: 'التطبيقات',
+    summary: 'بوابة طلابية ومنصة تعلم للبرامج الإلكترونية.',
+    image: '/images/services/app-rabbit-phone.png',
+    year: 2024,
+    heroImage: '/images/services/app-rabbit-phone.png',
+    outcomeLine: 'تطبيق طلابي يحافظ على التزام المتعلم بين الجلسات.',
+    challenge:
+      'احتاجت EduTech لتجربة جوال للدروس والمواعيد والتغذية الراجعة دون إعادة بناء نظام إدارة التعلم بالكامل.',
+    approach:
+      'رسمنا رحلات الطالب الأساسية، وصممنا نظام واجهات مركز، ونمذجنا الشاشات الأكثر تأثيرًا على الاستمرارية.',
+    result:
+      'ارتفع إكمال المتابعات الأسبوعية، وانخفضت تذاكر الدعم المتعلقة بالجدولة بعد الإطلاق.',
+    deliverables: [
+      'تدفقات UX للرحلات الأساسية',
+      'نظام تصميم واجهات',
+      'شاشات الرئيسية والدورات والملف الشخصي',
+      'نموذج أولي تفاعلي',
+      'أصول بصرية لمتاجر التطبيقات',
+    ],
+    work: {
+      type: 'apps',
+      title: 'شاشات المنتج',
+      heroScreen: {
+        src: '/images/services/app-rabbit-phone.png',
+        alt: 'الشاشة الرئيسية لتطبيق EduTech',
+        aspect: '9/16',
+      },
+      keyScreens: [
+        { src: '/images/services/app-rabbit-phone.png', alt: 'شاشة نظرة عامة على الدورة', aspect: '9/16' },
+        { src: '/images/services/web-development.png', alt: 'شاشة الواجبات', aspect: '9/16' },
+        { src: '/images/services/marketing-campaign.png', alt: 'شاشة الملف الشخصي والإعدادات', aspect: '9/16' },
+      ],
+      userFlow: [
+        { step: 'تسجيل الدخول ومراجعة جدول اليوم' },
+        { step: 'فتح دورة ومراجعة المواد' },
+        { step: 'تسليم المهمة واستلام التغذية الراجعة' },
+        { step: 'متابعة التقدم نحو الإكمال' },
+      ],
+      featureHighlights: [
+        { title: 'وضوح المواعيد', description: 'خط زمني موحد للمهام عبر جميع البرامج.' },
+        { title: 'دعم العمل دون اتصال', description: 'إتاحة المواد الأساسية حتى مع اتصال محدود.' },
+        { title: 'حلقة المدرس', description: 'عرض الملاحظات في نفس مسار عمل الطالب.' },
+      ],
+    },
+    relatedSlugs: ['city-services-co'],
+  },
+  {
+    id: 7,
+    slug: 'wellness-retreat',
+    client: 'Wellness Retreat',
+    field: 'السياحة العلاجية',
+    industry: 'الرعاية الصحية',
+    service: 'branding',
+    serviceLabel: 'الهوية البصرية',
+    summary: 'إطلاق هوية موجهة لإنستغرام لمنتجع صحي فاخر.',
+    image: '/images/services/marketing-campaign.png',
+    year: 2023,
+    heroImage: '/images/services/marketing-campaign.png',
+    outcomeLine: 'هوية فاخرة هادئة صُممت للاكتشاف عبر السوشيال.',
+    challenge:
+      'كان المنتجع يقدم برامج متميزة، لكن حضوره غير المتسق على إنستغرام وصفحات الحجز أضعف القيمة المتصورة.',
+    approach:
+      'صممنا هوية بسيطة بطباعة ناعمة، ولوحة ألوان هادئة، وقوالب مخصصة لاكتشاف العلامة عبر السوشيال أولًا.',
+    result:
+      'تحسن تميّز العلامة عبر السوشيال ونقاط الحجز من خلال لغة بصرية موحدة.',
+    deliverables: [
+      'شعار رئيسي وعلامة فرعية',
+      'حزمة قوالب سوشيال',
+      'توجيه تصوير العلامة',
+      'دليل الألوان والطباعة',
+      'توجيه فني لصفحات الحجز',
+    ],
+    work: {
+      type: 'branding',
+      title: 'تطبيق الهوية',
+      primaryLogo: {
+        src: '/images/services/marketing-campaign.png',
+        alt: 'الشعار الرئيسي لـ Wellness Retreat',
+        aspect: '16/9',
+      },
+      logoVariants: [
+        { src: '/images/services/social-branding.png', alt: 'نسخة أفقية', aspect: '4/3' },
+        { src: '/images/services/marketing-campaign.png', alt: 'نسخة رأسية', aspect: '4/3' },
+        { src: '/images/services/branding-stationery.png', alt: 'رمز مونوجرام', aspect: '1/1' },
+      ],
+      colorPalette: [
+        { name: 'أخضر سيج', hex: '#8A9A8A' },
+        { name: 'رملي', hex: '#E8E4DE' },
+        { name: 'حبر داكن', hex: '#303640' },
+        { name: 'ضبابي فاتح', hex: '#F8F7F4' },
+      ],
+      typography: { display: 'العناوين: Editorial sans', body: 'النص: Humanist sans' },
+      stationery: [
+        { src: '/images/services/branding-stationery.png', alt: 'بطاقة ترحيبية', aspect: '4/3' },
+        { src: '/images/services/marketing-campaign.png', alt: 'كتيب البرامج', aspect: '4/3' },
+      ],
+      inContext: {
+        src: '/images/services/social-branding.png',
+        alt: 'تطبيق العلامة على شبكة إنستغرام',
+        aspect: '16/9',
+      },
+    },
+    relatedSlugs: ['medcare-travel', 'global-forum'],
+  },
+  {
+    id: 8,
+    slug: 'ark-oto',
+    client: 'Ark Oto',
+    field: 'الخدمات',
+    industry: 'التصنيع',
+    service: 'marketing',
+    serviceLabel: 'التسويق',
+    summary: 'حملة تسويق متكاملة لعلامة خدمات سيارات.',
+    image: '/images/cases/ark-oto.png',
+    year: 2024,
+    heroImage: '/images/cases/ark-oto.png',
+    outcomeLine: 'حملة إقليمية جعلت علامة تقنية أكثر قربًا من الناس.',
+    challenge:
+      'قدمت Ark Oto خدمات موثوقة، لكنها بدت متشابهة مع سلاسل أكبر وأكثر حضورًا في السوق.',
+    approach:
+      'طورنا حملة ثقة محلية بمرئيات جريئة وعروض مخصصة للخدمات ورسائل موحدة عبر القنوات الخارجية والرقمية.',
+    result:
+      'حصلت الفروع على حزمة تنفيذ موحدة وواضحة لتفعيل الحملات محليًا.',
+    deliverables: [
+      'فكرة الحملة',
+      'حزمة خارجية ومطبوعات',
+      'قوالب إعلانات سوشيال',
+      'نصوص إذاعية ورسائل دعائية',
+      'دليل إطلاق للفروع',
+    ],
+    work: {
+      type: 'marketing',
+      title: 'إطلاق الحملة',
+      heroVisual: {
+        src: '/images/cases/ark-oto.png',
+        alt: 'المرئي الرئيسي لحملة Ark Oto',
+        aspect: '16/9',
+      },
+      keyMessage: 'عناية خبيرة للسيارة التي تعتمد عليها يوميًا.',
+      audience: 'مالكو المركبات في المناطق الحضرية وضواحي المدن',
+      channels: ['Outdoor', 'Meta ads', 'Radio', 'In-store'],
+      assets: [
+        { src: '/images/cases/ark-oto.png', alt: 'تصميم لوحة إعلانية', aspect: '4/3' },
+        { src: '/images/services/marketing-campaign.png', alt: 'قوالب إعلانات سوشيال', aspect: '4/3' },
+        { src: '/images/services/branding-banners.png', alt: 'ملصق داخل الفرع', aspect: '4/3' },
+        { src: '/images/services/web-shuaa.png', alt: 'الواجهة الرئيسية لصفحة الهبوط', aspect: '16/9' },
+      ],
+    },
+    relatedSlugs: ['annual-summit'],
+  },
+]

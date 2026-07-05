@@ -1,12 +1,14 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectWork } from '../../../types/projectDetail'
 import { ProjectSectionHeading, ProjectVisualFrame, revealProps } from './shared'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   work: ProjectWork
 }
 
 export default function ProjectWorkSection({ work }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -17,9 +19,9 @@ export default function ProjectWorkSection({ work }: Props) {
         </motion.div>
 
         {work.type === 'branding' && <BrandingWork work={work} reduce={reduce} />}
-        {work.type === 'marketing' && <MarketingWork work={work} reduce={reduce} />}
+        {work.type === 'marketing' && <MarketingWork work={work} reduce={reduce} t={t} />}
         {work.type === 'social' && <SocialWork work={work} reduce={reduce} />}
-        {work.type === 'consulting' && <ConsultingWork work={work} reduce={reduce} />}
+        {work.type === 'consulting' && <ConsultingWork work={work} reduce={reduce} t={t} />}
         {work.type === 'web' && <WebWork work={work} reduce={reduce} />}
         {work.type === 'apps' && <AppsWork work={work} reduce={reduce} />}
       </div>
@@ -94,9 +96,11 @@ function BrandingWork({
 function MarketingWork({
   work,
   reduce,
+  t,
 }: {
   work: Extract<ProjectWork, { type: 'marketing' }>
   reduce: boolean
+  t: (key: string) => string
 }) {
   return (
     <div className="space-y-8 lg:space-y-10">
@@ -109,7 +113,7 @@ function MarketingWork({
       >
         <div>
           <p className="text-sz-secondary mb-2" style={{ fontFamily: 'var(--font-body)', fontSize: 13 }}>
-            Key message
+            {t('projectDetail.keyMessage')}
           </p>
           <p
             className="text-sz-dark"
@@ -120,7 +124,7 @@ function MarketingWork({
         </div>
         <div>
           <p className="text-sz-secondary mb-2" style={{ fontFamily: 'var(--font-body)', fontSize: 13 }}>
-            Audience
+            {t('projectDetail.audience')}
           </p>
           <p className="text-sz-secondary" style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}>
             {work.audience}
@@ -200,21 +204,23 @@ function SocialWork({
 function ConsultingWork({
   work,
   reduce,
+  t,
 }: {
   work: Extract<ProjectWork, { type: 'consulting' }>
   reduce: boolean
+  t: (key: string) => string
 }) {
   return (
     <div className="space-y-8 lg:space-y-10 max-w-4xl">
       <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-5" {...revealProps(reduce, 0.04)}>
         <div className="rounded-card border border-sz-border bg-white p-6">
-          <p className="text-sz-secondary mb-2 text-sm">Before</p>
+          <p className="text-sz-secondary mb-2 text-sm">{t('projectDetail.before')}</p>
           <p className="text-sz-dark" style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}>
             {work.before}
           </p>
         </div>
         <div className="rounded-card border border-sz-interaction/25 bg-sz-interaction-soft/40 p-6">
-          <p className="text-sz-interaction mb-2 text-sm font-medium">After</p>
+          <p className="text-sz-interaction mb-2 text-sm font-medium">{t('projectDetail.after')}</p>
           <p className="text-sz-dark" style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}>
             {work.after}
           </p>

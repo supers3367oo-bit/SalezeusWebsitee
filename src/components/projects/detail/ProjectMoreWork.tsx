@@ -5,6 +5,7 @@ import PortfolioProjectCard from '../../portfolio/PortfolioProjectCard'
 import type { ProjectDetail } from '../../../types/projectDetail'
 import { SERVICE_SLUG_LABEL } from '../../../types/projectDetail'
 import { revealProps } from './shared'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   project: ProjectDetail
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export default function ProjectMoreWork({ project, related }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
   const serviceTitle = SERVICE_SLUG_LABEL[project.service]
 
@@ -29,13 +31,13 @@ export default function ProjectMoreWork({ project, related }: Props) {
               letterSpacing: '-0.02em',
             }}
           >
-            More {serviceTitle.toLowerCase()} work
+            {t('projectDetail.moreServiceWork').replace('{service}', serviceTitle.toLowerCase())}
           </h2>
           <p
             className="text-white/45 max-w-lg"
             style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.65 }}
           >
-            Other projects from the same service line.
+            {t('projectDetail.moreServiceWorkSubtitle')}
           </p>
         </motion.div>
 
@@ -69,14 +71,14 @@ export default function ProjectMoreWork({ project, related }: Props) {
 
         <motion.div className="flex flex-wrap gap-4" {...revealProps(reduce, 0.1)}>
           <Button to={`/services/${project.service}`} size="sm">
-            Explore {serviceTitle}
+            {t('projectDetail.exploreService').replace('{service}', serviceTitle)}
           </Button>
           <Link
             to="/contact"
             className="inline-flex items-center text-sm text-white/55 hover:text-white transition-colors min-h-[44px] px-2"
             style={{ fontFamily: 'var(--font-body)', fontWeight: 500 }}
           >
-            Start a project
+            {t('projectDetail.startProject')}
           </Link>
         </motion.div>
       </div>

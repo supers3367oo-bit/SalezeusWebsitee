@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { ProjectListItem } from '../../../types/projectDetail'
 import PortfolioProjectCard from '../../portfolio/PortfolioProjectCard'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -42,6 +43,7 @@ function FilterChip({
 }
 
 export default function ServiceRelatedProjects({ projects, serviceTitle, industries }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
   const [activeIndustry, setActiveIndustry] = useState<string | null>(null)
 
@@ -68,20 +70,20 @@ export default function ServiceRelatedProjects({ projects, serviceTitle, industr
               letterSpacing: '-0.02em',
             }}
           >
-            Related projects
+            {t('serviceDetail.relatedProjects')}
           </h2>
           <p
             className="text-white/45 max-w-sm"
             style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.65 }}
           >
-            Selected work where {serviceTitle.toLowerCase()} played a central role.
+            {t('serviceDetail.relatedSummary').replace('{service}', serviceTitle.toLowerCase())}
           </p>
         </div>
 
         {industries.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8 lg:mb-10">
             <FilterChip
-              label="All"
+              label={t('portfolio.filterAll')}
               active={activeIndustry === null}
               onClick={() => setActiveIndustry(null)}
             />
@@ -103,7 +105,7 @@ export default function ServiceRelatedProjects({ projects, serviceTitle, industr
             className="text-white/40 py-12"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
           >
-            No projects in this industry yet. Try another filter or view all work.
+            {t('serviceDetail.noIndustryProjects')}
           </p>
         ) : (
           <AnimatePresence mode="popLayout">
@@ -139,7 +141,7 @@ export default function ServiceRelatedProjects({ projects, serviceTitle, industr
             className="inline-flex items-center gap-2 text-sm text-white/55 hover:text-white transition-colors min-h-[44px]"
             style={{ fontFamily: 'var(--font-body)', fontWeight: 500 }}
           >
-            View all work
+            {t('serviceDetail.viewAllWork')}
             <ArrowUpRight size={15} strokeWidth={2} />
           </Link>
         </div>

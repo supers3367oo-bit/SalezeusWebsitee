@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import clsx from 'clsx'
 import ServiceMockupFrame from '../ui/ServiceMockupFrame'
 import type { Service } from '../../types/services'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type ServiceCardProps = {
   service: Service
@@ -17,6 +18,7 @@ export default function ServiceCard({
   cardRef,
   innerRef,
 }: ServiceCardProps) {
+  const { t } = useLocale()
   return (
     <div
       ref={cardRef}
@@ -33,7 +35,7 @@ export default function ServiceCard({
             innerRef(el as HTMLDivElement | null)
           }
         }}
-        aria-label={`Explore ${service.title} service`}
+        aria-label={`${t('serviceDetail.exploreService')} ${service.title}`}
         className={clsx(
           'group block cursor-pointer',
           layout === 'carousel' && 'solution-card-inner'
@@ -76,7 +78,7 @@ export default function ServiceCard({
                 className="inline-flex items-center gap-2 text-[10px] lg:text-[11px] font-medium uppercase tracking-[0.16em]"
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                Explore Service
+                {t('serviceDetail.exploreService')}
                 <ArrowRight
                   size={13}
                   strokeWidth={2}

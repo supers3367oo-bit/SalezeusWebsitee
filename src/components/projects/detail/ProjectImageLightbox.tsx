@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import clsx from 'clsx'
 import type { ProjectVisual } from '../../../types/projectDetail'
 import { isPortraitVisual } from '../../../lib/collectProjectGalleryImages'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   images: ProjectVisual[]
@@ -20,6 +21,8 @@ export default function ProjectImageLightbox({
   onNext,
   onPrev,
 }: Props) {
+  const { t, dir } = useLocale()
+  const isRtl = dir === 'rtl'
   const reduce = useReducedMotion() ?? false
   const open = activeIndex !== null && images.length > 0
   const current = open ? images[activeIndex] : null
@@ -38,13 +41,13 @@ export default function ProjectImageLightbox({
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowRight') onNext()
-      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'ArrowRight') (isRtl ? onPrev : onNext)()
+      if (e.key === 'ArrowLeft') (isRtl ? onNext : onPrev)()
     }
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [open, onClose, onNext, onPrev])
+  }, [open, onClose, onNext, onPrev, isRtl])
 
   return (
     <AnimatePresence>
@@ -53,7 +56,7 @@ export default function ProjectImageLightbox({
           className="fixed inset-0 z-[120]"
           role="dialog"
           aria-modal="true"
-          aria-label="Project image gallery"
+          aria-label={t('projectDetail.imageGallery')}
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -63,7 +66,7 @@ export default function ProjectImageLightbox({
             type="button"
             className="absolute inset-0 bg-[rgba(4,5,8,0.96)]"
             onClick={onClose}
-            aria-label="Close gallery"
+            aria-label={t('projectDetail.closeGallery')}
           />
 
           <div className="relative z-10 flex h-full min-h-[100dvh] flex-col pointer-events-none">
@@ -78,7 +81,7 @@ export default function ProjectImageLightbox({
                 type="button"
                 onClick={onClose}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-white/35 hover:text-white"
-                aria-label="Close gallery"
+                aria-label={t('projectDetail.closeGallery')}
               >
                 <X size={20} strokeWidth={2} />
               </button>
@@ -88,8 +91,8 @@ export default function ProjectImageLightbox({
               <button
                 type="button"
                 onClick={onPrev}
-                className="absolute left-3 sm:left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 backdrop-blur-sm transition-colors hover:border-white/35 hover:text-white"
-                aria-label="Previous image"
+                className="absolute start-3 sm:start-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 backdrop-blur-sm transition-colors hover:border-white/35 hover:text-white"
+                aria-label={t('projectDetail.previousImage')}
               >
                 <ChevronLeft size={22} strokeWidth={2} />
               </button>
@@ -125,8 +128,8 @@ export default function ProjectImageLightbox({
               <button
                 type="button"
                 onClick={onNext}
-                className="absolute right-3 sm:right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 backdrop-blur-sm transition-colors hover:border-white/35 hover:text-white"
-                aria-label="Next image"
+                className="absolute end-3 sm:end-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 backdrop-blur-sm transition-colors hover:border-white/35 hover:text-white"
+                aria-label={t('projectDetail.nextImage')}
               >
                 <ChevronRight size={22} strokeWidth={2} />
               </button>

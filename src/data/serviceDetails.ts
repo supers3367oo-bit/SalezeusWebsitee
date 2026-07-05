@@ -1,4 +1,7 @@
 import type { ServiceDetail } from '../types/services'
+import type { Locale } from '../i18n/types'
+import { pickLocale } from '../i18n/pickLocale'
+import { SERVICE_DETAILS_AR } from './localized/serviceDetails.ar'
 
 export const SERVICE_DETAILS: ServiceDetail[] = [
   {
@@ -297,11 +300,13 @@ export const SERVICE_DETAILS: ServiceDetail[] = [
   },
 ]
 
-export function getServiceBySlug(slug: string | undefined): ServiceDetail | undefined {
+export function getServiceBySlug(slug: string | undefined, locale: Locale = 'en'): ServiceDetail | undefined {
   if (!slug) return undefined
-  return SERVICE_DETAILS.find((s) => s.slug === slug)
+  const serviceList = pickLocale(locale, SERVICE_DETAILS, SERVICE_DETAILS_AR)
+  return serviceList.find((s) => s.slug === slug)
 }
 
-export function getOtherServices(currentSlug: string): ServiceDetail[] {
-  return SERVICE_DETAILS.filter((s) => s.slug !== currentSlug)
+export function getOtherServices(currentSlug: string, locale: Locale = 'en'): ServiceDetail[] {
+  const serviceList = pickLocale(locale, SERVICE_DETAILS, SERVICE_DETAILS_AR)
+  return serviceList.filter((s) => s.slug !== currentSlug)
 }

@@ -6,13 +6,7 @@ export type ProjectServiceSlug =
   | 'web-development'
   | 'mobile-apps'
 
-export type ProjectServiceLabel =
-  | 'Branding'
-  | 'Marketing'
-  | 'Social Media'
-  | 'Consulting'
-  | 'Web'
-  | 'Apps'
+export type ProjectServiceLabel = string
 
 export type ProjectVisual = {
   src: string
@@ -23,7 +17,7 @@ export type ProjectVisual = {
 
 export type BrandingWork = {
   type: 'branding'
-  title: 'Identity in practice'
+  title: string
   primaryLogo: ProjectVisual
   logoVariants: ProjectVisual[]
   colorPalette: { name: string; hex: string }[]
@@ -34,7 +28,7 @@ export type BrandingWork = {
 
 export type MarketingWork = {
   type: 'marketing'
-  title: 'Campaign rollout'
+  title: string
   heroVisual: ProjectVisual
   keyMessage: string
   audience: string
@@ -44,7 +38,7 @@ export type MarketingWork = {
 
 export type SocialWork = {
   type: 'social'
-  title: 'Content system'
+  title: string
   profilePreview: ProjectVisual
   feedGrid: ProjectVisual[]
   postFormats: ProjectVisual[]
@@ -54,7 +48,7 @@ export type SocialWork = {
 
 export type ConsultingWork = {
   type: 'consulting'
-  title: 'Strategic clarity'
+  title: string
   before: string
   after: string
   frameworkSteps: { title: string; description: string }[]
@@ -63,7 +57,7 @@ export type ConsultingWork = {
 
 export type WebWork = {
   type: 'web'
-  title: 'Built experience'
+  title: string
   homepage: ProjectVisual
   responsivePair: { desktop: ProjectVisual; mobile: ProjectVisual }
   keyPages: ProjectVisual[]
@@ -72,7 +66,7 @@ export type WebWork = {
 
 export type AppsWork = {
   type: 'apps'
-  title: 'Product screens'
+  title: string
   heroScreen: ProjectVisual
   keyScreens: ProjectVisual[]
   userFlow: { step: string }[]

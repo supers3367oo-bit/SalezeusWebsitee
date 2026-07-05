@@ -1,5 +1,8 @@
 import type { InsightArticle } from '../types/insights'
 import { SHOWCASE_ARTICLE } from './showcaseArticle'
+import type { Locale } from '../i18n/types'
+import { pickLocale } from '../i18n/pickLocale'
+import { INSIGHT_ARTICLES_AR } from './localized/insights.ar'
 
 export const INSIGHT_IMAGES = {
   brandSystem: '/images/insights/cover-brand-system.svg',
@@ -489,24 +492,31 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
   },
 ]
 
-export function getFeaturedArticle(): InsightArticle {
-  return INSIGHT_ARTICLES.find((a) => a.featured) ?? INSIGHT_ARTICLES[0]
+function getInsightArticles(locale: Locale = 'en'): InsightArticle[] {
+  return pickLocale(locale, INSIGHT_ARTICLES, INSIGHT_ARTICLES_AR)
 }
 
-export function getArticleBySlug(slug: string): InsightArticle | undefined {
-  return INSIGHT_ARTICLES.find((a) => a.slug === slug)
+export { getInsightArticles }
+
+export function getFeaturedArticle(locale: Locale = 'en'): InsightArticle {
+  const articles = getInsightArticles(locale)
+  return articles.find((a) => a.featured) ?? articles[0]
 }
 
-export function getRelatedArticles(article: InsightArticle, limit = 3): InsightArticle[] {
-  return INSIGHT_ARTICLES.filter(
+export function getArticleBySlug(slug: string, locale: Locale = 'en'): InsightArticle | undefined {
+  return getInsightArticles(locale).find((a) => a.slug === slug)
+}
+
+export function getRelatedArticles(article: InsightArticle, limit = 3, locale: Locale = 'en'): InsightArticle[] {
+  return getInsightArticles(locale).filter(
     (a) =>
       a.slug !== article.slug &&
       (a.service === article.service || a.industry === article.industry)
   ).slice(0, limit)
 }
 
-export function getArticlesForHome(limit = 3): InsightArticle[] {
-  return INSIGHT_ARTICLES.slice(0, limit)
+export function getArticlesForHome(limit = 3, locale: Locale = 'en'): InsightArticle[] {
+  return getInsightArticles(locale).slice(0, limit)
 }
 
 export function extractHeadings(
@@ -517,8 +527,8 @@ export function extractHeadings(
     .map((block) => ({ id: block.id, text: block.text, level: block.level }))
 }
 
-export function formatArticleDate(iso: string): string {
-  return new Intl.DateTimeFormat('en-US', {
+export function formatArticleDate(iso: string, locale: Locale = 'en'): string {
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

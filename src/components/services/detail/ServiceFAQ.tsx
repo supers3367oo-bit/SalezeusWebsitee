@@ -3,6 +3,7 @@ import { Plus, Minus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '../../ui/Button'
 import type { ServiceFAQ } from '../../../types/services'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   faqs: ServiceFAQ[]
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
+  const { t } = useLocale()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
@@ -27,16 +29,16 @@ export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
                 letterSpacing: '-0.02em',
               }}
             >
-              Questions about {serviceTitle.toLowerCase()}
+              {t('serviceDetail.questionsAbout').replace('{service}', serviceTitle.toLowerCase())}
             </h2>
             <p
               className="text-sz-secondary mb-8"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
             >
-              Straight answers before you reach out. Still unsure? We respond within one business day.
+              {t('serviceDetail.faqSummary')}
             </p>
             <Button to="/contact" size="sm">
-              Contact us
+              {t('serviceDetail.contactUs')}
             </Button>
           </div>
 

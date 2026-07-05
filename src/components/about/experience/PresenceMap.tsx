@@ -1,10 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import clsx from 'clsx'
 import gsap from 'gsap'
 import { useReducedMotion } from 'framer-motion'
-import { REGIONS, type RegionMarker } from './globe/locations'
+import type { RegionMarker } from './globe/locations'
+import { useLocale } from '../../../providers/LocaleProvider'
+import { getGlobeLocations } from '../../../data/localized'
 
-const MAP_IMAGE = '/images/about/world-map-presence.png'
+const MAP_IMAGE = '/images/about/map.svg'
+const MAP_ASPECT_RATIO = 14078 / 3541
 
 const PIN_GOLD = '#F0B80D'
 const PIN_GOLD_SOFT = 'rgba(240, 184, 13, 0.45)'
@@ -97,13 +100,14 @@ function GlowingPin({ reduce }: { reduce: boolean }) {
 
 function LocationMarker({ region, reduce }: { region: RegionMarker; reduce: boolean }) {
   const isTopLeft = region.cardPlacement === 'top-left'
+  const position = region.mapPosition
 
   return (
     <div
       className="absolute z-20"
       style={{
-        left: `${region.mapPosition.x}%`,
-        top: `${region.mapPosition.y}%`,
+        left: `${position.x}%`,
+        top: `${position.y}%`,
       }}
     >
       <div className="relative -translate-x-1/2 -translate-y-1/2">
@@ -133,6 +137,8 @@ type PresenceMapProps = {
 }
 
 export default function PresenceMap({ className = '' }: PresenceMapProps) {
+  const { locale, t } = useLocale()
+  const regions = useMemo(() => getGlobeLocations(locale), [locale])
   const reduceMotion = useReducedMotion()
   const reduce = reduceMotion ?? false
 
@@ -140,19 +146,19 @@ export default function PresenceMap({ className = '' }: PresenceMapProps) {
     <div className={`relative w-full ${className}`}>
       <div
         className="relative w-full"
-        style={{ aspectRatio: '1024 / 257' }}
+        style={{ aspectRatio: `${MAP_ASPECT_RATIO}` }}
       >
         <img
           src={MAP_IMAGE}
-          alt=""
-          className="presence-map__image absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
+          alt={t('experience.map.alt')}
+          className="presence-map__image absolute inset-0 w-full h-full object-contain object-[50%_58%] pointer-events-none select-none"
           draggable={false}
         />
 
         <div className="presence-map__fade presence-map__fade--top" aria-hidden />
         <div className="presence-map__fade presence-map__fade--bottom" aria-hidden />
 
-        {REGIONS.map((region) => (
+        {regions.map((region) => (
           <LocationMarker key={region.id} region={region} reduce={reduce} />
         ))}
       </div>

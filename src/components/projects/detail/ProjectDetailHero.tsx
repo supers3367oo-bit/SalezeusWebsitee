@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectDetail } from '../../../types/projectDetail'
 import { revealProps } from './shared'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   project: ProjectDetail
 }
 
 export default function ProjectDetailHero({ project }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -18,7 +20,7 @@ export default function ProjectDetailHero({ project }: Props) {
           className="inline-flex items-center text-sz-secondary hover:text-sz-dark text-sm mb-8 transition-colors"
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          ← Portfolio
+          {t('projectDetail.backToPortfolio')}
         </Link>
 
         <motion.div {...revealProps(reduce)}>

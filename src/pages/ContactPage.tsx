@@ -7,8 +7,10 @@ import ContactLocation from '../components/contact/ContactLocation'
 import ContactPhones from '../components/contact/ContactPhones'
 import { CONTACT_EMAIL } from '../data/contact'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function ContactPage() {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   useLayoutEffect(() => {
@@ -38,15 +40,14 @@ export default function ContactPage() {
                   letterSpacing: '-0.025em',
                 }}
               >
-                <SplitText text="Let's start a conversation." wrap stagger={0.08} duration={0.7} />
+                <SplitText text={t('contact.title')} wrap stagger={0.08} duration={0.7} />
               </h1>
 
               <p
                 className="text-white/45 max-w-md mb-8"
                 style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.75 }}
               >
-                Tell us what you are building, or how you would like to work with Salezeus. We
-                respond within one business day.
+                {t('contact.intro')}
               </p>
 
               <div className="mb-8 space-y-8 lg:mb-0">
@@ -55,7 +56,7 @@ export default function ContactPage() {
                     className="text-white/30 text-xs mb-2 uppercase tracking-[0.12em]"
                     style={{ fontFamily: 'var(--font-body)' }}
                   >
-                    Email
+                    {t('contact.email')}
                   </p>
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
@@ -73,15 +74,20 @@ export default function ContactPage() {
                 />
 
                 <div className="space-y-3 text-sm text-white/40 lg:pt-2" style={{ fontFamily: 'var(--font-body)' }}>
-                  <p>Service requests and project inquiries welcome.</p>
-                  <p>Talent applications reviewed on a rolling basis.</p>
+                  <p>{t('contact.serviceNote')}</p>
+                  <p>{t('contact.talentNote')}</p>
                 </div>
               </div>
             </motion.div>
 
-            <div className="lg:col-span-7 min-w-0">
+            <motion.div
+              className="lg:col-span-7 min-w-0"
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
               <ContactForm />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

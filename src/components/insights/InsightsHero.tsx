@@ -1,18 +1,26 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import SplitText from '../ui/SplitText'
 import ScrollReveal from '../ui/ScrollReveal'
 import Button from '../ui/Button'
-import { INSIGHT_ARTICLES } from '../../data/insights'
+import { getInsightArticles } from '../../data/insights'
 import { refreshLocomotiveScroll } from '../../lib/locomotive'
-
-const COLLAGE = INSIGHT_ARTICLES.slice(0, 3).map((a) => ({
-  src: a.cardImage ?? a.coverImage,
-  alt: a.title,
-}))
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function InsightsHero() {
+  const { locale, t } = useLocale()
   const reduce = useReducedMotion() ?? false
+
+  const collage = useMemo(
+    () =>
+      getInsightArticles(locale)
+        .slice(0, 3)
+        .map((article) => ({
+          src: article.cardImage ?? article.coverImage,
+          alt: article.title,
+        })),
+    [locale]
+  )
 
   useLayoutEffect(() => {
     requestAnimationFrame(() => refreshLocomotiveScroll())
@@ -28,7 +36,7 @@ export default function InsightsHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="label-tag mb-4 block">Insights</span>
+            <span className="label-tag mb-4 block">{t('insightsPage.label')}</span>
 
             <h1
               className="text-sz-dark mb-5 max-w-full"
@@ -41,7 +49,7 @@ export default function InsightsHero() {
               }}
             >
               <SplitText
-                text="Ideas worth building on."
+                text={t('insightsPage.title')}
                 repeat
                 wrap
                 stagger={0.1}
@@ -57,13 +65,12 @@ export default function InsightsHero() {
               scrollStart="top bottom"
               scrollEnd="top center+=10%"
             >
-              Strategy, design, and growth thinking from the Salezeus team. Written for leaders who
-              care about craft and commercial impact.
+              {t('insightsPage.subtitle')}
             </ScrollReveal>
 
             <div className="flex flex-wrap gap-3">
               <Button href="#insights-articles" size="sm">
-                Browse articles
+                {t('insightsPage.browseArticles')}
               </Button>
             </div>
           </motion.div>
@@ -77,8 +84,8 @@ export default function InsightsHero() {
             <div className="grid grid-cols-12 gap-3 lg:gap-4">
               <div className="col-span-7 overflow-card border border-sz-border bg-white shadow-sm">
                 <img
-                  src={COLLAGE[0].src}
-                  alt={COLLAGE[0].alt}
+                  src={collage[0]?.src}
+                  alt={collage[0]?.alt ?? ''}
                   className="w-full aspect-[4/5] object-cover"
                   loading="eager"
                 />
@@ -86,16 +93,16 @@ export default function InsightsHero() {
               <div className="col-span-5 flex flex-col gap-3 lg:gap-4">
                 <div className="overflow-card border border-sz-border bg-white shadow-sm flex-1">
                   <img
-                    src={COLLAGE[1].src}
-                    alt={COLLAGE[1].alt}
+                    src={collage[1]?.src}
+                    alt={collage[1]?.alt ?? ''}
                     className="w-full h-full min-h-[120px] object-cover aspect-square"
                     loading="eager"
                   />
                 </div>
                 <div className="overflow-card border border-sz-border bg-white shadow-sm">
                   <img
-                    src={COLLAGE[2].src}
-                    alt={COLLAGE[2].alt}
+                    src={collage[2]?.src}
+                    alt={collage[2]?.alt ?? ''}
                     className="w-full aspect-[5/4] object-cover"
                     loading="lazy"
                   />

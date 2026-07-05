@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import SplitText from '../ui/SplitText'
 import Button from '../ui/Button'
 import { getArticlesForHome, formatArticleDate } from '../../data/insights'
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function LatestInsights() {
-  const articles = getArticlesForHome(3)
+  const { locale, t } = useLocale()
+  const articles = useMemo(() => getArticlesForHome(3, locale), [locale])
 
   return (
     <section className="section-surface section-padding" id="insights">
@@ -13,10 +16,10 @@ export default function LatestInsights() {
 
         <div className="section-header section-header-row">
           <div>
-            <span className="label-tag mb-3 block">Latest Insights</span>
+            <span className="label-tag mb-3 block">{t('insights.title')}</span>
             <h2 className="heading-lg text-sz-dark whitespace-nowrap">
               <SplitText
-                text="From Our Blog"
+                text={t('insights.label')}
                 repeat
                 stagger={0.14}
                 duration={1.2}
@@ -24,7 +27,7 @@ export default function LatestInsights() {
             </h2>
           </div>
           <Button to="/insights" size="sm" className="hidden lg:inline-flex">
-            View All Articles
+            {t('insights.viewAllArticles')}
           </Button>
         </div>
 
@@ -60,7 +63,7 @@ export default function LatestInsights() {
                       lineHeight: 1.4,
                     }}
                   >
-                    {formatArticleDate(article.publishedAt)}
+                    {formatArticleDate(article.publishedAt, locale)}
                   </time>
 
                   <h3
@@ -83,7 +86,7 @@ export default function LatestInsights() {
 
         <div className="mt-8 lg:hidden text-center">
           <Button to="/insights" size="sm">
-            View All Articles
+            {t('insights.viewAllArticles')}
           </Button>
         </div>
 

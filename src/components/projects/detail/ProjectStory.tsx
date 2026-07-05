@@ -1,25 +1,26 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectDetail } from '../../../types/projectDetail'
 import { revealProps } from './shared'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   project: ProjectDetail
 }
 
-const STORY_BLOCKS = [
-  { key: 'challenge', title: 'Challenge' },
-  { key: 'approach', title: 'Approach' },
-  { key: 'result', title: 'Result' },
-] as const
-
 export default function ProjectStory({ project }: Props) {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
+  const storyBlocks = [
+    { key: 'challenge', title: t('projectDetail.story.challenge') },
+    { key: 'approach', title: t('projectDetail.story.approach') },
+    { key: 'result', title: t('projectDetail.story.result') },
+  ] as const
 
   return (
     <section className="section-surface section-padding border-t border-sz-border/60">
       <div className="section-container">
         <div className="max-w-[65ch] space-y-10 lg:space-y-12">
-          {STORY_BLOCKS.map((block, i) => (
+          {storyBlocks.map((block, i) => (
             <motion.div key={block.key} {...revealProps(reduce, i * 0.06)}>
               <h2
                 className="text-sz-dark mb-3"

@@ -7,10 +7,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Familjen Grotesk"', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
-        mono: ['"Martian Mono"', 'monospace'],
-        display: ['Anton', 'sans-serif'],
+        heading: ['var(--font-heading)', 'sans-serif'],
+        body: ['var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+        display: ['var(--font-display)', 'sans-serif'],
+        arabic: ['var(--font-arabic)', 'sans-serif'],
       },
       colors: {
         sz: {

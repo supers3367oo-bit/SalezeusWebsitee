@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import type { ProjectVisual } from '../../../types/projectDetail'
 import { useProjectGallery } from './ProjectGalleryContext'
 import './ProjectBehanceGallery.css'
+import { useLocale } from '../../../providers/LocaleProvider'
 
 type Props = {
   images: ProjectVisual[]
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export default function ProjectBehanceGallery({ images, projectTitle }: Props) {
+  const { t } = useLocale()
   const gallery = useProjectGallery()
   const slideRefs = useRef<(HTMLDivElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
@@ -50,14 +52,14 @@ export default function ProjectBehanceGallery({ images, projectTitle }: Props) {
     return (
       <section className="bg-white py-24 text-center">
         <p className="text-sz-secondary" style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}>
-          Gallery images coming soon.
+          {t('projectDetail.galleryComingSoon')}
         </p>
       </section>
     )
   }
 
   return (
-    <section className="project-behance-gallery bg-white" aria-label={`${projectTitle} gallery`}>
+    <section className="project-behance-gallery bg-white" aria-label={`${projectTitle} ${t('projectDetail.gallery')}`}>
       <div className="project-behance-gallery__track">
         {images.map((visual, index) => (
           <div
@@ -75,7 +77,7 @@ export default function ProjectBehanceGallery({ images, projectTitle }: Props) {
                 'project-behance-gallery__frame',
                 gallery && 'cursor-zoom-in'
               )}
-              aria-label={gallery ? `View larger: ${visual.alt}` : visual.alt}
+              aria-label={gallery ? `${t('projectDetail.viewLarger')}: ${visual.alt}` : visual.alt}
             >
               <img
                 src={visual.src}
@@ -92,7 +94,7 @@ export default function ProjectBehanceGallery({ images, projectTitle }: Props) {
       {images.length > 1 && (
         <nav
           className="project-behance-gallery__nav hidden lg:flex"
-          aria-label="Gallery position"
+          aria-label={t('projectDetail.galleryPosition')}
         >
           {images.map((visual, index) => (
             <button
@@ -105,7 +107,7 @@ export default function ProjectBehanceGallery({ images, projectTitle }: Props) {
               onClick={() => {
                 slideRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
               }}
-              aria-label={`Go to image ${index + 1}`}
+              aria-label={`${t('projectDetail.goToImage')} ${index + 1}`}
               aria-current={activeIndex === index ? 'true' : undefined}
             />
           ))}

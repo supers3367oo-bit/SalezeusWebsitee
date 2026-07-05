@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, ReactNode, RefObject } from 'react';
+import React, { useEffect, useMemo, useRef, ReactNode, RefObject, Fragment } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,6 +14,11 @@ interface ScrollFloatProps {
   scrollStart?: string;
   scrollEnd?: string;
   stagger?: number;
+  splitBy?: 'char' | 'word';
+}
+
+function hasArabicScript(text: string) {
+  return /[\u0600-\u06FF]/.test(text);
 }
 
 const ScrollFloat: React.FC<ScrollFloatProps> = ({
@@ -25,12 +30,33 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
   ease = 'back.inOut(2)',
   scrollStart = 'center bottom+=50%',
   scrollEnd = 'bottom bottom-=40%',
-  stagger = 0.03
+  stagger = 0.03,
+  splitBy,
 }) => {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
   const splitText = useMemo(() => {
     const text = typeof children === 'string' ? children : '';
+    const mode = splitBy ?? (hasArabicScript(text) ? 'word' : 'char');
+
+    if (mode === 'word') {
+      const words = text.split(' ').filter(Boolean);
+      const lastIndex = words.length - 1;
+
+      return words.map((word, index) => (
+        <Fragment key={`${word}-${index}`}>
+          <span
+            className={`inline-block overflow-hidden align-bottom pb-[0.15em] -mb-[0.15em] ${
+              index === lastIndex ? 'pe-[0.1em]' : ''
+            }`}
+          >
+            <span className="scroll-float-char inline-block">{word}</span>
+          </span>
+          {index < lastIndex && <span className="inline-block w-[0.28em]" aria-hidden>{'\u00A0'}</span>}
+        </Fragment>
+      ));
+    }
+
     const lastIndex = text.length - 1;
 
     return text.split('').map((char, index) => {
@@ -53,17 +79,16 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
         </span>
       )
     });
-  }, [children]);
+  }, [children, splitBy]);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
-
     const charElements = el.querySelectorAll('.scroll-float-char');
 
-    gsap.fromTo(
+    const tween = gsap.fromTo(
       charElements,
       {
         willChange: 'opacity, transform',
@@ -86,11 +111,16 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
           scroller,
           start: scrollStart,
           end: scrollEnd,
-          scrub: true
+          toggleActions: 'play none none reverse',
         }
       }
     );
-  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, children]);
 
   return (
     <h2 ref={containerRef} className={`my-5 overflow-hidden pe-[0.06em] ${containerClassName}`}>

@@ -1,13 +1,14 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import SplitText from '../ui/SplitText'
 import ScrollReveal from '../ui/ScrollReveal'
 import { getAllProjects } from '../../data/projectDetails'
 import { refreshLocomotiveScroll } from '../../lib/locomotive'
-
-const PROJECT_COUNT = getAllProjects().length
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function PortfolioHero() {
+  const { locale, t } = useLocale()
+  const projectCount = useMemo(() => getAllProjects(locale).length, [locale])
   const reduce = useReducedMotion() ?? false
 
   useLayoutEffect(() => {
@@ -23,7 +24,7 @@ export default function PortfolioHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="label-tag mb-4 block">Portfolio</span>
+          <span className="label-tag mb-4 block">{t('portfolio.label')}</span>
 
           <h1
             className="text-sz-dark mb-5"
@@ -35,7 +36,7 @@ export default function PortfolioHero() {
               letterSpacing: '-0.03em',
             }}
           >
-            <SplitText text="Work that moves brands forward." repeat wrap stagger={0.1} duration={1} />
+            <SplitText text={t('portfolioPage.title')} repeat wrap stagger={0.1} duration={1} />
           </h1>
 
           <ScrollReveal
@@ -46,7 +47,7 @@ export default function PortfolioHero() {
             scrollStart="top bottom"
             scrollEnd="top center+=10%"
           >
-            {`${PROJECT_COUNT} projects across branding, marketing, digital, and strategy — filter by service or field to explore what fits your challenge.`}
+            {t('portfolioPage.subtitle').replace('{count}', String(projectCount))}
           </ScrollReveal>
         </motion.div>
       </div>

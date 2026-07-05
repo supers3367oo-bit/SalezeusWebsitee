@@ -1,8 +1,10 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Button from '../ui/Button'
 import ScrollReveal from '../ui/ScrollReveal'
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function ArticleEndCTA() {
+  const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
 
   return (
@@ -25,7 +27,7 @@ export default function ArticleEndCTA() {
               lineHeight: 1.15,
             }}
           >
-            Keep exploring, or start a conversation.
+            {t('insightsPage.articleEndTitle')}
           </h2>
 
           <ScrollReveal
@@ -34,16 +36,15 @@ export default function ArticleEndCTA() {
             blurStrength={3}
             baseOpacity={0.12}
           >
-            More perspectives on brand, product, and growth. When you are ready to apply them, we are
-            here.
+            {t('insightsPage.articleEndSubtitle')}
           </ScrollReveal>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button to="/insights" size="sm">
-              More insights
+              {t('insightsPage.moreInsights')}
             </Button>
             <Button to="/#contact" size="sm">
-              Start a conversation
+              {t('insightsPage.startConversation')}
             </Button>
           </div>
         </motion.div>

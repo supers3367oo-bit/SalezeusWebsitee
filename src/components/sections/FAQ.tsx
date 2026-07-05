@@ -1,37 +1,23 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Plus, Minus } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '../ui/Button'
+import { useLocale } from '../../providers/LocaleProvider'
 
-const FAQS = [
-  {
-    q: 'What industries do you work with?',
-    a: 'We work across a broad range of industries including technology, retail, F&B, real estate, healthcare, education, and professional services. Our methodology is industry-agnostic — what matters most is your ambition to grow.',
-  },
-  {
-    q: 'How long does a typical project take?',
-    a: 'Project timelines vary by scope. A brand identity project typically takes 4–6 weeks. A website takes 6–10 weeks. A full brand + marketing launch can span 8–16 weeks. We\'ll give you a precise timeline after our discovery session.',
-  },
-  {
-    q: 'Do you work with international clients?',
-    a: 'Yes. While we\'re headquartered with operations in Turkey and Syria, we work with clients remotely across the MENA region and beyond. Our workflows are built for distributed collaboration.',
-  },
-  {
-    q: 'What is your pricing model?',
-    a: 'We offer project-based pricing for defined scopes and retainer models for ongoing partnerships. We don\'t have one-size-fits-all pricing — every proposal is tailored to your specific needs and goals.',
-  },
-  {
-    q: 'Can you handle both brand strategy and execution?',
-    a: 'Absolutely — that\'s our core strength. We bridge the gap between strategic thinking and creative execution, providing end-to-end coverage so you don\'t need to manage multiple agencies.',
-  },
-  {
-    q: 'Do you offer ongoing support after project launch?',
-    a: 'Yes. We offer post-launch maintenance, monitoring, and growth retainers. Many of our clients transition from project engagements to long-term partnerships after seeing initial results.',
-  },
-]
+const FAQ_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'] as const
 
 export default function FAQ() {
+  const { t } = useLocale()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+
+  const faqs = useMemo(
+    () =>
+      FAQ_KEYS.map((key) => ({
+        q: t(`faq.items.${key}.q`),
+        a: t(`faq.items.${key}.a`),
+      })),
+    [t]
+  )
 
   return (
     <section className="section-surface section-padding" id="faq">
@@ -39,32 +25,30 @@ export default function FAQ() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20">
 
-          {/* Left: Header */}
           <div className="lg:col-span-2">
-            <span className="label-tag mb-3 block">FAQ</span>
+            <span className="label-tag mb-3 block">{t('faq.label')}</span>
             <h2 className="heading-lg text-sz-dark mb-5">
-              Common<br />Questions
+              {t('faq.titleLine1')}<br />{t('faq.titleLine2')}
             </h2>
             <p
               className="text-sz-secondary mb-8"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
             >
-              Can't find what you're looking for? Reach out directly and we'll respond within one business day.
+              {t('faq.subtitle')}
             </p>
             <Button href="#contact">
-              Ask Us Anything
+              {t('faq.cta')}
             </Button>
           </div>
 
-          {/* Right: Accordion */}
           <div className="lg:col-span-3 space-y-0 divide-y divide-sz-border">
-            {FAQS.map((faq, i) => {
+            {faqs.map((faq, i) => {
               const isOpen = openIndex === i
               return (
-                <div key={i}>
+                <div key={FAQ_KEYS[i]}>
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : i)}
-                    className="w-full flex items-start justify-between gap-4 py-5 text-left group"
+                    className="w-full flex items-start justify-between gap-4 py-5 text-start group"
                   >
                     <span
                       className="font-medium text-sz-dark group-hover:text-sz-interaction transition-colors duration-200"
@@ -93,7 +77,7 @@ export default function FAQ() {
                         style={{ overflow: 'hidden' }}
                       >
                         <p
-                          className="text-sz-secondary pb-5 pr-10"
+                          className="text-sz-secondary pb-5 pe-10"
                           style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.7 }}
                         >
                           {faq.a}

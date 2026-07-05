@@ -5,6 +5,7 @@ import { getLocomotiveInstance, refreshLocomotiveScroll } from '../../lib/locomo
 import Button from '../ui/Button'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLocale } from '../../providers/LocaleProvider'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -36,12 +37,14 @@ function ArchiveCard({
   side,
   compact = false,
   mobileWide = false,
+  viewWorkLabel,
 }: {
   c: CaseData
   index: number
   side: 'left' | 'right'
   compact?: boolean
   mobileWide?: boolean
+  viewWorkLabel: string
 }) {
   if (mobileWide) {
     return (
@@ -73,7 +76,7 @@ function ArchiveCard({
             className="inline-flex shrink-0 items-center gap-1 text-xs text-sz-primary group-hover:text-sz-interaction transition-colors"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            View work
+            {viewWorkLabel}
             <ArrowUpRight size={13} />
           </span>
         </div>
@@ -91,7 +94,7 @@ function ArchiveCard({
           loading="lazy"
         />
       </div>
-        <div className={`mt-4 flex items-end justify-between gap-3 ${side === 'right' ? 'flex-row-reverse text-right' : ''}`}>
+        <div className={`mt-4 flex items-end justify-between gap-3 ${side === 'right' ? 'flex-row-reverse text-end' : 'text-start'}`}>
         <div>
           <p className="text-sz-dark font-medium" style={{ fontFamily: 'var(--font-heading)', fontSize: 15 }}>
             {c.client}
@@ -104,7 +107,7 @@ function ArchiveCard({
           className={`inline-flex items-center gap-1 text-xs text-sz-primary group-hover:text-sz-interaction transition-colors ${side === 'right' ? 'flex-row-reverse' : ''}`}
           style={{ fontFamily: 'var(--font-body)' }}
         >
-          View work
+          {viewWorkLabel}
           <ArrowUpRight size={13} />
         </span>
       </div>
@@ -124,19 +127,22 @@ function useScrollGalleryEnabled() {
 }
 
 function SectionCTAs({ className = '' }: { className?: string }) {
+  const { t } = useLocale()
   return (
     <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 ${className}`}>
       <Button to="/#contact" size="sm">
-        Let&apos;s Work Together
+        {t('featuredSuccess.ctaWorkTogether')}
       </Button>
       <Button to="/portfolio" size="sm">
-        Explore Our Work
+        {t('featuredSuccess.ctaExploreWork')}
       </Button>
     </div>
   )
 }
 
 export default function FeaturedSuccess() {
+  const { t, dir } = useLocale()
+  const isRtl = dir === 'rtl'
   const [active, setActive] = useState(0)
   const total = CASES.length
   const galleryEnabled = useScrollGalleryEnabled()
@@ -230,13 +236,15 @@ export default function FeaturedSuccess() {
   }, [galleryEnabled, total])
 
   const prev = () => {
-    const nextIndex = (active - 1 + total) % total
+    const step = isRtl ? 1 : -1
+    const nextIndex = (active + step + total) % total
     setActive(nextIndex)
     if (galleryEnabled) scrollToIndex(nextIndex)
   }
 
   const next = () => {
-    const nextIndex = (active + 1) % total
+    const step = isRtl ? -1 : 1
+    const nextIndex = (active + step + total) % total
     setActive(nextIndex)
     if (galleryEnabled) scrollToIndex(nextIndex)
   }
@@ -251,7 +259,7 @@ export default function FeaturedSuccess() {
       ref={sectionRef}
       className="section-surface relative"
       id="success"
-      aria-label="Featured client success stories"
+      aria-label={t('featured.aria')}
     >
       <div
         ref={pinRef}
@@ -260,7 +268,7 @@ export default function FeaturedSuccess() {
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none px-[min(30vw,280px)]">
           <div className="text-center max-w-md">
             <p className="label-tag mb-4 block" style={{ letterSpacing: '0.2em' }}>
-              Case Studies
+              {t('featuredSuccess.caseStudies')}
             </p>
             <h2
               className="text-sz-dark uppercase leading-[1.08] tracking-[-0.02em]"
@@ -270,33 +278,33 @@ export default function FeaturedSuccess() {
                 fontWeight: 600,
               }}
             >
-              Archive of the
+              {t('featuredSuccess.archiveLine1')}
               <br />
-              Selected Works
+              {t('featuredSuccess.archiveLine2')}
               <br />
-              <span className="text-sz-primary/60">by Salezeus</span>
+              <span className="text-sz-primary/60">{t('featuredSuccess.archiveByline')}</span>
             </h2>
             <p
               className="mt-5 text-sz-secondary text-sm max-w-md mx-auto"
               style={{ fontFamily: 'var(--font-body)', lineHeight: 1.7 }}
             >
-              Where brand stories take visual form
+              {t('featuredSuccess.archiveSubtitle')}
             </p>
             <SectionCTAs className="mt-8 pointer-events-auto" />
           </div>
         </div>
 
-        <div className="absolute top-8 right-8 z-30 flex gap-2">
+        <div className="absolute top-8 end-8 z-30 flex gap-2">
           <button
             onClick={prev}
-            aria-label="Previous project"
+            aria-label={t('featuredSuccess.previousProject')}
             className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
           >
             <ChevronLeft size={16} />
           </button>
           <button
             onClick={next}
-            aria-label="Next project"
+            aria-label={t('featuredSuccess.nextProject')}
             className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
           >
             <ChevronRight size={16} />
@@ -312,11 +320,11 @@ export default function FeaturedSuccess() {
                 cardRefs.current[i] = el
               }}
               className={`absolute top-1/2 will-change-transform ${
-                side === 'left' ? 'left-[8%]' : 'right-[8%]'
+                side === 'left' ? 'start-[8%]' : 'end-[8%]'
               }`}
               style={{ zIndex: 10 + i }}
             >
-              <ArchiveCard c={caseData} index={i} side={side} compact />
+              <ArchiveCard c={caseData} index={i} side={side} compact viewWorkLabel={t('featuredSuccess.viewWork')} />
             </div>
           )
         })}
@@ -325,7 +333,7 @@ export default function FeaturedSuccess() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 pointer-events-none"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
-          <span className="text-[10px] uppercase tracking-[0.22em] text-sz-secondary">Scroll</span>
+          <span className="text-[10px] uppercase tracking-[0.22em] text-sz-secondary">{t('featuredSuccess.scroll')}</span>
           <span className="w-px h-8 bg-gradient-to-b from-sz-secondary/50 to-transparent" />
         </div>
       </div>
@@ -334,20 +342,20 @@ export default function FeaturedSuccess() {
         <div className="hidden lg:block section-padding">
           <div className="section-container">
             <div className="text-center section-header">
-              <span className="label-tag mb-3 block">Case Studies</span>
-              <h2 className="heading-lg text-sz-dark">Archive of the Selected Works</h2>
+              <span className="label-tag mb-3 block">{t('featuredSuccess.caseStudies')}</span>
+              <h2 className="heading-lg text-sz-dark">{t('featuredSuccess.archiveHeading')}</h2>
               <p
                 className="mx-auto mt-4 max-w-md text-sz-secondary"
                 style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
               >
-                Where brand stories take visual form
+                {t('featuredSuccess.archiveSubtitle')}
               </p>
               <SectionCTAs className="mt-8" />
             </div>
             <div className="space-y-16 max-w-lg mx-auto">
               {CASES.map((caseData, i) => (
-                <div key={caseData.client} className={i % 2 === 1 ? 'ml-auto' : ''}>
-                  <ArchiveCard c={caseData} index={i} side={i % 2 === 0 ? 'left' : 'right'} />
+                <div key={caseData.client} className={i % 2 === 1 ? 'ms-auto' : ''}>
+                  <ArchiveCard c={caseData} index={i} side={i % 2 === 0 ? 'left' : 'right'} viewWorkLabel={t('featuredSuccess.viewWork')} />
                 </div>
               ))}
             </div>
@@ -358,17 +366,17 @@ export default function FeaturedSuccess() {
       <div className="lg:hidden section-padding">
         <div className="section-container">
           <div className="text-center section-header">
-            <span className="label-tag mb-3 block">Case Studies</span>
+            <span className="label-tag mb-3 block">{t('featuredSuccess.caseStudies')}</span>
             <h2 className="heading-lg text-sz-dark">
-              Archive of the
+              {t('featuredSuccess.archiveLine1')}
               <br />
-              Selected Works
+              {t('featuredSuccess.archiveLine2')}
             </h2>
             <p
               className="mx-auto mt-4 max-w-md text-sz-secondary"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
             >
-              Where brand stories take visual form
+              {t('featuredSuccess.archiveSubtitle')}
             </p>
             <SectionCTAs className="mt-8" />
           </div>
@@ -381,6 +389,7 @@ export default function FeaturedSuccess() {
                 index={i}
                 side={i % 2 === 0 ? 'left' : 'right'}
                 mobileWide
+                viewWorkLabel={t('featuredSuccess.viewWork')}
               />
             ))}
           </div>
@@ -393,7 +402,7 @@ export default function FeaturedSuccess() {
             <button
               key={i}
               onClick={() => goTo(i)}
-              aria-label={`Go to project ${i + 1}`}
+              aria-label={`${t('featuredSuccess.goToProject')} ${i + 1}`}
               style={{
                 width: i === active ? 24 : 7,
                 height: 7,

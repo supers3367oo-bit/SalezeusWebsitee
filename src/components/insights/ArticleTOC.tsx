@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { getLocomotiveInstance } from '../../lib/locomotive'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type TocItem = {
   id: string
@@ -13,6 +14,7 @@ type ArticleTOCProps = {
 }
 
 export default function ArticleTOC({ items }: ArticleTOCProps) {
+  const { t } = useLocale()
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? '')
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function ArticleTOC({ items }: ArticleTOCProps) {
   if (items.length === 0) return null
 
   return (
-    <nav aria-label="Table of contents">
+    <nav aria-label={t('insightsPage.tableOfContents')}>
       <p
         className="text-sz-primary/40 mb-4"
         style={{
@@ -57,7 +59,7 @@ export default function ArticleTOC({ items }: ArticleTOCProps) {
           textTransform: 'uppercase',
         }}
       >
-        On this page
+        {t('insightsPage.onThisPage')}
       </p>
       <ul className="space-y-2 border-l border-sz-border">
         {items.map((item) => (
@@ -88,12 +90,13 @@ export default function ArticleTOC({ items }: ArticleTOCProps) {
 }
 
 export function ArticleTOCMobile({ items }: ArticleTOCProps) {
+  const { t } = useLocale()
   if (items.length === 0) return null
 
   return (
     <nav
       className="lg:hidden mb-10 pb-6 border-b border-sz-border overflow-x-auto"
-      aria-label="Table of contents"
+      aria-label={t('insightsPage.tableOfContents')}
     >
       <div className="flex gap-2 min-w-max">
         {items.map((item) => (

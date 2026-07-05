@@ -7,10 +7,18 @@ export type RegionMarker = {
   description: string
   services: string[]
   accent: 'blue' | 'gold'
-  /** Position on the arc map image (percent) */
+  /** Pin position on `/images/about/map.svg` (percent of rendered map) */
   mapPosition: { x: number; y: number }
   /** Card placement relative to pin */
   cardPlacement: 'top-left' | 'bottom-right'
+}
+
+/** Fallback lat/lng → percent (not used for map.svg — geography is non‑equirectangular in the asset). */
+export function geoToMapPercent(lat: number, lng: number) {
+  return {
+    x: ((lng + 180) / 360) * 100,
+    y: ((90 - lat) / 180) * 100,
+  }
 }
 
 export const REGIONS: RegionMarker[] = [
@@ -24,7 +32,7 @@ export const REGIONS: RegionMarker[] = [
       'Our creative headquarters and strategy hub — where brand, design, and technology converge.',
     services: ['Brand Strategy', 'UI/UX Design', 'Web Development', 'Digital Marketing'],
     accent: 'blue',
-    mapPosition: { x: 60.6, y: 60.86 },
+    mapPosition: { x: 57.6, y: 58.2 },
     cardPlacement: 'top-left',
   },
   {
@@ -37,7 +45,7 @@ export const REGIONS: RegionMarker[] = [
       'Regional studio rooted in local insight — delivering global standards across the Levant.',
     services: ['Regional Campaigns', 'Content Production', 'Social Media', 'E-commerce'],
     accent: 'gold',
-    mapPosition: { x: 60.89, y: 63.16 },
+    mapPosition: { x: 60.4, y: 63.1 },
     cardPlacement: 'bottom-right',
   },
 ]

@@ -8,11 +8,13 @@ import { ProjectGalleryProvider } from '../components/projects/detail/ProjectGal
 import { getProjectBySlug, getRelatedProjects } from '../data/projectDetails'
 import { collectProjectGalleryImages } from '../lib/collectProjectGalleryImages'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function ProjectDetailPage() {
+  const { locale, t } = useLocale()
   const { slug } = useParams<{ slug: string }>()
-  const project = slug ? getProjectBySlug(slug) : undefined
-  const related = project ? getRelatedProjects(project) : []
+  const project = slug ? getProjectBySlug(slug, locale) : undefined
+  const related = project ? getRelatedProjects(project, locale) : []
   const galleryImages = useMemo(
     () => (project ? collectProjectGalleryImages(project) : []),
     [project]
@@ -30,10 +32,10 @@ export default function ProjectDetailPage() {
             className="text-sz-dark mb-4"
             style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 600 }}
           >
-            Project not found
+            {t('errors.projectNotFound')}
           </h1>
           <Button href="/portfolio" size="sm">
-            Back to portfolio
+            {t('errors.backToPortfolio')}
           </Button>
         </div>
       </section>

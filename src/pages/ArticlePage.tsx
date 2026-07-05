@@ -14,10 +14,12 @@ import {
   getRelatedArticles,
 } from '../data/insights'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function ArticlePage() {
+  const { locale, t } = useLocale()
   const { slug } = useParams<{ slug: string }>()
-  const article = slug ? getArticleBySlug(slug) : undefined
+  const article = slug ? getArticleBySlug(slug, locale) : undefined
 
   useEffect(() => {
     requestAnimationFrame(() => refreshLocomotiveScroll())
@@ -31,10 +33,10 @@ export default function ArticlePage() {
             className="text-sz-dark mb-4"
             style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 600 }}
           >
-            Article not found
+            {t('errors.articleNotFound')}
           </h1>
           <Button to="/insights" size="sm">
-            Back to insights
+            {t('errors.backToInsights')}
           </Button>
         </div>
       </section>
@@ -42,7 +44,7 @@ export default function ArticlePage() {
   }
 
   const headings = extractHeadings(article.content)
-  const related = getRelatedArticles(article)
+  const related = getRelatedArticles(article, 3, locale)
 
   return (
     <>
