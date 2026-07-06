@@ -159,7 +159,7 @@ function SectionCTAs({ className = '' }: { className?: string }) {
 }
 
 export default function FeaturedSuccess() {
-  const { t, dir } = useLocale()
+  const { t, dir, locale } = useLocale()
   const isRtl = dir === 'rtl'
   const archiveSubtitleStyle = {
     fontFamily: 'var(--font-body)',
@@ -169,6 +169,10 @@ export default function FeaturedSuccess() {
   const [active, setActive] = useState(0)
   const total = CASES.length
   const galleryEnabled = useScrollGalleryEnabled()
+
+  useLayoutEffect(() => {
+    setActive(0)
+  }, [locale, dir])
 
   const sectionRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
@@ -256,7 +260,7 @@ export default function FeaturedSuccess() {
       scrollTriggerRef.current = null
       ctx.revert()
     }
-  }, [galleryEnabled, total])
+  }, [galleryEnabled, total, locale, dir])
 
   const prev = () => {
     const step = isRtl ? 1 : -1
@@ -343,7 +347,7 @@ export default function FeaturedSuccess() {
           const side = i % 2 === 0 ? 'left' : 'right'
           return (
             <div
-              key={caseData.client}
+              key={`${caseData.client}-${i}`}
               ref={(el) => {
                 cardRefs.current[i] = el
               }}
@@ -382,7 +386,7 @@ export default function FeaturedSuccess() {
             </div>
             <div className="space-y-16 max-w-lg mx-auto">
               {CASES.map((caseData, i) => (
-                <div key={caseData.client} className={i % 2 === 1 ? 'ms-auto' : ''}>
+                <div key={`${caseData.client}-${i}`} className={i % 2 === 1 ? 'ms-auto' : ''}>
                   <ArchiveCard c={caseData} index={i} side={i % 2 === 0 ? 'left' : 'right'} viewWorkLabel={t('featuredSuccess.viewWork')} />
                 </div>
               ))}
@@ -412,7 +416,7 @@ export default function FeaturedSuccess() {
           <div className="space-y-8">
             {CASES.map((caseData, i) => (
               <ArchiveCard
-                key={caseData.client}
+                key={`${caseData.client}-${i}`}
                 c={caseData}
                 index={i}
                 side={i % 2 === 0 ? 'left' : 'right'}

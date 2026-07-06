@@ -19,51 +19,51 @@ export type TeamMember = {
 export const TEAM: TeamMember[] = [
   {
     src: '/team/t1.png',
-    realSrc: '/team/real/t1.webp',
+    realSrc: '/team/real/tt1.png',
     name: 'Abdulkader Assani',
     role: 'Backend Developer',
     firstName: 'Abdulkader',
     heroName: 'Abdulkader',
     bio: 'Seven years building scalable, reliable backend systems.',
     aboutBio:
-      'For brands that need more than a vendor — someone who connects architecture, performance, and reliability into systems that scale with confidence.',
+      'Meet Abd Alkader, our skilled Back-End Developer. He builds secure, scalable, and high-performance server-side systems, manages databases, and ensures smooth front-end to back-end integration. With a strong focus on clean architecture and security, Abd Alkader delivers reliable solutions that support business growth and long-term client success.',
   },
   {
     src: '/team/t2.png',
     realSrc: '/team/real/t2.png',
     name: 'Heba Ghabab',
-    role: 'Marketing',
+    role: 'Marketing / Media buyer',
     firstName: 'Heba',
     heroName: 'Heba Ghabab',
     bio: 'Six years driving growth through strategic marketing campaigns.',
     aboutBio:
-      'She turns insight into momentum — building campaigns that reach the right audience, sharpen the message, and deliver measurable growth.',
+      'Meet Heba, our Media Buyer specialized in planning and managing high-performing paid advertising campaigns across Facebook, Google, TikTok, and other platforms. She focuses on budget optimization, audience targeting, campaign analysis, and delivering strong ROI through data-driven strategies and continuous performance improvement.',
   },
   {
     src: '/team/t3.png',
-    realSrc: '/team/real/tt3.png',
+    realSrc: '/team/real/t3.png',
     name: 'Muhammed Darwish',
     role: 'CEO · Graphic Designer',
     firstName: 'Muhammed',
     heroName: 'Muhammed',
     bio: 'Eight years leading brands with design and strategy.',
     aboutBio:
-      'Leading with vision and craft — connecting strategy, identity, and design into brands that stand out and grow with purpose.',
+      'Meet Mohammad, our visionary CEO. He leads the agency with a strong focus on innovation, growth, and excellence. Mohammad oversees strategic direction, builds lasting client relationships, and ensures every project delivers exceptional quality. Passionate about digital transformation, he empowers the team to create impactful solutions that drive long-term brand success.',
   },
   {
     src: '/team/t4.png',
-    realSrc: '/team/real/t4.webp',
+    realSrc: '/team/real/tt4.png',
     name: 'Aya Alkayali',
     role: 'Graphic Designer',
     firstName: 'Aya',
     heroName: 'Aya Alkayali',
     bio: 'Five years crafting distinctive visual identities for brands.',
     aboutBio:
-      'She shapes visual worlds that feel unmistakable — translating brand strategy into design systems clients remember and audiences trust.',
+      'Meet Aya, our passionate Graphic Designer. She transforms ideas into visually compelling designs that strengthen brand identity and boost audience engagement. With expertise in social media creatives, logos, branding, and marketing materials, Aya combines creativity with strategy to deliver clear, memorable, and impactful designs.',
   },
   {
     src: '/team/t5.png',
-    realSrc: '/team/real/t5.png',
+    realSrc: '/team/real/tt5.png',
     name: 'Esraa Elnajjar',
     role: 'Frontend Developer',
     firstName: 'Esraa',
@@ -71,7 +71,7 @@ export const TEAM: TeamMember[] = [
     heroNameSize: 'compact',
     bio: 'Six years building polished, high-performance web interfaces.',
     aboutBio:
-      'She builds interfaces that feel effortless — fast, polished, and precise — turning design intent into responsive experiences users enjoy.',
+      'Meet Esraa, our skilled Front-End Developer. She transforms designs into responsive, interactive, and user-friendly interfaces using clean, efficient code. Specializing in modern web experiences, Esraa ensures websites are fast, accessible, and visually consistent across all devices, delivering seamless user experiences through close collaboration with designers and back-end teams.',
   },
   {
     src: '/team/t6.png',
@@ -82,7 +82,7 @@ export const TEAM: TeamMember[] = [
     heroName: 'Haidy Tarek',
     bio: 'Five years designing bold visuals that convert audiences.',
     aboutBio:
-      'Bold, conversion-minded design is her signature — visuals that capture attention quickly and move people toward action.',
+      'Meet Haidy, our creative Graphic Designer. With a strong foundation in design principles, she transforms ideas into impactful visuals across print and digital media. Haidy specializes in logos, branding, social media content, marketing materials, and UI designs that effectively communicate messages and leave a lasting impression.',
   },
   {
     src: '/team/t7.png',
@@ -93,7 +93,7 @@ export const TEAM: TeamMember[] = [
     heroName: 'Alaa Elsayed',
     bio: 'Seven years creating content that builds loyal audiences.',
     aboutBio:
-      'Story-first content that builds loyal audiences — crafted to educate, engage, and keep brands present in the conversations that matter.',
+      'Meet Alaa, our creative Content Writer. She transforms ideas into compelling stories and strategic content that strengthen brand identity and connect with audiences. Specializing in social media, website copy, campaigns, and marketing materials, Alaa crafts engaging messages that inspire action, build trust, and deliver real value.',
   },
   {
     src: '/team/t8.png',
@@ -105,18 +105,18 @@ export const TEAM: TeamMember[] = [
     heroNameSize: 'compact',
     bio: 'Six years shaping stories that drive real engagement.',
     aboutBio:
-      'She turns ideas into narratives people follow — content with rhythm, clarity, and the kind of engagement brands can build on.',
+      'Meet Lora, our strategic Content Writer. With a deep understanding of digital trends and audience behavior, she creates compelling content that builds trust and strengthens brand connection. Lora develops engaging social media posts and content strategies that boost visibility, increase engagement, and drive long-term digital growth.',
   },
   {
     src: '/team/t9.png',
     realSrc: '/team/real/tt9.png',
-    name: 'Ibrahim Naser',
+    name: 'Ibrahim Nasser',
     role: 'SEO',
     firstName: 'Ibrahim',
     heroName: 'Ibrahim',
     bio: 'Five years ranking brands with proven SEO strategies.',
     aboutBio:
-      'Search visibility with intent behind it — structured SEO that helps brands get discovered by the audiences already looking for them.',
+      'Meet Ibrahim, our experienced SEO Expert. He helps brands boost online visibility through effective keyword research, on-page and technical SEO, content optimization, and performance analysis. Combining data-driven insights with best practices, Ibrahim drives higher rankings, qualified traffic, and sustainable organic growth.',
   },
   {
     src: '/team/t10.png',
@@ -127,7 +127,7 @@ export const TEAM: TeamMember[] = [
     heroName: 'Aya Khairbek',
     bio: 'Five years engineering robust APIs and database systems.',
     aboutBio:
-      'She engineers the backbone behind the product — reliable APIs, clean data flows, and backend systems teams can depend on.',
+      'Meet Aya, our talented Back-End Developer and Software Engineer specializing in Laravel. She builds powerful back-end systems, designs efficient databases, ensures seamless server-UI integration, and develops custom admin panels with strong security and optimal performance. Aya delivers scalable, reliable solutions for long-term client success.',
   },
   {
     src: '/team/t11.png',
@@ -138,7 +138,7 @@ export const TEAM: TeamMember[] = [
     heroName: 'Ola Masoud',
     bio: 'Six years designing intuitive experiences users truly trust.',
     aboutBio:
-      'Human-centered design is her focus — intuitive flows, thoughtful details, and experiences that make complex products feel simple.',
+      'Meet Ola, our talented UI/UX Designer with expertise in Figma. She creates intuitive, user-centered digital experiences through user research, wireframes, and high-fidelity designs that blend functionality with visual appeal. Ola collaborates with teams to build scalable design systems and delivers seamless, engaging interfaces aligned with user needs and business goals.',
   },
 ]
 

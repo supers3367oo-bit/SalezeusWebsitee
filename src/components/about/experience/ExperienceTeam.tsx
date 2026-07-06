@@ -253,16 +253,10 @@ function MemberCard({
                   {member.name}
                 </h3>
                 <p
-                  className="mt-2.5 line-clamp-3 text-sz-primary/65"
+                  className="mt-2.5 line-clamp-[7] text-sz-primary/65"
                   style={{ fontFamily: 'var(--font-body)', fontSize: 12, lineHeight: 1.7 }}
                 >
                   {member.aboutBio}
-                </p>
-                <p
-                  className="mt-2.5 border-t border-sz-primary/10 pt-2.5 text-sz-primary/40"
-                  style={{ fontFamily: 'var(--font-body)', fontSize: 11, lineHeight: 1.5 }}
-                >
-                  {member.bio}
                 </p>
               </div>
             </div>

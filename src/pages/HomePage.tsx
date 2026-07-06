@@ -9,8 +9,11 @@ import WhySalezeus from '../components/sections/WhySalezeus'
 import LatestInsights from '../components/sections/LatestInsights'
 import FAQ from '../components/sections/FAQ'
 import ClosingFuture from '../components/sections/ClosingFuture'
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function HomePage() {
+  const { locale } = useLocale()
+
   return (
     <>
       <Hero />
@@ -18,7 +21,7 @@ export default function HomePage() {
       <TrustedBy />
       <ImpactNumbers />
       <OurSolutions />
-      <FeaturedSuccess />
+      <FeaturedSuccess key={locale} />
       <PortfolioPreview />
       <WhySalezeus />
       <LatestInsights />
