@@ -33,7 +33,7 @@ export default function FloatingActions() {
         >
           <span>{t('floating.startNow')}</span>
           <span className="floating-dual-btn__icon">
-            <ArrowUpRight className="h-[15px] w-[15px] rtl:-scale-x-100" strokeWidth={2.25} />
+            <ArrowUpRight className="h-[15px] w-[15px]" strokeWidth={2.25} />
           </span>
         </Link>
       </div>

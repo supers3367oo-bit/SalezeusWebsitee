@@ -51,18 +51,32 @@ export const ar: TranslationTree = {
   },
   hero: {
     ourTeam: 'فريقنا',
-    explore: 'استكشف',
+    explore: 'خدماتنا',
   },
   trustedBy: {
     label: 'يثقون بنا',
     title: 'علامات رائدة في مختلف القطاعات تثق بسيلزيوس',
     subtitle: 'من السيارات إلى الرعاية الصحية، نتعاون مع فرق تطلب التميز.',
-    cta: 'كن شريكاً',
+    cta: 'صمّم نجاحك',
     stats: {
       clients: 'عملاء',
       industries: 'قطاعات',
     },
     hoverHint: 'مرر للاستكشاف',
+    industries: {
+      medicalTourism: 'السياحة العلاجية',
+      education: 'التعليم',
+      foodBeverage: 'الأغذية والمشروبات',
+      beauty: 'التجميل',
+      conferences: 'المؤتمرات',
+      automotive: 'السيارات',
+      technology: 'التقنية',
+      ecommerce: 'التجارة الإلكترونية',
+      fashion: 'الأزياء',
+      hospitality: 'الضيافة',
+      healthcare: 'الرعاية الصحية',
+      finance: 'المالية',
+    },
   },
   impact: {
     label: 'أثرنا',
@@ -225,6 +239,7 @@ export const ar: TranslationTree = {
     },
     team: {
       title: 'العقول وراء سيلزيوس',
+      specialistsCount: '{count} متخصصاً',
     },
     map: {
       alt: 'خريطة تواجد سيلزيوس',
@@ -240,7 +255,7 @@ export const ar: TranslationTree = {
   },
   insightsPage: {
     label: 'المقالات',
-    title: 'أفكار تستحق البناء عليها.',
+    title: 'أفكار، اتجاهات، وإلهام.',
     subtitle: 'أفكار في الاستراتيجية والتصميم والنمو من فريق سيلزيوس، موجهة لقادة يقدّرون الحرفة والأثر التجاري.',
     browseArticles: 'تصفح المقالات',
     selectedForYou: 'مختارة لك',
@@ -248,8 +263,8 @@ export const ar: TranslationTree = {
     minRead: 'دقائق قراءة',
     read: 'اقرأ',
     clear: 'مسح',
-    noArticlesTitle: 'لا توجد مقالات مطابقة',
-    noArticlesSubtitle: 'جرّب مسح الفلتر أو اختيار قطاع آخر أدناه.',
+    noArticlesTitle: 'لا يوجد مقالات',
+    noArticlesSubtitle: 'جرّب تصنيفاً آخر أو امسح الفلتر.',
     clearFilter: 'مسح الفلتر',
     relatedReading: 'مقالات ذات صلة',
     articleEndTitle: 'واصل الاستكشاف أو ابدأ محادثة.',
@@ -392,6 +407,15 @@ export const ar: TranslationTree = {
     email: 'البريد الإلكتروني',
     serviceNote: 'نرحب بطلبات الخدمة واستفسارات المشاريع.',
     talentNote: 'طلبات الانضمام للفريق تُراجع بشكل مستمر.',
+    location: {
+      title: 'مواقعنا',
+      subtitle:
+        'استوديوهات في تركيا وسوريا، نعمل مع عملاء في منطقة الشرق الأوسط وشمال أفريقيا وخارجها.',
+    },
+    offices: {
+      istanbul: 'إسطنبول',
+      syria: 'سوريا',
+    },
     form: {
       name: 'الاسم الكامل',
       email: 'البريد الإلكتروني',
@@ -403,6 +427,7 @@ export const ar: TranslationTree = {
       submit: 'إرسال الرسالة',
       submitAlt: 'إرسال الرسالة',
       phoneError: 'يرجى إدخال رقم هاتف صحيح.',
+      emailError: 'يرجى إدخال بريد إلكتروني صالح.',
       successTitle: 'تم استلام رسالتك.',
       successTitleAlt: 'تم استلام رسالتك',
       successBody: 'شكراً لتواصلك. سنعود إليك خلال يوم عمل واحد.',

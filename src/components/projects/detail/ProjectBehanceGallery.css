@@ -20,8 +20,8 @@
 
 .project-behance-gallery__frame {
   display: block;
-  width: min(88vw, 60%);
-  max-width: 60%;
+  width: 90%;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0;
   border: 0;

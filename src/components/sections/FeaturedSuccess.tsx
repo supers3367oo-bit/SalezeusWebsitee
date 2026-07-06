@@ -28,6 +28,24 @@ const CASES = [
     service: 'Brand Identity',
     image: '/images/cases/cake-station.png',
   },
+  {
+    client: 'Panda',
+    title: 'Premium Künefe',
+    service: 'Branding + Packaging',
+    image: '/images/cases/panda-kunefe.png',
+  },
+  {
+    client: 'Ark Oto',
+    title: 'Farklı Dokun',
+    service: 'Marketing Campaign',
+    image: '/images/cases/ark-oto.png',
+  },
+  {
+    client: 'Cake Station',
+    title: 'Coffee Identity',
+    service: 'Brand Identity',
+    image: '/images/cases/cake-station.png',
+  }
 ]
 
 type CaseData = (typeof CASES)[number]
@@ -143,6 +161,11 @@ function SectionCTAs({ className = '' }: { className?: string }) {
 export default function FeaturedSuccess() {
   const { t, dir } = useLocale()
   const isRtl = dir === 'rtl'
+  const archiveSubtitleStyle = {
+    fontFamily: 'var(--font-body)',
+    fontSize: 'clamp(14px, 3.8vw, 15px)',
+    lineHeight: 1.7,
+  } as const
   const [active, setActive] = useState(0)
   const total = CASES.length
   const galleryEnabled = useScrollGalleryEnabled()
@@ -282,11 +305,16 @@ export default function FeaturedSuccess() {
               <br />
               {t('featuredSuccess.archiveLine2')}
               <br />
-              <span className="text-sz-primary/60">{t('featuredSuccess.archiveByline')}</span>
+              <span
+                className="mt-1 inline-block text-sz-dark normal-case"
+                style={{ lineHeight: 1.35, letterSpacing: isRtl ? 0 : undefined }}
+              >
+                {t('featuredSuccess.archiveByline')}
+              </span>
             </h2>
             <p
-              className="mt-5 text-sz-secondary text-sm max-w-md mx-auto"
-              style={{ fontFamily: 'var(--font-body)', lineHeight: 1.7 }}
+              className="mt-5 text-sz-dark/75 text-sm max-w-md mx-auto"
+              style={archiveSubtitleStyle}
             >
               {t('featuredSuccess.archiveSubtitle')}
             </p>
@@ -345,8 +373,8 @@ export default function FeaturedSuccess() {
               <span className="label-tag mb-3 block">{t('featuredSuccess.caseStudies')}</span>
               <h2 className="heading-lg text-sz-dark">{t('featuredSuccess.archiveHeading')}</h2>
               <p
-                className="mx-auto mt-4 max-w-md text-sz-secondary"
-                style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
+                className="mx-auto mt-4 max-w-md text-sz-dark/75"
+                style={archiveSubtitleStyle}
               >
                 {t('featuredSuccess.archiveSubtitle')}
               </p>
@@ -363,22 +391,22 @@ export default function FeaturedSuccess() {
         </div>
       )}
 
-      <div className="lg:hidden section-padding">
+      <div className="lg:hidden -mt-4 pb-8 pt-0 sm:-mt-2 sm:pb-10">
         <div className="section-container">
-          <div className="text-center section-header">
-            <span className="label-tag mb-3 block">{t('featuredSuccess.caseStudies')}</span>
+          <div className="mb-2 text-center sm:mb-3">
+            <span className="label-tag mb-1 block">{t('featuredSuccess.caseStudies')}</span>
             <h2 className="heading-lg text-sz-dark">
               {t('featuredSuccess.archiveLine1')}
               <br />
               {t('featuredSuccess.archiveLine2')}
             </h2>
             <p
-              className="mx-auto mt-4 max-w-md text-sz-secondary"
-              style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
+              className="mx-auto mt-2 max-w-md text-sz-dark/75"
+              style={archiveSubtitleStyle}
             >
               {t('featuredSuccess.archiveSubtitle')}
             </p>
-            <SectionCTAs className="mt-8" />
+            <SectionCTAs className="mt-3" />
           </div>
 
           <div className="space-y-8">

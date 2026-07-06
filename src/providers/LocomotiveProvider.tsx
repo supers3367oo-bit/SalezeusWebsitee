@@ -3,6 +3,7 @@ import LocomotiveScroll from 'locomotive-scroll'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { refreshLocomotiveScroll, setLocomotiveInstance } from '../lib/locomotive'
+import { shouldUseLightMotion } from '../lib/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,7 +16,7 @@ export default function LocomotiveProvider({ children }: Props) {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) return
+    if (prefersReducedMotion || shouldUseLightMotion()) return
 
     const locomotiveScroll = new LocomotiveScroll({
       lenisOptions: {

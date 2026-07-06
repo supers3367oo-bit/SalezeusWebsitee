@@ -55,7 +55,8 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
 }
 
 export default function ImpactNumbers() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const isArabic = locale === 'ar'
 
   const stats = useMemo<Stat[]>(
     () => [
@@ -114,7 +115,11 @@ export default function ImpactNumbers() {
 
         <ScrollFloat
           containerClassName="!my-0 heading-lg text-white max-w-4xl mx-auto"
-          textClassName="!text-[clamp(2.25rem,5.5vw,4.5rem)] !leading-[1.08] !font-semibold text-white"
+          textClassName={
+            isArabic
+              ? '!text-[clamp(2.25rem,5.5vw,4.5rem)] !leading-[1.32] !font-semibold text-white'
+              : '!text-[clamp(2.25rem,5.5vw,4.5rem)] !leading-[1.08] !font-semibold text-white'
+          }
           scrollStart="top 90%"
           scrollEnd="top 55%"
           animationDuration={1.1}

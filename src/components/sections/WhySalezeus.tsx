@@ -32,67 +32,67 @@ type WhyCard = {
   footnote: string
 }
 
-function CardBackground({ variant, index }: { variant: 'dark' | 'light'; index: number }) {
-  if (index === 0) {
-    return (
-      <Aurora
-        colorStops={['#3258A4', '#1e3460', '#040508']}
-        amplitude={0.85}
-        blend={0.42}
-        speed={0.8}
-      />
-    )
-  }
-
-  if (index === 1) {
-    return (
-      <Particles
-        className="h-full w-full"
-        particleCount={180}
-        particleSpread={9}
-        speed={0.08}
-        particleColors={['#3258A4', '#F0B80D', '#303640']}
-        moveParticlesOnHover
-        particleHoverFactor={0.6}
-        alphaParticles
-        particleBaseSize={90}
-        sizeRandomness={0.8}
-        cameraDistance={22}
-      />
-    )
-  }
-
-  if (index === 2) {
-    return (
-      <Threads
-        color={[0.88, 0.92, 1]}
-        amplitude={0.85}
-        distance={0.28}
-        enableMouseInteraction
-      />
-    )
-  }
+function CardBackground({ index }: { variant: 'dark' | 'light'; index: number }) {
+  const fallbackClass =
+    index === 0
+      ? 'bg-gradient-to-br from-[#1a2d52] via-[#243d6e] to-[#0a0b0f]'
+      : index === 1
+        ? 'bg-gradient-to-br from-[#e8e4de] via-[#f2efe9] to-[#ddd8d0]'
+        : 'bg-gradient-to-br from-[#2d4f96] via-[#3258A4] to-[#1e3460]'
 
   return (
-    <Threads
-      color={variant === 'dark' ? [0.75, 0.78, 0.85] : [0.2, 0.35, 0.64]}
-      amplitude={1.1}
-      distance={0.35}
-      enableMouseInteraction
-    />
+    <>
+      <div className={`absolute inset-0 ${fallbackClass}`} aria-hidden />
+      <div className="absolute inset-0">
+        {index === 0 && (
+          <Aurora
+            colorStops={['#3258A4', '#1e3460', '#040508']}
+            amplitude={0.85}
+            blend={0.42}
+            speed={0.8}
+          />
+        )}
+        {index === 1 && (
+          <Particles
+            className="h-full w-full"
+            particleCount={180}
+            particleSpread={9}
+            speed={0.08}
+            particleColors={['#3258A4', '#F0B80D', '#303640']}
+            moveParticlesOnHover
+            particleHoverFactor={0.6}
+            alphaParticles
+            particleBaseSize={90}
+            sizeRandomness={0.8}
+            cameraDistance={22}
+          />
+        )}
+        {index === 2 && (
+          <Threads
+            color={[0.88, 0.92, 1]}
+            amplitude={0.85}
+            distance={0.28}
+            enableMouseInteraction
+          />
+        )}
+      </div>
+    </>
   )
 }
 
 function CardTitle({
   lines,
   variant,
+  isRtl,
 }: {
   lines: readonly [string, string]
   variant: 'dark' | 'light'
+  isRtl: boolean
 }) {
   return (
     <h3
-      className={`text-left leading-[1.05] ${
+      dir={isRtl ? 'rtl' : 'ltr'}
+      className={`text-start leading-[1.05] ${
         variant === 'dark' ? 'text-white' : 'text-sz-dark'
       }`}
       style={{
@@ -112,9 +112,11 @@ function CardTitle({
 function DarkFactCard({
   card,
   index,
+  isRtl,
 }: {
   card: WhyCard
   index: number
+  isRtl: boolean
 }) {
   const isBrandBlue = index === 2
 
@@ -128,7 +130,7 @@ function DarkFactCard({
         isBrandBlue ? 'bg-[#3258A4]' : 'bg-[#111216]'
       }`}
     >
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 min-h-[200px]">
         <CardBackground variant="dark" index={index} />
         <div
           className={`absolute inset-0 ${
@@ -141,11 +143,12 @@ function DarkFactCard({
 
       <div className="relative z-10 flex h-full min-h-[inherit] flex-col p-5 sm:p-6">
         <div className="flex flex-1 w-full items-center justify-start px-1 py-6">
-          <CardTitle lines={card.title} variant="dark" />
+          <CardTitle lines={card.title} variant="dark" isRtl={isRtl} />
         </div>
 
         <p
-          className="text-left text-white/70"
+          className="text-start text-white/70"
+          dir={isRtl ? 'rtl' : 'ltr'}
           style={{ fontFamily: 'var(--font-body)', fontSize: 13, lineHeight: 1.65 }}
         >
           {card.footnote}
@@ -158,9 +161,11 @@ function DarkFactCard({
 function LightFactCard({
   card,
   index,
+  isRtl,
 }: {
   card: WhyCard
   index: number
+  isRtl: boolean
 }) {
   return (
     <motion.article
@@ -170,17 +175,18 @@ function LightFactCard({
       transition={{ duration: 0.5, delay: index * 0.08, ease: EASE }}
       className="relative flex min-h-[360px] flex-col overflow-hidden rounded-card bg-[#ECE8E2] sm:min-h-[400px] lg:min-h-[440px]"
     >
-      <div className="absolute inset-0 opacity-70">
+      <div className="absolute inset-0 min-h-[200px] opacity-70">
         <CardBackground variant="light" index={index} />
       </div>
 
       <div className="relative z-10 flex h-full min-h-[inherit] flex-col p-5 sm:p-6">
         <div className="flex flex-1 w-full items-center justify-start px-1 py-6">
-          <CardTitle lines={card.title} variant="light" />
+          <CardTitle lines={card.title} variant="light" isRtl={isRtl} />
         </div>
 
         <p
-          className="text-left text-sz-primary/75"
+          className="text-start text-sz-primary/75"
+          dir={isRtl ? 'rtl' : 'ltr'}
           style={{ fontFamily: 'var(--font-body)', fontSize: 13, lineHeight: 1.65 }}
         >
           {card.footnote}
@@ -195,7 +201,8 @@ type WhySalezeusProps = {
 }
 
 export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const isRtl = locale === 'ar'
   const cards = [
     {
       ...CARDS[0],
@@ -245,9 +252,9 @@ export default function WhySalezeus({ sectionId = 'about' }: WhySalezeusProps) {
         </motion.div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
-          <DarkFactCard card={cards[0]} index={0} />
-          <LightFactCard card={cards[1]} index={1} />
-          <DarkFactCard card={cards[2]} index={2} />
+          <DarkFactCard card={cards[0]} index={0} isRtl={isRtl} />
+          <LightFactCard card={cards[1]} index={1} isRtl={isRtl} />
+          <DarkFactCard card={cards[2]} index={2} isRtl={isRtl} />
         </div>
 
         <motion.div

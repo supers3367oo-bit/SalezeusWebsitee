@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, Transition, Easing } from 'framer-motion';
+import { hasArabicScript } from '../../lib/arabicScript';
 
 type BlurTextProps = {
   text?: string;
@@ -43,6 +44,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   onAnimationComplete,
   stepDuration = 0.35
 }) => {
+  const isArabic = hasArabicScript(text);
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
@@ -64,20 +66,27 @@ const BlurText: React.FC<BlurTextProps> = ({
 
   const defaultFrom = useMemo(
     () =>
-      direction === 'top' ? { filter: 'blur(10px)', opacity: 0, y: -50 } : { filter: 'blur(10px)', opacity: 0, y: 50 },
-    [direction]
+      isArabic
+        ? { filter: 'blur(6px)', opacity: 0, y: direction === 'top' ? -14 : 14 }
+        : direction === 'top'
+          ? { filter: 'blur(10px)', opacity: 0, y: -50 }
+          : { filter: 'blur(10px)', opacity: 0, y: 50 },
+    [direction, isArabic]
   );
 
   const defaultTo = useMemo(
-    () => [
-      {
-        filter: 'blur(5px)',
-        opacity: 0.5,
-        y: direction === 'top' ? 5 : -5
-      },
-      { filter: 'blur(0px)', opacity: 1, y: 0 }
-    ],
-    [direction]
+    () =>
+      isArabic
+        ? [{ filter: 'blur(0px)', opacity: 1, y: 0 }]
+        : [
+            {
+              filter: 'blur(5px)',
+              opacity: 0.5,
+              y: direction === 'top' ? 5 : -5
+            },
+            { filter: 'blur(0px)', opacity: 1, y: 0 }
+          ],
+    [direction, isArabic]
   );
 
   const fromSnapshot = animationFrom ?? defaultFrom;
@@ -88,7 +97,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   const times = Array.from({ length: stepCount }, (_, i) => (stepCount === 1 ? 0 : i / (stepCount - 1)));
 
   return (
-    <p ref={ref} className={`blur-text ${className} flex flex-wrap`}>
+    <p ref={ref} className={`blur-text ${className} flex flex-wrap ${isArabic ? 'leading-[1.75]' : ''}`}>
       {elements.map((segment, index) => {
         const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
 

@@ -146,11 +146,22 @@ const Threads: React.FC<ThreadsProps> = ({
     if (!containerRef.current) return;
     const container = containerRef.current;
 
-    const renderer = new Renderer({ alpha: true });
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({ alpha: true });
+    } catch {
+      return;
+    }
+
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    if (gl.canvas instanceof HTMLCanvasElement) {
+      gl.canvas.style.display = 'block';
+      gl.canvas.style.width = '100%';
+      gl.canvas.style.height = '100%';
+    }
     container.appendChild(gl.canvas);
 
     const geometry = new Triangle(gl);
@@ -178,6 +189,7 @@ const Threads: React.FC<ThreadsProps> = ({
     const MAX_RENDER_DIM = 1920;
     function resize() {
       const { clientWidth, clientHeight } = container;
+      if (clientWidth === 0 || clientHeight === 0) return;
       const baseDpr = Math.min(window.devicePixelRatio || 1, 2);
       const longestSide = Math.max(clientWidth, clientHeight) * baseDpr;
       const dpr = longestSide > MAX_RENDER_DIM ? (baseDpr * MAX_RENDER_DIM) / longestSide : baseDpr;

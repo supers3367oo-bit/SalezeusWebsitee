@@ -51,10 +51,10 @@ export default function PortfolioProjectCard({ project, motionProps, className }
 
       <div className="absolute inset-0" style={{ background: PORTFOLIO_OVERLAY_GRADIENT }} />
 
-      <div className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-card border border-white/0 bg-white/0 backdrop-blur-sm transition-all duration-300 group-hover:border-white/25 group-hover:bg-white/10 sm:right-6 sm:top-6">
+      <div className="absolute end-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-card border border-white/0 bg-white/0 backdrop-blur-sm transition-all duration-300 group-hover:border-white/25 group-hover:bg-white/10 sm:end-6 sm:top-6">
         <ArrowUpRight
           size={15}
-          className="text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 -translate-y-0.5 translate-x-0.5"
+          className="text-white opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0 group-hover:opacity-100 -translate-y-0.5 rtl:group-hover:-translate-x-0.5 rtl:-translate-x-0.5 translate-x-0.5"
         />
       </div>
 

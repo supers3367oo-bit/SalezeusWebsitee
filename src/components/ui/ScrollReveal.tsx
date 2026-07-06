@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { hasArabicScript } from '../../lib/arabicScript'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -28,6 +29,9 @@ export default function ScrollReveal({
   scrollEnd = 'top center',
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLParagraphElement>(null)
+  const isArabic = hasArabicScript(children)
+  const effectiveBaseOpacity = isArabic ? Math.max(baseOpacity, 0.55) : baseOpacity
+  const effectiveBlurStrength = isArabic ? Math.min(blurStrength, 3) : blurStrength
 
   const splitText = useMemo(
     () =>
@@ -67,7 +71,7 @@ export default function ScrollReveal({
 
     const opacityTween = gsap.fromTo(
       wordElements,
-      { opacity: baseOpacity, willChange: 'opacity' },
+      { opacity: effectiveBaseOpacity, willChange: 'opacity' },
       {
         ease: 'none',
         opacity: 1,
@@ -86,7 +90,7 @@ export default function ScrollReveal({
     if (enableBlur) {
       blurTween = gsap.fromTo(
         wordElements,
-        { filter: `blur(${blurStrength}px)` },
+        { filter: `blur(${effectiveBlurStrength}px)` },
         {
           ease: 'none',
           filter: 'blur(0px)',
@@ -110,11 +114,11 @@ export default function ScrollReveal({
       blurTween?.scrollTrigger?.kill()
       blurTween?.kill()
     }
-  }, [children, enableBlur, blurStrength, baseOpacity, baseRotation, scrollStart, scrollEnd])
+  }, [children, enableBlur, blurStrength, baseOpacity, baseRotation, scrollStart, scrollEnd, effectiveBaseOpacity, effectiveBlurStrength])
 
   return (
     <p ref={containerRef} className={className}>
-      <span className={textClassName}>{splitText}</span>
+      <span className={`${textClassName} ${isArabic ? 'leading-[1.75]' : ''}`}>{splitText}</span>
     </p>
   )
 }

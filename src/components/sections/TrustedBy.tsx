@@ -24,20 +24,20 @@ const CLIENTS: Client[] = [
   { name: 'Summit Co.', abbr: 'SC', industry: 'Finance' },
 ]
 
-const INDUSTRIES = [
-  'Medical Tourism',
-  'Education',
-  'Food & Beverage',
-  'Beauty',
-  'Conferences',
-  'Automotive',
-  'Technology',
-  'E-commerce',
-  'Fashion',
-  'Hospitality',
-  'Healthcare',
-  'Finance',
-]
+const INDUSTRY_KEYS = [
+  'medicalTourism',
+  'education',
+  'foodBeverage',
+  'beauty',
+  'conferences',
+  'automotive',
+  'technology',
+  'ecommerce',
+  'fashion',
+  'hospitality',
+  'healthcare',
+  'finance',
+] as const
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -75,6 +75,7 @@ function MarqueeRow({
   variant,
   clients,
   industries,
+  useArabicTypography = false,
 }: {
   direction?: 'left' | 'right'
   speed?: number
@@ -82,6 +83,7 @@ function MarqueeRow({
   variant: 'logo' | 'industry'
   clients?: Client[]
   industries?: string[]
+  useArabicTypography?: boolean
 }) {
   const items =
     variant === 'logo'
@@ -89,10 +91,11 @@ function MarqueeRow({
       : [...(industries ?? []), ...(industries ?? [])]
 
   return (
-    <div className="overflow-hidden py-3">
+    <div className="overflow-hidden py-3" dir="ltr">
       <motion.div
         key={direction}
         className="flex w-max"
+        dir="ltr"
         animate={{
           x: direction === 'left' ? ['0%', '-50%'] : ['-50%', '0%'],
         }}
@@ -115,7 +118,7 @@ function MarqueeRow({
               >
                 <ClientMark client={client} />
                 <span
-                  className="ms-4 sm:ms-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
+                  className="ml-4 sm:ml-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
                   aria-hidden
                 >
                   ·
@@ -134,16 +137,16 @@ function MarqueeRow({
               <span
                 className="font-heading font-bold text-sz-dark/20 group-hover:text-sz-dark transition-colors duration-500 select-none whitespace-nowrap"
                 style={{
-                  fontFamily: 'var(--font-heading)',
+                  fontFamily: useArabicTypography ? 'var(--font-arabic)' : 'var(--font-heading)',
                   fontSize: 'clamp(1rem, 2vw, 1.35rem)',
-                  letterSpacing: '0.04em',
+                  letterSpacing: useArabicTypography ? 0 : '0.04em',
                   lineHeight: 1,
                 }}
               >
                 {label}
               </span>
               <span
-                className="ms-4 sm:ms-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
+                className="ml-4 sm:ml-6 text-sz-accent/40 group-hover:text-sz-accent transition-colors duration-500 text-lg select-none"
                 aria-hidden
               >
                 ·
@@ -156,7 +159,13 @@ function MarqueeRow({
   )
 }
 
-function StaticFallback() {
+function StaticFallback({
+  industries,
+  useArabicTypography = false,
+}: {
+  industries: string[]
+  useArabicTypography?: boolean
+}) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-8">
@@ -179,10 +188,15 @@ function StaticFallback() {
         ))}
       </div>
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
-        {INDUSTRIES.map((industry) => (
+        {industries.map((industry) => (
           <span
             key={industry}
-            className="font-body text-[11px] uppercase tracking-[0.18em] text-sz-secondary"
+            className={
+              useArabicTypography
+                ? 'font-body text-[13px] text-sz-secondary'
+                : 'font-body text-[11px] uppercase tracking-[0.18em] text-sz-secondary'
+            }
+            style={useArabicTypography ? { fontFamily: 'var(--font-arabic)' } : undefined}
           >
             {industry}
           </span>
@@ -193,8 +207,9 @@ function StaticFallback() {
 }
 
 export default function TrustedBy() {
-  const { t, dir } = useLocale()
-  const isRtl = dir === 'rtl'
+  const { t, locale } = useLocale()
+  const isArabic = locale === 'ar'
+  const industries = INDUSTRY_KEYS.map((key) => t(`trustedBy.industries.${key}`))
   const prefersReducedMotion = useReducedMotion()
   const [paused, setPaused] = useState(false)
 
@@ -227,7 +242,7 @@ export default function TrustedBy() {
       <div className="section-container relative z-20 flex flex-col gap-10 lg:min-h-0 lg:flex-1">
         <div className="flex flex-col items-center px-1 text-center sm:px-2 lg:flex-1 lg:justify-center">
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center">
-            <span className="mb-4 block font-body text-xs font-medium uppercase tracking-widest text-sz-primary/75">
+            <span className="label-tag mb-4 block">
               {t('trustedBy.label')}
             </span>
             <h2
@@ -284,25 +299,26 @@ export default function TrustedBy() {
 
         <div className="w-full shrink-0 lg:mt-auto">
           {prefersReducedMotion ? (
-            <StaticFallback />
+            <StaticFallback industries={industries} useArabicTypography={isArabic} />
           ) : (
-            <div className="relative -mx-6 lg:-mx-8">
-              <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-12 bg-gradient-to-r from-sz-surface to-transparent sm:w-24" />
-              <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-12 bg-gradient-to-l from-sz-surface to-transparent sm:w-24" />
+            <div className="relative -mx-6 lg:-mx-8" dir="ltr">
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-sz-surface to-transparent sm:w-24" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-sz-surface to-transparent sm:w-24" />
 
               <MarqueeRow
                 variant="logo"
                 clients={CLIENTS}
-                direction={isRtl ? 'right' : 'left'}
+                direction="left"
                 speed={36}
                 paused={paused}
               />
               <MarqueeRow
                 variant="industry"
-                industries={INDUSTRIES}
-                direction={isRtl ? 'left' : 'right'}
+                industries={industries}
+                direction="right"
                 speed={48}
                 paused={paused}
+                useArabicTypography={isArabic}
               />
 
               <p className="mt-4 hidden text-center font-body text-[10px] uppercase tracking-[0.25em] text-sz-secondary/40 lg:block">

@@ -40,7 +40,7 @@ export const REGIONS: RegionMarker[] = [
     lat: 34.8,
     lng: 36.7,
     country: 'Syria',
-    cities: 'Damascus / Aleppo',
+    cities: 'Aleppo',
     description:
       'Regional studio rooted in local insight — delivering global standards across the Levant.',
     services: ['Regional Campaigns', 'Content Production', 'Social Media', 'E-commerce'],

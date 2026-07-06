@@ -63,6 +63,20 @@ export const en: TranslationTree = {
       industries: 'Industries',
     },
     hoverHint: 'Hover to explore',
+    industries: {
+      medicalTourism: 'Medical Tourism',
+      education: 'Education',
+      foodBeverage: 'Food & Beverage',
+      beauty: 'Beauty',
+      conferences: 'Conferences',
+      automotive: 'Automotive',
+      technology: 'Technology',
+      ecommerce: 'E-commerce',
+      fashion: 'Fashion',
+      hospitality: 'Hospitality',
+      healthcare: 'Healthcare',
+      finance: 'Finance',
+    },
   },
   impact: {
     label: 'Our Impact',
@@ -225,6 +239,7 @@ export const en: TranslationTree = {
     },
     team: {
       title: 'The Minds Behind Salezeus',
+      specialistsCount: '{count} specialists',
     },
     map: {
       alt: 'Salezeus presence map',
@@ -248,8 +263,8 @@ export const en: TranslationTree = {
     minRead: 'min read',
     read: 'Read',
     clear: 'Clear',
-    noArticlesTitle: 'No articles match',
-    noArticlesSubtitle: 'Try clearing your filter or pick another industry below.',
+    noArticlesTitle: 'No articles',
+    noArticlesSubtitle: 'Try another category or clear the filter.',
     clearFilter: 'Clear filter',
     relatedReading: 'Related reading',
     articleEndTitle: 'Keep exploring, or start a conversation.',
@@ -392,6 +407,15 @@ export const en: TranslationTree = {
     email: 'Email',
     serviceNote: 'Service requests and project inquiries welcome.',
     talentNote: 'Talent applications reviewed on a rolling basis.',
+    location: {
+      title: 'Our location',
+      subtitle:
+        'Studios in Turkey and Syria, working with clients across the MENA region and beyond.',
+    },
+    offices: {
+      istanbul: 'Istanbul',
+      syria: 'Syria',
+    },
     form: {
       name: 'Full name',
       email: 'Email address',
@@ -403,6 +427,7 @@ export const en: TranslationTree = {
       submit: 'Send Message',
       submitAlt: 'Send message',
       phoneError: 'Please enter a valid phone number.',
+      emailError: 'Please enter a valid email address.',
       successTitle: 'Message received.',
       successTitleAlt: 'Message received',
       successBody: 'Thank you for reaching out. We will get back to you within one business day.',

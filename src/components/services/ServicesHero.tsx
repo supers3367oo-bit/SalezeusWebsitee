@@ -4,7 +4,6 @@ import SplitText from '../ui/SplitText'
 import BlurText from '../ui/BlurText'
 import Aurora from '../ui/Aurora'
 import DotGrid from '../ui/backgrounds/DotGrid'
-import LogoOrb from '../ui/LogoOrb'
 import { refreshLocomotiveScroll } from '../../lib/locomotive'
 import { useLocale } from '../../providers/LocaleProvider'
 
@@ -51,26 +50,6 @@ export default function ServicesHero() {
           aria-hidden
         />
       </div>
-
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 45% at 80% 20%, rgba(240,184,13,0.07) 0%, transparent 55%)',
-        }}
-      />
-
-      <LogoOrb
-        className="absolute top-[18%] right-[8%] hidden sm:block"
-        size={120}
-        opacity={0.28}
-      />
-      <LogoOrb
-        className="absolute bottom-[28%] left-[4%] hidden lg:block"
-        size={72}
-        opacity={0.18}
-        animate={false}
-      />
 
       <div className="section-container relative z-10 w-full max-w-3xl">
         <motion.div

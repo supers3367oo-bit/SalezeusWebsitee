@@ -1,4 +1,5 @@
 import { CONTACT_OFFICES } from '../../data/contact'
+import { useLocale } from '../../providers/LocaleProvider'
 
 type Props = {
   className?: string
@@ -11,12 +12,14 @@ export default function ContactPhones({
   labelClassName = 'text-white/30 text-xs mb-1',
   phoneClassName = 'text-white/60 hover:text-white transition-colors duration-200',
 }: Props) {
+  const { t } = useLocale()
+
   return (
     <div className={className}>
       {CONTACT_OFFICES.map((office) => (
         <div key={office.id}>
           <p className={labelClassName} style={{ fontFamily: 'var(--font-body)' }}>
-            {office.label}
+            {t(`contact.offices.${office.id}`)}
           </p>
           <a
             href={`tel:${office.phoneE164}`}

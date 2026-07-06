@@ -122,12 +122,23 @@ const Particles: React.FC<ParticlesProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new Renderer({
-      dpr: pixelRatio,
-      depth: false,
-      alpha: true
-    });
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
+        depth: false,
+        alpha: true
+      });
+    } catch {
+      return;
+    }
+
     const gl = renderer.gl;
+    if (gl.canvas instanceof HTMLCanvasElement) {
+      gl.canvas.style.display = 'block';
+      gl.canvas.style.width = '100%';
+      gl.canvas.style.height = '100%';
+    }
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
@@ -137,9 +148,13 @@ const Particles: React.FC<ParticlesProps> = ({
     const resize = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
+      if (width === 0 || height === 0) return;
       renderer.setSize(width, height);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
     window.addEventListener('resize', resize, false);
     resize();
 
@@ -229,6 +244,7 @@ const Particles: React.FC<ParticlesProps> = ({
     animationFrameId = requestAnimationFrame(update);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', resize);
       if (moveParticlesOnHover) {
         container.removeEventListener('mousemove', handleMouseMove);
@@ -237,6 +253,7 @@ const Particles: React.FC<ParticlesProps> = ({
       if (container.contains(gl.canvas)) {
         container.removeChild(gl.canvas);
       }
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

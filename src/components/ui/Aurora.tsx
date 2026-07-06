@@ -126,28 +126,43 @@ export default function Aurora(props: AuroraProps) {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: true
-    });
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: true
+      });
+    } catch {
+      return;
+    }
+
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.canvas.style.backgroundColor = 'transparent';
+    if (gl.canvas instanceof HTMLCanvasElement) {
+      gl.canvas.style.display = 'block';
+      gl.canvas.style.width = '100%';
+      gl.canvas.style.height = '100%';
+      gl.canvas.style.backgroundColor = 'transparent';
+    }
 
     let program: Program | undefined;
 
     function resize() {
       if (!ctn) return;
-      const width = ctn.offsetWidth;
-      const height = ctn.offsetHeight;
+      const width = ctn.clientWidth;
+      const height = ctn.clientHeight;
+      if (width === 0 || height === 0) return;
       renderer.setSize(width, height);
       if (program) {
         program.uniforms.uResolution.value = [width, height];
       }
     }
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(ctn);
     window.addEventListener('resize', resize);
 
     const geometry = new Triangle(gl);
@@ -197,13 +212,14 @@ export default function Aurora(props: AuroraProps) {
 
     return () => {
       cancelAnimationFrame(animateId);
+      resizeObserver.disconnect();
       window.removeEventListener('resize', resize);
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas);
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [amplitude]);
+  }, [amplitude, blend, colorStops]);
 
   return <div ref={ctnDom} className="w-full h-full" />;
 }

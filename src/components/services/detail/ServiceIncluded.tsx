@@ -47,7 +47,7 @@ export default function ServiceIncluded({ service }: Props) {
           {service.included.map((item, i) => (
             <motion.div
               key={item.title}
-              className="group rounded-card border border-sz-border bg-white p-6 lg:p-7 flex flex-col min-h-[180px] transition-colors duration-300 hover:border-sz-interaction/30 hover:bg-sz-interaction-soft/40"
+              className="rounded-card border border-sz-border bg-white p-6 lg:p-7 flex flex-col min-h-[180px]"
               initial={reduce ? false : { opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-6%' }}
@@ -60,7 +60,7 @@ export default function ServiceIncluded({ service }: Props) {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3
-                className="text-sz-dark mb-3 group-hover:text-sz-interaction transition-colors duration-200"
+                className="text-sz-dark mb-3 text-start"
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: 17,
@@ -71,7 +71,7 @@ export default function ServiceIncluded({ service }: Props) {
                 {item.title}
               </h3>
               <p
-                className="text-sz-secondary flex-1"
+                className="text-sz-secondary flex-1 text-start"
                 style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.7 }}
               >
                 {item.description}

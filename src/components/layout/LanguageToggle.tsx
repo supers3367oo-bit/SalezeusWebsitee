@@ -21,7 +21,9 @@ export default function LanguageToggle({ className }: { className?: string }) {
           EN
         </span>
         <span className={clsx('lang-toggle__label lang-toggle__label--ar', isArabic && 'lang-toggle__label--active')}>
-          ع
+          <span className="lang-toggle__glyph" aria-hidden>
+            ع
+          </span>
         </span>
       </span>
     </button>

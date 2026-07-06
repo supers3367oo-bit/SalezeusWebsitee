@@ -57,7 +57,7 @@ export default function ExperiencePhilosophy() {
 
   return (
     <section className="section-surface relative overflow-hidden">
-      <div className="section-container relative z-10 py-20 lg:py-32">
+      <div className="section-container relative z-10 pt-12 pb-8 lg:pt-28 lg:pb-10">
         <div className="flex flex-col gap-16 lg:gap-24">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
             <motion.div

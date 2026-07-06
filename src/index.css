@@ -105,6 +105,26 @@ html[dir='rtl'] .label-tag {
   text-transform: none;
 }
 
+/* Directional icons — mirror in Arabic */
+html[dir='rtl'] .lucide-arrow-left,
+html[dir='rtl'] .lucide-arrow-right,
+html[dir='rtl'] .lucide-arrow-up-right,
+html[dir='rtl'] .lucide-chevron-left,
+html[dir='rtl'] .lucide-chevron-right,
+html[dir='rtl'] .sz-btn__arrow {
+  transform: scaleX(-1);
+}
+
+html[dir='rtl'] .sz-btn__label,
+html[dir='rtl'] .btn__label {
+  padding-block: 0;
+}
+
+html[dir='rtl'] .sz-btn:hover .sz-btn__icon,
+html[dir='rtl'] .btn:hover .btn__icon {
+  transform: scale(1.04);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -208,7 +228,7 @@ body.custom-cursor-active * {
   }
 
   .label-tag {
-    @apply inline-block text-xs font-medium uppercase tracking-widest text-sz-secondary;
+    @apply inline-block text-xs font-medium uppercase tracking-widest text-sz-dark/75;
     font-family: var(--font-body);
     letter-spacing: 0.12em;
   }
@@ -234,22 +254,27 @@ body.custom-cursor-active * {
     white-space: nowrap;
     transition: transform 0.2s ease, box-shadow 0.25s ease;
     box-shadow: 0 2px 12px rgba(4, 5, 8, 0.06);
-    padding: 6px 6px 6px 22px;
+    padding-block: 6px;
+    padding-inline-start: 22px;
+    padding-inline-end: 6px;
     gap: 14px;
     font-size: 15px;
-    line-height: 1.2;
+    line-height: 1;
   }
 
   .btn--sm,
   .sz-btn--sm {
-    padding: 5px 5px 5px 18px;
+    padding-block: 5px;
+    padding-inline-start: 18px;
+    padding-inline-end: 5px;
     gap: 12px;
     font-size: 13px;
   }
 
   .btn__label,
   .sz-btn__label {
-    @apply relative z-[1];
+    @apply relative z-[1] inline-flex items-center justify-center;
+    line-height: 1;
   }
 
   .btn__icon,
@@ -265,6 +290,11 @@ body.custom-cursor-active * {
   .sz-btn--sm .sz-btn__icon {
     width: 34px;
     height: 34px;
+  }
+
+  .btn__icon svg,
+  .sz-btn__icon svg {
+    display: block;
   }
 
   .btn__arrow,

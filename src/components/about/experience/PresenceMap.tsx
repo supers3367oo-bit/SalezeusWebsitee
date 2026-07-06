@@ -9,6 +9,11 @@ import { getGlobeLocations } from '../../../data/localized'
 const MAP_IMAGE = '/images/about/map.svg'
 const MAP_ASPECT_RATIO = 14078 / 3541
 
+/** Calibrated to pin positions in `locations.ts` (Turkey + Syria cluster). */
+const MOBILE_MAP_ZOOM = 3.1
+const MOBILE_FOCUS_X = 0.545
+const MOBILE_FOCUS_Y = 0.625
+
 const PIN_GOLD = '#F0B80D'
 const PIN_GOLD_SOFT = 'rgba(240, 184, 13, 0.45)'
 
@@ -116,9 +121,10 @@ function LocationMarker({ region, reduce }: { region: RegionMarker; reduce: bool
         <div
           className={clsx(
             'absolute w-max',
+            'max-lg:left-1/2 max-lg:top-[calc(100%+10px)] max-lg:-translate-x-1/2 max-lg:right-auto max-lg:bottom-auto',
             isTopLeft
-              ? 'right-[calc(100%+10px)] bottom-[calc(100%+6px)] sm:right-[calc(100%+14px)] sm:bottom-[calc(100%+8px)]'
-              : 'left-[calc(100%+10px)] top-[calc(100%+6px)] sm:left-[calc(100%+14px)] sm:top-[calc(100%+8px)]'
+              ? 'lg:right-[calc(100%+14px)] lg:bottom-[calc(100%+8px)]'
+              : 'lg:left-[calc(100%+14px)] lg:top-[calc(100%+8px)]'
           )}
         >
           <RegionCard region={region} />
@@ -143,31 +149,65 @@ export default function PresenceMap({ className = '' }: PresenceMapProps) {
   const reduce = reduceMotion ?? false
 
   return (
-    <div className={`relative w-full ${className}`}>
+    <div
+      dir="ltr"
+      className={`relative w-full overflow-hidden lg:overflow-visible ${className}`}
+    >
       <div
-        className="relative w-full"
-        style={{ aspectRatio: `${MAP_ASPECT_RATIO}` }}
+        className="presence-map__viewport relative w-full"
+        style={{
+          ['--map-zoom' as string]: MOBILE_MAP_ZOOM,
+          ['--focus-x' as string]: MOBILE_FOCUS_X,
+          ['--focus-y' as string]: MOBILE_FOCUS_Y,
+        }}
       >
-        <img
-          src={MAP_IMAGE}
-          alt={t('experience.map.alt')}
-          className="presence-map__image absolute inset-0 w-full h-full object-contain object-[50%_58%] pointer-events-none select-none"
-          draggable={false}
-        />
+        <div className="presence-map__frame relative">
+          <img
+            src={MAP_IMAGE}
+            alt={t('experience.map.alt')}
+            className="presence-map__image block h-auto w-full pointer-events-none select-none"
+            draggable={false}
+          />
 
-        <div className="presence-map__fade presence-map__fade--top" aria-hidden />
-        <div className="presence-map__fade presence-map__fade--bottom" aria-hidden />
+          <div className="absolute inset-0">
+            <div className="presence-map__fade presence-map__fade--top" aria-hidden />
+            <div className="presence-map__fade presence-map__fade--bottom" aria-hidden />
 
-        {regions.map((region) => (
-          <LocationMarker key={region.id} region={region} reduce={reduce} />
-        ))}
+            {regions.map((region) => (
+              <LocationMarker key={region.id} region={region} reduce={reduce} />
+            ))}
+          </div>
+        </div>
       </div>
 
       <style>{`
+        .presence-map__viewport {
+          min-height: clamp(250px, 62vw, 340px);
+        }
+
+        @media (min-width: 1024px) {
+          .presence-map__viewport {
+            min-height: 0;
+            aspect-ratio: ${MAP_ASPECT_RATIO};
+          }
+
+          .presence-map__frame {
+            position: absolute !important;
+            inset: 0;
+            width: 100% !important;
+          }
+
+          .presence-map__image {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+            object-fit: contain;
+            object-position: 50% 58%;
+          }
+        }
+
         .presence-map__image {
-          opacity: 0.82;
-          -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.25) 14%, black 32%);
-          mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.25) 14%, black 32%);
+          opacity: 0.92;
         }
 
         .presence-map__fade {
@@ -184,6 +224,27 @@ export default function PresenceMap({ className = '' }: PresenceMapProps) {
         .presence-map__fade--bottom {
           inset: 88% 0 0 0;
           background: linear-gradient(0deg, #040508 0%, transparent 100%);
+        }
+
+        @media (max-width: 1023px) {
+          .presence-map__frame {
+            width: calc(var(--map-zoom) * 100%);
+            left: calc(50% - var(--focus-x) * var(--map-zoom) * 100%);
+            top: calc(44% - var(--focus-y) * var(--map-zoom) * 34%);
+          }
+
+          .presence-map__image {
+            opacity: 0.98;
+          }
+
+          .presence-map__fade--top {
+            inset: 0 0 62% 0;
+            background: linear-gradient(180deg, #040508 0%, rgba(4,5,8,0.35) 28%, transparent 100%);
+          }
+
+          .presence-map__fade--bottom {
+            inset: 86% 0 0 0;
+          }
         }
       `}</style>
     </div>

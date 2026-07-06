@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, ReactNode, RefObject, Fragment } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { hasArabicScript } from '../../lib/arabicScript';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,10 +18,6 @@ interface ScrollFloatProps {
   splitBy?: 'char' | 'word';
 }
 
-function hasArabicScript(text: string) {
-  return /[\u0600-\u06FF]/.test(text);
-}
-
 const ScrollFloat: React.FC<ScrollFloatProps> = ({
   children,
   scrollContainerRef,
@@ -35,9 +32,15 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
 }) => {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
+  const text = typeof children === 'string' ? children : '';
+  const isArabic = hasArabicScript(text);
+
   const splitText = useMemo(() => {
-    const text = typeof children === 'string' ? children : '';
-    const mode = splitBy ?? (hasArabicScript(text) ? 'word' : 'char');
+    const mode = splitBy ?? (isArabic ? 'word' : 'char');
+    const maskClass = isArabic
+      ? 'inline-block overflow-hidden align-bottom pb-[0.38em] -mb-[0.38em]'
+      : 'inline-block overflow-hidden align-bottom pb-[0.15em] -mb-[0.15em]';
+    const lastWordPad = isArabic ? 'pe-[0.14em]' : 'pe-[0.1em]';
 
     if (mode === 'word') {
       const words = text.split(' ').filter(Boolean);
@@ -46,9 +49,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
       return words.map((word, index) => (
         <Fragment key={`${word}-${index}`}>
           <span
-            className={`inline-block overflow-hidden align-bottom pb-[0.15em] -mb-[0.15em] ${
-              index === lastIndex ? 'pe-[0.1em]' : ''
-            }`}
+            className={`${maskClass} ${index === lastIndex ? lastWordPad : ''}`}
           >
             <span className="scroll-float-char inline-block">{word}</span>
           </span>
@@ -70,16 +71,14 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
 
       return (
         <span
-          className={`inline-block overflow-hidden align-bottom pb-[0.15em] -mb-[0.15em] ${
-            index === lastIndex ? 'pe-[0.1em]' : ''
-          }`}
+          className={`${maskClass} ${index === lastIndex ? lastWordPad : ''}`}
           key={index}
         >
           <span className="scroll-float-char inline-block">{char}</span>
         </span>
       )
     });
-  }, [children, splitBy]);
+  }, [children, splitBy, isArabic, text]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -93,9 +92,9 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
       {
         willChange: 'opacity, transform',
         opacity: 0,
-        yPercent: 120,
-        scaleY: 2.3,
-        scaleX: 0.7,
+        yPercent: isArabic ? 105 : 120,
+        scaleY: isArabic ? 1.5 : 2.3,
+        scaleX: isArabic ? 0.92 : 0.7,
         transformOrigin: '50% 0%'
       },
       {
@@ -120,11 +119,16 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, children]);
+  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, children, isArabic]);
 
   return (
-    <h2 ref={containerRef} className={`my-5 overflow-hidden pe-[0.06em] ${containerClassName}`}>
-      <span className={`inline shrink-0 leading-[1.15] pe-[0.04em] ${textClassName}`}>
+    <h2
+      ref={containerRef}
+      className={`my-5 ${isArabic ? 'overflow-visible' : 'overflow-hidden'} pe-[0.06em] ${containerClassName}`}
+    >
+      <span
+        className={`inline shrink-0 ${isArabic ? 'leading-[1.35]' : 'leading-[1.15]'} pe-[0.04em] ${textClassName}`}
+      >
         {splitText}
       </span>
     </h2>

@@ -10,7 +10,8 @@ import { useLocale } from '../../../providers/LocaleProvider'
 const HERO_IMAGE = '/images/about/hero-team-collab.png'
 
 export default function ExperienceOpening() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const isArabic = locale === 'ar'
   const reduceMotion = useReducedMotion()
   const reduce = reduceMotion ?? false
 
@@ -90,13 +91,13 @@ export default function ExperienceOpening() {
           style={{
             fontFamily: 'var(--font-heading)',
             fontSize: 'clamp(2rem, 5.5vw, 4.25rem)',
-            lineHeight: 1.05,
+            lineHeight: isArabic ? 1.2 : 1.05,
             fontWeight: 700,
-            letterSpacing: '-0.025em',
+            letterSpacing: isArabic ? 0 : '-0.025em',
           }}
         >
           <SplitText text={t('experience.opening.titleLine1')} stagger={0.06} duration={0.75} />
-          <span className="block mt-1 text-white/75">
+          <span className="block mt-1 text-white">
             <SplitText text={t('experience.opening.titleLine2')} stagger={0.06} duration={0.75} delay={0.3} />
           </span>
         </h1>
@@ -104,7 +105,7 @@ export default function ExperienceOpening() {
         <div className="mt-8 max-w-md">
           <BlurText
             text={t('experience.opening.description')}
-            className="text-white/45"
+            className={isArabic ? 'text-white/60' : 'text-white/45'}
             animateBy="words"
             delay={35}
             stepDuration={0.28}

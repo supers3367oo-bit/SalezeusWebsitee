@@ -1,16 +1,11 @@
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { InsightArticle } from '../../types/insights'
-import Button from '../ui/Button'
 import { formatArticleDate } from '../../data/insights'
 import { useLocale } from '../../providers/LocaleProvider'
 
 type ArticlesGridProps = {
   articles: InsightArticle[]
-  showEmptyState?: boolean
-  onClearFilters?: () => void
-  suggestedIndustries?: string[]
-  onIndustrySelect?: (industry: string) => void
 }
 
 function ArticleCard({ article, index, locale }: { article: InsightArticle; index: number; locale: 'en' | 'ar' }) {
@@ -67,61 +62,8 @@ function ArticleCard({ article, index, locale }: { article: InsightArticle; inde
   )
 }
 
-export default function ArticlesGrid({
-  articles,
-  showEmptyState = false,
-  onClearFilters,
-  suggestedIndustries = [],
-  onIndustrySelect,
-}: ArticlesGridProps) {
-  const { locale, t } = useLocale()
-  if (showEmptyState) {
-    return (
-      <section className="section-surface pb-20 lg:pb-24">
-        <div className="section-container py-16 lg:py-20 text-center max-w-lg mx-auto">
-          <h2
-            className="text-sz-dark mb-3"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.35rem, 2.5vw, 1.75rem)',
-              fontWeight: 600,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            {t('insightsPage.noArticlesTitle')}
-          </h2>
-          <p
-            className="text-sz-primary/55 mb-8"
-            style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.65 }}
-          >
-            {t('insightsPage.noArticlesSubtitle')}
-          </p>
-
-          {onClearFilters && (
-            <Button type="button" size="sm" onClick={onClearFilters} className="mb-8">
-              {t('insightsPage.clearFilter')}
-            </Button>
-          )}
-
-          {suggestedIndustries.length > 0 && onIndustrySelect && (
-            <div className="flex flex-wrap justify-center gap-2">
-              {suggestedIndustries.map((industry) => (
-                <button
-                  key={industry}
-                  type="button"
-                  onClick={() => onIndustrySelect(industry)}
-                  className="px-4 py-2.5 rounded-full text-sm border border-sz-border bg-transparent text-sz-primary/65 hover:border-sz-interaction hover:text-sz-interaction transition-all duration-200 min-h-[44px]"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {industry}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-    )
-  }
+export default function ArticlesGrid({ articles }: ArticlesGridProps) {
+  const { locale } = useLocale()
 
   if (articles.length === 0) {
     return null

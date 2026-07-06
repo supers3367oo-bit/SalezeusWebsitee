@@ -1,12 +1,10 @@
-import { useMemo } from 'react'
 import clsx from 'clsx'
-import type { InsightArticle } from '../../types/insights'
+import { getInsightIndustryCategories } from '../../data/insights'
 import { useLocale } from '../../providers/LocaleProvider'
 
 type InsightsFiltersProps = {
-  articles: InsightArticle[]
-  activeIndustry: string | null
-  onIndustryChange: (industry: string | null) => void
+  activeCategory: string | null
+  onCategoryChange: (category: string | null) => void
   onClearAll: () => void
 }
 
@@ -38,36 +36,31 @@ function FilterChip({
 }
 
 export default function InsightsFilters({
-  articles,
-  activeIndustry,
-  onIndustryChange,
+  activeCategory,
+  onCategoryChange,
   onClearAll,
 }: InsightsFiltersProps) {
-  const { t } = useLocale()
-
-  const industries = useMemo(() => {
-    const unique = [...new Set(articles.map((article) => article.industry))]
-    return unique.sort((a, b) => a.localeCompare(b, 'ar'))
-  }, [articles])
+  const { locale, t } = useLocale()
+  const categories = getInsightIndustryCategories(locale)
 
   return (
     <section id="insights-articles" className="section-surface scroll-mt-28 pb-8 lg:pb-10">
       <div className="section-container">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-wrap gap-2 flex-1">
-            {industries.map((industry) => (
+            {categories.map((category) => (
               <FilterChip
-                key={industry}
-                label={industry}
-                active={activeIndustry === industry}
+                key={category}
+                label={category}
+                active={activeCategory === category}
                 onClick={() =>
-                  onIndustryChange(activeIndustry === industry ? null : industry)
+                  onCategoryChange(activeCategory === category ? null : category)
                 }
               />
             ))}
           </div>
 
-          {activeIndustry && (
+          {activeCategory && (
             <button
               type="button"
               onClick={onClearAll}

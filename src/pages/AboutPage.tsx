@@ -5,10 +5,13 @@ import ExperienceTeam from '../components/about/experience/ExperienceTeam'
 import ExperienceImpact from '../components/about/experience/ExperienceImpact'
 import ExperienceBorders from '../components/about/experience/ExperienceBorders'
 import ClosingFuture from '../components/sections/ClosingFuture'
+import { useLocale } from '../providers/LocaleProvider'
 
 export default function AboutPage() {
+  const { locale } = useLocale()
+
   return (
-    <>
+    <div key={locale}>
       <ExperienceOpening />
       <ExperiencePhilosophy />
       <ExperienceCreate />
@@ -16,6 +19,6 @@ export default function AboutPage() {
       <ExperienceImpact />
       <ExperienceBorders />
       <ClosingFuture sectionId="future" />
-    </>
+    </div>
   )
 }

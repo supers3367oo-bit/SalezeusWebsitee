@@ -11,16 +11,16 @@ type Props = {
 }
 
 export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
-  const { t } = useLocale()
+  const { dir, locale, t } = useLocale()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section className="bg-[#F0EFEC] section-padding">
+    <section className="bg-[#F0EFEC] section-padding" dir={dir}>
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 text-start">
             <h2
-              className="text-sz-dark mb-5"
+              className="text-sz-dark mb-5 text-start"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
@@ -29,10 +29,13 @@ export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
                 letterSpacing: '-0.02em',
               }}
             >
-              {t('serviceDetail.questionsAbout').replace('{service}', serviceTitle.toLowerCase())}
+              {t('serviceDetail.questionsAbout').replace(
+                '{service}',
+                locale === 'ar' ? serviceTitle : serviceTitle.toLowerCase()
+              )}
             </h2>
             <p
-              className="text-sz-secondary mb-8"
+              className="text-sz-secondary mb-8 text-start"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
             >
               {t('serviceDetail.faqSummary')}
@@ -50,10 +53,10 @@ export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? null : i)}
-                    className="w-full flex items-start justify-between gap-4 py-5 text-left group"
+                    className="w-full flex items-start justify-between gap-4 py-5 text-start"
                   >
                     <span
-                      className="font-medium text-sz-dark group-hover:text-sz-interaction transition-colors duration-200"
+                      className="font-medium text-sz-dark text-start"
                       style={{ fontFamily: 'var(--font-heading)', fontSize: 16 }}
                     >
                       {faq.question}
@@ -79,7 +82,7 @@ export default function ServiceFAQ({ faqs, serviceTitle }: Props) {
                         style={{ overflow: 'hidden' }}
                       >
                         <p
-                          className="text-sz-secondary pb-5 pr-10"
+                          className="text-sz-secondary pb-5 pe-10 text-start"
                           style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.7 }}
                         >
                           {faq.answer}

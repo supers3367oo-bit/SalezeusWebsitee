@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import CountUp from '../../ui/CountUp'
 import ScrollFloat from '../../ui/ScrollFloat'
+import { useLightMotion } from '../../../lib/useLightMotion'
 import { useLocale } from '../../../providers/LocaleProvider'
 
 const METRICS = [
@@ -14,19 +15,22 @@ const METRICS = [
 function MetricBlock({
   metric,
   index,
+  lightMotion,
 }: {
   metric: (typeof METRICS)[number]
   index: number
+  lightMotion: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const reduce = useReducedMotion()
+  const useMotion = !reduce && !lightMotion
 
   return (
     <motion.div
       ref={ref}
-      initial={reduce ? false : { opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      initial={useMotion ? { opacity: 0, y: 40 } : false}
+      animate={useMotion ? (inView ? { opacity: 1, y: 0 } : {}) : { opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       className="relative border-t border-white/[0.1] pt-8 lg:pt-10"
     >
@@ -42,7 +46,11 @@ function MetricBlock({
             }}
           >
             {inView ? (
-              <CountUp to={metric.value} duration={2.2} />
+              lightMotion ? (
+                <>{metric.value}</>
+              ) : (
+                <CountUp to={metric.value} duration={2.2} />
+              )
             ) : (
               '0'
             )}
@@ -72,7 +80,9 @@ function MetricBlock({
 }
 
 export default function ExperienceImpact() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const isArabic = locale === 'ar'
+  const lightMotion = useLightMotion()
   const metrics = [
     { ...METRICS[0], label: t('experience.impact.metrics.years.label'), sub: t('experience.impact.metrics.years.sub') },
     { ...METRICS[1], label: t('experience.impact.metrics.projects.label'), sub: t('experience.impact.metrics.projects.sub') },
@@ -80,7 +90,7 @@ export default function ExperienceImpact() {
     { ...METRICS[3], label: t('experience.impact.metrics.countries.label'), sub: t('experience.impact.metrics.countries.sub') },
   ]
   return (
-    <section className="bg-sz-dark relative overflow-hidden py-20 lg:py-28" id="impact-story">
+    <section className="bg-sz-dark relative overflow-hidden py-14 lg:py-28" id="impact-story">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -90,19 +100,38 @@ export default function ExperienceImpact() {
       />
 
       <div className="section-container relative z-10">
-        <div className="mb-16 lg:mb-24 max-w-4xl">
-          <ScrollFloat
-            containerClassName="!my-0 text-white"
-            textClassName="!text-[clamp(2.5rem,6vw,5rem)] !leading-[1.05] !font-semibold"
-            scrollStart="top 90%"
-            scrollEnd="top 55%"
-            animationDuration={1}
-            stagger={0.025}
-          >
-            {t('experience.impact.title')}
-          </ScrollFloat>
+        <div className="mb-10 lg:mb-24 max-w-4xl">
+          {lightMotion ? (
+            <h2
+              className="text-white"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+                lineHeight: isArabic ? 1.2 : 1.05,
+                fontWeight: 600,
+                letterSpacing: isArabic ? 0 : '-0.02em',
+              }}
+            >
+              {t('experience.impact.title')}
+            </h2>
+          ) : (
+            <ScrollFloat
+              containerClassName="!my-0 text-white"
+              textClassName={
+                isArabic
+                  ? '!text-[clamp(2.5rem,6vw,5rem)] !leading-[1.2] !font-semibold'
+                  : '!text-[clamp(2.5rem,6vw,5rem)] !leading-[1.05] !font-semibold'
+              }
+              scrollStart="top 90%"
+              scrollEnd="top 55%"
+              animationDuration={1}
+              stagger={0.025}
+            >
+              {t('experience.impact.title')}
+            </ScrollFloat>
+          )}
           <p
-            className="mt-6 text-white/40 max-w-md"
+            className="mt-4 lg:mt-6 text-white/40 max-w-md"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
             {t('experience.impact.subtitle')}
@@ -111,7 +140,7 @@ export default function ExperienceImpact() {
 
         <div className="space-y-4 lg:space-y-2">
           {metrics.map((metric, i) => (
-            <MetricBlock key={metric.label} metric={metric} index={i} />
+            <MetricBlock key={metric.label} metric={metric} index={i} lightMotion={lightMotion} />
           ))}
         </div>
       </div>

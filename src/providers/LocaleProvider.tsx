@@ -55,7 +55,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, locale)
 
     const frame = requestAnimationFrame(() => {
-      ScrollTrigger.refresh()
+      ScrollTrigger.refresh(true)
       refreshLocomotiveScroll()
     })
 

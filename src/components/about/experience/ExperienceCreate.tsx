@@ -45,7 +45,7 @@ function StepPanel({ step, index }: { step: (typeof STEPS)[number]; index: numbe
 
   return (
     <div
-      className={`create-step relative min-h-[100dvh] flex items-center ${
+      className={`create-step relative flex min-h-[50dvh] items-center lg:min-h-[100dvh] ${
         isDark ? 'bg-sz-dark' : 'section-surface'
       }`}
       data-step={index}
@@ -88,7 +88,7 @@ function StepPanel({ step, index }: { step: (typeof STEPS)[number]; index: numbe
 }
 
 export default function ExperienceCreate() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const rootRef = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
   const steps = [
@@ -163,11 +163,11 @@ export default function ExperienceCreate() {
     }, rootRef)
 
     return () => ctx.revert()
-  }, [reduce])
+  }, [reduce, locale])
 
   return (
     <section id="create" className="relative">
-      <div className="section-surface py-16 lg:py-20 border-b border-sz-border">
+      <div className="section-surface -mt-6 border-b border-sz-border pt-3 pb-5 lg:-mt-10 lg:pt-6 lg:pb-8">
         <div className="section-container">
           <h2 className="heading-lg text-sz-dark max-w-3xl">
             {t('experience.create.title')}
@@ -183,7 +183,7 @@ export default function ExperienceCreate() {
 
       <div ref={rootRef} className="relative">
         {steps.map((step, i) => (
-          <StepPanel key={step.title} step={step} index={i} />
+          <StepPanel key={`create-step-${i}`} step={step} index={i} />
         ))}
       </div>
     </section>

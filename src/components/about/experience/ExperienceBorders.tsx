@@ -10,7 +10,7 @@ import { useLocale } from '../../../providers/LocaleProvider'
 gsap.registerPlugin(ScrollTrigger)
 
 export default function ExperienceBorders() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const mapWrapRef = useRef<HTMLDivElement>(null)
@@ -62,21 +62,21 @@ export default function ExperienceBorders() {
     requestAnimationFrame(() => refreshLocomotiveScroll())
 
     return () => ctx.revert()
-  }, [reduce])
+  }, [reduce, locale])
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#040508] min-h-[100dvh] flex flex-col"
+      className="relative overflow-hidden bg-[#040508] flex flex-col min-h-0 lg:min-h-[100dvh]"
       aria-labelledby="location-heading"
     >
       <div
         ref={headerRef}
-        className="relative z-10 shrink-0 pt-24 sm:pt-28 lg:pt-32 pb-6 lg:pb-10 px-6 text-center"
+        className="relative z-10 shrink-0 px-6 pt-20 pb-4 text-center sm:pt-28 sm:pb-5 lg:pt-32 lg:pb-10"
       >
         <h2
           id="location-heading"
-          className="text-white mb-5 sm:mb-6"
+          className="mb-4 text-white sm:mb-5 lg:mb-6"
           style={{
             fontFamily: 'var(--font-heading)',
             fontSize: 'clamp(2.25rem, 5.5vw, 4.25rem)',
@@ -100,7 +100,7 @@ export default function ExperienceBorders() {
         </ScrollReveal>
       </div>
 
-      <div ref={mapWrapRef} className="relative z-0 mt-auto w-full pb-4 sm:pb-8">
+      <div ref={mapWrapRef} className="relative z-0 mt-5 w-full pb-3 sm:mt-6 sm:pb-6 lg:mt-auto lg:pb-8">
         <PresenceMap />
       </div>
     </section>

@@ -32,6 +32,15 @@ function StaticGrid({ services }: { services: Service[] }) {
 export default function OurSolutions() {
   const { t, dir } = useLocale()
   const isRtl = dir === 'rtl'
+  const solutionsTitle = isRtl ? (
+    <span className="whitespace-nowrap">{t('solutions.title')}</span>
+  ) : (
+    <>
+      {t('solutions.titleLine1')}
+      <br />
+      {t('solutions.titleLine2')}
+    </>
+  )
   const services = useLocalizedServices()
   const orderedServices = useMemo(
     () => (isRtl ? [...services].reverse() : services),
@@ -202,17 +211,19 @@ export default function OurSolutions() {
   if (useStatic) {
     return (
       <section className="section-surface pt-24 pb-16 lg:pt-32 lg:pb-24" id="solutions">
-        <div className="section-container section-header">
+        <div className="section-container mb-4 lg:mb-12">
           <div className="flex flex-col gap-3 max-w-2xl">
             <div>
               <span className="label-tag mb-3 block">{t('solutions.label')}</span>
-              <h2 className="heading-lg text-sz-dark">
-                {t('solutions.titleLine1')}<br />{t('solutions.titleLine2')}
-              </h2>
+              <h2 className="heading-lg text-sz-dark">{solutionsTitle}</h2>
             </div>
             <p
-              className="text-sz-secondary max-w-xl"
-              style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
+              className="text-sz-dark/75 max-w-xl"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'clamp(14px, 3.8vw, 15px)',
+                lineHeight: 1.7,
+              }}
             >
               {t('solutions.subtitleDetailed')}
             </p>
@@ -228,7 +239,7 @@ export default function OurSolutions() {
       <div ref={pinRef} className="relative z-20 h-[100dvh] overflow-hidden flex flex-col bg-[#F8F7F4]">
         <div
           ref={headerRef}
-          className="section-container pt-8 lg:pt-10 pb-2 shrink-0"
+          className="section-container pt-8 lg:pt-10 pb-0 shrink-0"
         >
           <div className="flex flex-col gap-3 max-w-2xl">
             <div>
@@ -242,19 +253,23 @@ export default function OurSolutions() {
                   letterSpacing: isRtl ? 0 : '-0.02em',
                 }}
               >
-                {t('solutions.titleLine1')}<br />{t('solutions.titleLine2')}
+                {solutionsTitle}
               </h2>
             </div>
             <p
-              className="text-sz-secondary max-w-xl"
-              style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.65 }}
+              className="text-sz-dark/75 max-w-xl"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'clamp(14px, 3.8vw, 15px)',
+                lineHeight: 1.7,
+              }}
             >
               {t('solutions.subtitleDetailed')}
             </p>
           </div>
         </div>
 
-        <div className="flex-1 flex items-end min-h-0 overflow-hidden px-6 lg:px-8 pb-10 lg:pb-14">
+        <div className="flex-1 flex items-start min-h-0 overflow-hidden px-6 lg:px-8 pt-1 pb-6 lg:pb-8">
           <div
             ref={trackRef}
             className={`flex items-end gap-8 lg:gap-10 will-change-transform ${

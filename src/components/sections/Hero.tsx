@@ -195,7 +195,7 @@ export default function Hero() {
     <>
       <div
         className="min-w-0"
-        style={{ maxWidth: isMobile ? 'calc(100% - 96px)' : 360 }}
+        style={{ maxWidth: isMobile ? (isRtl ? 'calc(100% - 132px)' : 'calc(100% - 96px)') : 360 }}
       >
         <p
           style={{
@@ -306,30 +306,35 @@ export default function Hero() {
       <a
         href="#solutions"
         data-scroll-to
-        className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+        dir={dir}
+        className="flex shrink-0 items-center gap-1.5 sm:gap-2 overflow-visible"
         style={{
           fontFamily: isRtl ? 'var(--font-heading)' : 'var(--font-display)',
-          fontSize: isMobile ? 'clamp(15px, 4.5vw, 22px)' : 'clamp(18px, 3vw, 44px)',
+          fontSize: isMobile
+            ? isRtl
+              ? 'clamp(14px, 3.8vw, 18px)'
+              : 'clamp(15px, 4.5vw, 22px)'
+            : 'clamp(18px, 3vw, 44px)',
           fontWeight: isRtl ? 700 : 400,
-          color: 'rgba(4,5,8,0.7)',
+          color: '#040508',
           letterSpacing: isRtl ? 0 : '-0.02em',
-          lineHeight: 1,
+          lineHeight: isRtl ? 1.4 : 1.1,
           textTransform: isRtl ? 'none' : 'uppercase',
           textDecoration: 'none',
-          transition: 'color 200ms ease',
+          whiteSpace: 'nowrap',
           alignSelf: 'flex-end',
           paddingBottom: isMobile ? 2 : 0,
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = '#040508' }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(4,5,8,0.7)' }}
       >
         {t('hero.explore')}
         <ArrowRight
           strokeWidth={2.25}
-          className={isRtl ? 'scale-x-[-1]' : undefined}
           style={{
             width: isMobile ? 'clamp(14px, 4vw, 20px)' : 'clamp(16px, 2.5vw, 36px)',
             height: isMobile ? 'clamp(14px, 4vw, 20px)' : 'clamp(16px, 2.5vw, 36px)',
+            transform: isRtl
+              ? `translateY(${isMobile ? 5 : 7}px) scaleX(-1)`
+              : `translateY(${isMobile ? 4 : 6}px)`,
           }}
         />
       </a>

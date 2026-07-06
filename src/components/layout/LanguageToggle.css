@@ -14,6 +14,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
+  justify-items: center;
   width: 58px;
   height: 32px;
   padding: 3px;
@@ -37,7 +38,7 @@
 .lang-toggle__pill {
   position: absolute;
   top: 3px;
-  left: 3px;
+  inset-inline-start: 3px;
   width: calc(50% - 3px);
   height: calc(100% - 6px);
   border-radius: 9999px;
@@ -47,12 +48,18 @@
 }
 
 .lang-toggle__pill--ar {
-  transform: translateX(calc(100% + 3px));
+  transform: translateX(100%);
 }
 
 .lang-toggle__label {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100% - 6px);
+  min-width: 0;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
@@ -61,12 +68,24 @@
   transition: color 0.25s ease;
   user-select: none;
   line-height: 1;
+  text-align: center;
 }
 
 .lang-toggle__label--ar {
   font-family: var(--font-arabic, var(--font-body));
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.lang-toggle__glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  margin-bottom: 6px;
 }
 
 .lang-toggle__label--active {
@@ -77,5 +96,9 @@
   .lang-toggle__track {
     width: 62px;
     height: 34px;
+  }
+
+  .lang-toggle__label--ar {
+    font-size: 14px;
   }
 }

@@ -47,11 +47,11 @@ export default function PortfolioPreview() {
       : activeFilter === filter
 
   return (
-    <section className="section-surface section-padding" id="portfolio">
+    <section className="section-surface pt-0 pb-10 sm:pt-2 lg:py-24" id="portfolio">
       <div className="section-container">
-        <div className="section-header section-header-row">
+        <div className="section-header section-header-row max-lg:mb-5">
           <div>
-            <span className="label-tag mb-3 block">{t('portfolio.label')}</span>
+            <span className="label-tag mb-1.5 block lg:mb-3">{t('portfolio.label')}</span>
             <h2 className="heading-lg text-sz-dark">
               <SplitText text={t('portfolio.previewTitle')} repeat stagger={0.1} duration={1} />
             </h2>
@@ -61,7 +61,7 @@ export default function PortfolioPreview() {
           </Button>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-1.5">
+        <div className="mb-5 flex flex-wrap gap-1.5 lg:mb-8">
           {serviceFilters.map((filter) => (
             <button
               key={filter}

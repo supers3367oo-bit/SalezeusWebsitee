@@ -20,23 +20,23 @@ export default function FAQ() {
   )
 
   return (
-    <section className="section-surface section-padding" id="faq">
+    <section className="section-surface -mt-4 pt-0 pb-8 sm:-mt-2 sm:pb-10 lg:mt-0 lg:py-24" id="faq">
       <div className="section-container">
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-20">
 
           <div className="lg:col-span-2">
-            <span className="label-tag mb-3 block">{t('faq.label')}</span>
-            <h2 className="heading-lg text-sz-dark mb-5">
+            <span className="label-tag mb-1 block lg:mb-3">{t('faq.label')}</span>
+            <h2 className="heading-lg mb-3 text-sz-dark lg:mb-5">
               {t('faq.titleLine1')}<br />{t('faq.titleLine2')}
             </h2>
             <p
-              className="text-sz-secondary mb-8"
+              className="mb-5 text-sz-secondary lg:mb-8"
               style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
             >
               {t('faq.subtitle')}
             </p>
-            <Button href="#contact">
+            <Button href="#contact" className="hidden lg:inline-flex">
               {t('faq.cta')}
             </Button>
           </div>

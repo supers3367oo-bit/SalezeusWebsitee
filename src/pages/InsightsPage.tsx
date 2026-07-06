@@ -3,6 +3,7 @@ import InsightsHero from '../components/insights/InsightsHero'
 import FeaturedInsight from '../components/insights/FeaturedInsight'
 import InsightsFilters from '../components/insights/InsightsFilters'
 import ArticlesGrid from '../components/insights/ArticlesGrid'
+import InsightsEmptyState from '../components/insights/InsightsEmptyState'
 import InsightsHubCTA from '../components/insights/InsightsHubCTA'
 import { getFeaturedArticle, getInsightArticles } from '../data/insights'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
@@ -10,42 +11,49 @@ import { useLocale } from '../providers/LocaleProvider'
 
 export default function InsightsPage() {
   const { locale, t } = useLocale()
-  const [activeIndustry, setActiveIndustry] = useState<string | null>(null)
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const allArticles = useMemo(() => getInsightArticles(locale), [locale])
 
-  const filteredArticles = useMemo(() => {
-    if (!activeIndustry) return allArticles
-    return allArticles.filter((article) => article.industry === activeIndustry)
-  }, [activeIndustry, allArticles])
+  useEffect(() => {
+    setActiveCategory(null)
+  }, [locale])
 
-  const suggestedIndustries = useMemo(() => {
+  const filteredArticles = useMemo(() => {
+    if (!activeCategory) return allArticles
+    return allArticles.filter((article) => article.industry === activeCategory)
+  }, [activeCategory, allArticles])
+
+  const suggestedCategories = useMemo(() => {
     const counts = new Map<string, number>()
     for (const article of allArticles) {
       counts.set(article.industry, (counts.get(article.industry) ?? 0) + 1)
     }
     return [...counts.entries()]
+      .filter(([, count]) => count > 0)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 4)
       .map(([industry]) => industry)
   }, [allArticles])
 
   const spotlightArticle = useMemo(() => {
-    if (filteredArticles.length === 0) return null
-    if (!activeIndustry) return getFeaturedArticle(locale)
-    return filteredArticles.find((a) => a.featured) ?? filteredArticles[0]
-  }, [filteredArticles, activeIndustry, locale])
+    if (activeCategory) return null
+    return getFeaturedArticle(locale)
+  }, [activeCategory, locale])
 
   const gridArticles = useMemo(() => {
-    if (!spotlightArticle) return []
-    return filteredArticles.filter((a) => a.slug !== spotlightArticle.slug)
-  }, [filteredArticles, spotlightArticle])
+    if (activeCategory) return filteredArticles
+    if (!spotlightArticle) return filteredArticles
+    return filteredArticles.filter((article) => article.slug !== spotlightArticle.slug)
+  }, [activeCategory, filteredArticles, spotlightArticle])
 
-  const clearFilter = () => setActiveIndustry(null)
+  const showEmptyState = Boolean(activeCategory && filteredArticles.length === 0)
+
+  const clearFilter = () => setActiveCategory(null)
 
   useEffect(() => {
     requestAnimationFrame(() => refreshLocomotiveScroll())
-  }, [filteredArticles, spotlightArticle])
+  }, [filteredArticles, spotlightArticle, showEmptyState, activeCategory])
 
   return (
     <>
@@ -54,24 +62,25 @@ export default function InsightsPage() {
       {spotlightArticle && (
         <FeaturedInsight
           article={spotlightArticle}
-          label={activeIndustry ? t('insightsPage.selectedForYou') : t('insightsPage.editorsPick')}
+          label={t('insightsPage.editorsPick')}
         />
       )}
 
       <InsightsFilters
-        articles={allArticles}
-        activeIndustry={activeIndustry}
-        onIndustryChange={setActiveIndustry}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
         onClearAll={clearFilter}
       />
 
-      <ArticlesGrid
-        articles={gridArticles}
-        showEmptyState={filteredArticles.length === 0}
-        onClearFilters={clearFilter}
-        suggestedIndustries={suggestedIndustries}
-        onIndustrySelect={setActiveIndustry}
-      />
+      {showEmptyState ? (
+        <InsightsEmptyState
+          onClearFilters={clearFilter}
+          suggestedIndustries={suggestedCategories}
+          onIndustrySelect={setActiveCategory}
+        />
+      ) : (
+        <ArticlesGrid articles={gridArticles} />
+      )}
 
       <InsightsHubCTA />
     </>

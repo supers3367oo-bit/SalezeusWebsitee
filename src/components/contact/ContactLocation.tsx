@@ -1,10 +1,14 @@
+import { useMemo } from 'react'
 import { MapPin, Mail, Phone } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { REGIONS } from '../about/experience/globe/locations'
 import { CONTACT_EMAIL, getOfficePhone } from '../../data/contact'
+import { getGlobeLocations } from '../../data/localized'
+import { useLocale } from '../../providers/LocaleProvider'
 
 export default function ContactLocation() {
+  const { locale, t } = useLocale()
   const reduce = useReducedMotion() ?? false
+  const regions = useMemo(() => getGlobeLocations(locale), [locale])
 
   return (
     <section className="relative bg-[#040508] border-t border-white/[0.08] py-16 lg:py-24">
@@ -25,18 +29,18 @@ export default function ContactLocation() {
               letterSpacing: '-0.02em',
             }}
           >
-            Our location
+            {t('contact.location.title')}
           </h2>
           <p
             className="text-white/45 max-w-xl"
             style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7 }}
           >
-            Studios in Turkey and Syria, working with clients across the MENA region and beyond.
+            {t('contact.location.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 mb-10">
-          {REGIONS.map((region, i) => (
+          {regions.map((region, i) => (
             <motion.article
               key={region.id}
               initial={reduce ? false : { opacity: 0, y: 24 }}
@@ -99,7 +103,7 @@ export default function ContactLocation() {
                     <Phone size={15} strokeWidth={2} className="shrink-0 opacity-70" />
                     <span>
                       <span className="block text-white/35 text-xs mb-0.5">
-                        {office.label}
+                        {t(`contact.offices.${office.id}`)}
                       </span>
                       {office.phoneDisplay}
                     </span>

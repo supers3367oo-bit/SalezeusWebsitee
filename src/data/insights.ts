@@ -1,8 +1,23 @@
 import type { InsightArticle } from '../types/insights'
+import { INDUSTRY_CATEGORIES, type IndustryCategory } from '../types/insights'
 import { SHOWCASE_ARTICLE } from './showcaseArticle'
 import type { Locale } from '../i18n/types'
 import { pickLocale } from '../i18n/pickLocale'
-import { INSIGHT_ARTICLES_AR } from './localized/insights.ar'
+import { INSIGHT_ARTICLES_AR, POPULAR_TOPICS_AR } from './localized/insights.ar'
+
+const INDUSTRY_LABELS_AR: Record<IndustryCategory, string> = {
+  Healthcare: 'الرعاية الصحية',
+  'Medical Tourism': 'السياحة العلاجية',
+  Education: 'التعليم',
+  Tourism: 'السياحة',
+  Restaurants: 'المطاعم',
+  'Real Estate': 'العقارات',
+  Manufacturing: 'التصنيع',
+  Technology: 'التقنية',
+  'E-commerce': 'التجارة الإلكترونية',
+  Fashion: 'الأزياء',
+  Startups: 'الشركات الناشئة',
+}
 
 export const INSIGHT_IMAGES = {
   brandSystem: '/images/insights/cover-brand-system.svg',
@@ -494,6 +509,16 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
 
 function getInsightArticles(locale: Locale = 'en'): InsightArticle[] {
   return pickLocale(locale, INSIGHT_ARTICLES, INSIGHT_ARTICLES_AR)
+}
+
+export function getPopularTopics(locale: Locale = 'en'): string[] {
+  return pickLocale(locale, POPULAR_TOPICS, POPULAR_TOPICS_AR)
+}
+
+export function getInsightIndustryCategories(locale: Locale = 'en'): string[] {
+  return INDUSTRY_CATEGORIES.map((category) =>
+    locale === 'ar' ? INDUSTRY_LABELS_AR[category] : category
+  )
 }
 
 export { getInsightArticles }

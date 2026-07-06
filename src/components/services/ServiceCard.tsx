@@ -82,7 +82,7 @@ export default function ServiceCard({
                 <ArrowRight
                   size={13}
                   strokeWidth={2}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  className="transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"
                 />
               </span>
               <span className="h-px w-full bg-current origin-right transition-transform duration-300 group-hover:scale-x-105" />

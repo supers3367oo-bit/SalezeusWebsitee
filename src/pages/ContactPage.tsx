@@ -7,11 +7,13 @@ import ContactLocation from '../components/contact/ContactLocation'
 import ContactPhones from '../components/contact/ContactPhones'
 import { CONTACT_EMAIL } from '../data/contact'
 import { refreshLocomotiveScroll } from '../lib/locomotive'
+import { useLightMotion } from '../lib/useLightMotion'
 import { useLocale } from '../providers/LocaleProvider'
 
 export default function ContactPage() {
   const { t } = useLocale()
   const reduce = useReducedMotion() ?? false
+  const lightMotion = useLightMotion()
 
   useLayoutEffect(() => {
     requestAnimationFrame(() => refreshLocomotiveScroll())
@@ -40,7 +42,11 @@ export default function ContactPage() {
                   letterSpacing: '-0.025em',
                 }}
               >
-                <SplitText text={t('contact.title')} wrap stagger={0.08} duration={0.7} />
+                {!lightMotion && !reduce ? (
+                  <SplitText text={t('contact.title')} wrap stagger={0.08} duration={0.7} />
+                ) : (
+                  t('contact.title')
+                )}
               </h1>
 
               <p

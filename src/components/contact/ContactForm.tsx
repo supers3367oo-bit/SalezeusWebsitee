@@ -1,10 +1,11 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import clsx from 'clsx'
 import { motion, useReducedMotion } from 'framer-motion'
 import Button from '../ui/Button'
 import PhoneCountryInput from './PhoneCountryInput'
 import { DEFAULT_COUNTRY_ISO, formatPhoneE164, getDefaultCountry } from '../../data/countries'
 import {
+  isValidEmail,
   resolveInitialContactEmail,
   setStoredContactEmail,
 } from '../../lib/contactFormStorage'
@@ -62,6 +63,8 @@ export default function ContactForm() {
   const [form, setForm] = useState<FormState>(() => createFreshForm())
   const [submitted, setSubmitted] = useState(false)
   const [phoneError, setPhoneError] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [showEmailField, setShowEmailField] = useState(false)
   const [showEmailAutoHint, setShowEmailAutoHint] = useState(() => Boolean(resolveInitialContactEmail()))
 
   const reasonLabels: Record<ContactReason, string> = {
@@ -69,10 +72,20 @@ export default function ContactForm() {
     join: t('contact.form.joinUs'),
   }
 
+  useEffect(() => {
+    const resolved = resolveInitialContactEmail()
+    if (!resolved) return
+    setForm((prev) => (prev.email ? prev : { ...prev, email: resolved }))
+    setShowEmailAutoHint(true)
+  }, [])
+
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }))
     if (key === 'phoneNational') setPhoneError('')
-    if (key === 'email') setShowEmailAutoHint(false)
+    if (key === 'email') {
+      setEmailError('')
+      setShowEmailAutoHint(false)
+    }
   }
 
   const onSubmit = (e: FormEvent) => {
@@ -84,12 +97,17 @@ export default function ContactForm() {
       return
     }
 
+    if (!isValidEmail(form.email)) {
+      setEmailError(t('contact.form.emailError'))
+      setShowEmailField(true)
+      return
+    }
+
     setPhoneError('')
+    setEmailError('')
     setStoredContactEmail(form.email)
     setSubmitted(true)
   }
-
-  const fullPhone = formatPhoneE164(getDefaultCountry(form.countryIso), form.phoneNational)
 
   if (submitted) {
     return (
@@ -119,6 +137,8 @@ export default function ContactForm() {
             setForm(createFreshForm())
             setSubmitted(false)
             setPhoneError('')
+            setEmailError('')
+            setShowEmailField(false)
             setShowEmailAutoHint(Boolean(resolveInitialContactEmail()))
           }}
         >
@@ -135,32 +155,43 @@ export default function ContactForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="rounded-card border border-white/10 bg-white/[0.05] backdrop-blur-md p-6 sm:p-8 lg:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
-      noValidate={false}
       autoComplete="on"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-        <div>
-          <RequiredLabel htmlFor="contact-name">{t('contact.form.name')}</RequiredLabel>
-          <input
-            id="contact-name"
-            type="text"
-            required
-            autoComplete="name"
-            value={form.name}
-            onChange={(e) => update('name', e.target.value)}
-            className={fieldClass}
-            style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
-            placeholder={t('contact.form.namePlaceholder')}
-          />
-        </div>
+      {!showEmailField && (
+        <input
+          type="email"
+          name="email"
+          autoComplete="email"
+          value={form.email}
+          onChange={(e) => update('email', e.target.value)}
+          onBlur={(e) => setStoredContactEmail(e.target.value)}
+          className="sr-only"
+          tabIndex={-1}
+          aria-hidden
+        />
+      )}
 
-        <div>
-          <RequiredLabel htmlFor="contact-email">{t('contact.form.email')}</RequiredLabel>
+      <div className="mb-5">
+        <RequiredLabel htmlFor="contact-name">{t('contact.form.name')}</RequiredLabel>
+        <input
+          id="contact-name"
+          type="text"
+          required
+          autoComplete="name"
+          value={form.name}
+          onChange={(e) => update('name', e.target.value)}
+          className={fieldClass}
+          style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
+          placeholder={t('contact.form.namePlaceholder')}
+        />
+      </div>
+
+      {showEmailField && (
+        <div className="mb-5">
+          <RequiredLabel htmlFor="contact-email-visible">{t('contact.form.email')}</RequiredLabel>
           <input
-            id="contact-email"
-            name="email"
+            id="contact-email-visible"
             type="email"
-            required
             autoComplete="email"
             value={form.email}
             onChange={(e) => update('email', e.target.value)}
@@ -169,13 +200,25 @@ export default function ContactForm() {
             style={{ fontFamily: 'var(--font-body)', fontSize: 15 }}
             placeholder={t('contact.form.emailPlaceholder')}
           />
-          {showEmailAutoHint && (
-            <p className="mt-2 text-xs text-white/35" style={{ fontFamily: 'var(--font-body)' }}>
-              {t('contact.form.autoFillHint')}
+          {emailError && (
+            <p className="mt-2 text-sm text-[#F0B80D]" style={{ fontFamily: 'var(--font-body)' }} role="alert">
+              {emailError}
             </p>
           )}
         </div>
-      </div>
+      )}
+
+      {!showEmailField && showEmailAutoHint && form.email && (
+        <p className="mb-5 text-xs text-white/35" style={{ fontFamily: 'var(--font-body)' }}>
+          {t('contact.form.autoFillHint')}
+        </p>
+      )}
+
+      {!showEmailField && emailError && (
+        <p className="mb-5 text-sm text-[#F0B80D]" style={{ fontFamily: 'var(--font-body)' }} role="alert">
+          {emailError}
+        </p>
+      )}
 
       <div className="mb-5">
         <RequiredLabel htmlFor="contact-phone">{t('contact.form.phone')}</RequiredLabel>
@@ -228,7 +271,6 @@ export default function ContactForm() {
         </label>
         <textarea
           id="contact-message"
-          required
           rows={5}
           value={form.message}
           onChange={(e) => update('message', e.target.value)}

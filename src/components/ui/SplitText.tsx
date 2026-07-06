@@ -1,6 +1,7 @@
 import { Fragment, useRef } from 'react'
 import clsx from 'clsx'
 import { motion, useInView, type Easing } from 'framer-motion'
+import { hasArabicScript } from '../../lib/arabicScript'
 
 type SplitTextProps = {
   text: string
@@ -28,6 +29,7 @@ export default function SplitText({
   wrap = false,
 }: SplitTextProps) {
   const ref = useRef<HTMLSpanElement>(null)
+  const isArabic = hasArabicScript(text)
   const isInView = useInView(ref, {
     once: !repeat,
     margin: '-40px',
@@ -35,11 +37,15 @@ export default function SplitText({
   })
 
   const parts = splitBy === 'chars' ? text.split('') : text.split(' ')
+  const maskClass = isArabic
+    ? 'inline-block overflow-hidden align-bottom pb-[0.38em] -mb-[0.38em]'
+    : 'inline-block overflow-hidden align-bottom pb-[0.14em] -mb-[0.14em]'
+  const hiddenY = isArabic ? '100%' : '110%'
 
   return (
     <span
       ref={ref}
-      className={clsx('inline', wrap && 'max-w-full', className)}
+      className={clsx('inline', wrap && 'max-w-full', isArabic && 'leading-[1.28]', className)}
       aria-label={text}
     >
       {parts.map((part, i) => {
@@ -48,10 +54,7 @@ export default function SplitText({
         return (
           <Fragment key={`${part}-${i}`}>
             <span
-              className={clsx(
-                'inline-block overflow-hidden align-bottom pb-[0.14em] -mb-[0.14em]',
-                isLast && 'pe-[0.1em]',
-              )}
+              className={clsx(maskClass, isLast && (isArabic ? 'pe-[0.14em]' : 'pe-[0.1em]'))}
             >
               <motion.span
                 className="inline-block will-change-transform"
@@ -59,7 +62,7 @@ export default function SplitText({
                 animate={
                   isInView
                     ? { y: '0%', opacity: 1 }
-                    : { y: '110%', opacity: 0 }
+                    : { y: hiddenY, opacity: 0 }
                 }
                 transition={{
                   duration,
