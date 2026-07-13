@@ -79,13 +79,28 @@ export type AdminProjectImage = {
   alt: BilingualText
 }
 
+/** Behance-style ordered body blocks for project case studies */
+export type AdminProjectBlock =
+  | { id: string; type: 'image'; src: string; alt: BilingualText }
+  | { id: string; type: 'text'; title?: BilingualText; body: BilingualText }
+  | { id: string; type: 'video'; url: string; caption?: BilingualText }
+  | {
+      id: string
+      type: 'link'
+      url: string
+      title: BilingualText
+      description?: BilingualText
+    }
+
 export type AdminProject = {
   id: number
   slug: string
   image: string
   heroImage: string
-  /** Gallery images for the project case study */
+  /** Legacy gallery — migrated into blocks when empty */
   images: AdminProjectImage[]
+  /** Ordered Behance body: image / text / video / link */
+  blocks: AdminProjectBlock[]
   year: number
   service: ProjectDetail['service']
   /** When true, eligible for home Portfolio Preview */
@@ -124,6 +139,13 @@ export type AdminInsight = {
   keywords?: BilingualText
 }
 
+export type AdminSocialLinks = {
+  linkedin: string
+  instagram: string
+  twitter: string
+  youtube: string
+}
+
 export type AdminContact = {
   email: string
   whatsappPhone: string
@@ -133,6 +155,7 @@ export type AdminContact = {
     phoneE164: string
     phoneDisplay: string
   }[]
+  socialLinks: AdminSocialLinks
 }
 
 /** Flat editable string leaves from i18n trees */
@@ -153,6 +176,15 @@ export type PageCopySection = {
 /** Static chrome images editable in admin (paths or data URLs) */
 export type AdminSiteAssets = Record<string, string>
 
+/** Home Featured Success / case study carousel cards */
+export type AdminFeaturedCase = {
+  id: string
+  client: BilingualText
+  title: BilingualText
+  service: BilingualText
+  image: string
+}
+
 export type AdminContentState = {
   team: AdminTeamMember[]
   services: AdminService[]
@@ -161,6 +193,7 @@ export type AdminContentState = {
   contact: AdminContact
   pageSections: PageCopySection[]
   siteAssets: AdminSiteAssets
+  featuredCases: AdminFeaturedCase[]
 }
 
 export type { TeamMember, ServiceDetail, ProjectDetail, InsightArticle }

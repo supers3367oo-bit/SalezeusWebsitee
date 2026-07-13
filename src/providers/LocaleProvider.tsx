@@ -96,3 +96,36 @@ export function useLocale() {
   }
   return context
 }
+
+/**
+ * Nested draft locale for admin live previews.
+ * Does not touch document.lang / localStorage.
+ */
+export function DraftLocaleProvider({
+  locale,
+  overlay,
+  children,
+}: {
+  locale: Locale
+  overlay: TranslationTree
+  children: ReactNode
+}) {
+  const dir: 'ltr' | 'rtl' = locale === 'ar' ? 'rtl' : 'ltr'
+  const messages = useMemo(
+    () => deepMergeMessages(MESSAGES[locale], overlay),
+    [locale, overlay],
+  )
+  const t = useCallback((key: string) => getTranslation(messages, key), [messages])
+  const noop = useCallback((_next?: Locale) => {}, [])
+  const value = useMemo(
+    () => ({
+      locale,
+      dir,
+      setLocale: noop as (locale: Locale) => void,
+      toggleLocale: noop as () => void,
+      t,
+    }),
+    [locale, dir, noop, t],
+  )
+  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+}

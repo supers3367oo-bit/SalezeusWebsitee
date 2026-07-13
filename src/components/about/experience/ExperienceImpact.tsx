@@ -1,23 +1,23 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import CountUp from '../../ui/CountUp'
 import ScrollFloat from '../../ui/ScrollFloat'
 import { useLightMotion } from '../../../lib/useLightMotion'
 import { useLocale } from '../../../providers/LocaleProvider'
 
-const METRICS = [
-  { value: 7, suffix: '+', label: 'Years', sub: 'Building since 2017' },
-  { value: 250, suffix: '+', label: 'Projects', sub: 'Delivered across industries' },
-  { value: 120, suffix: '+', label: 'Clients', sub: 'Long-term partnerships' },
-  { value: 2, suffix: '', label: 'Countries', sub: 'Turkey and Syria' },
-]
+type Metric = {
+  value: number
+  suffix: string
+  label: string
+  sub: string
+}
 
 function MetricBlock({
   metric,
   index,
   lightMotion,
 }: {
-  metric: (typeof METRICS)[number]
+  metric: Metric
   index: number
   lightMotion: boolean
 }) {
@@ -83,12 +83,31 @@ export default function ExperienceImpact() {
   const { t, locale } = useLocale()
   const isArabic = locale === 'ar'
   const lightMotion = useLightMotion()
-  const metrics = [
-    { ...METRICS[0], label: t('experience.impact.metrics.years.label'), sub: t('experience.impact.metrics.years.sub') },
-    { ...METRICS[1], label: t('experience.impact.metrics.projects.label'), sub: t('experience.impact.metrics.projects.sub') },
-    { ...METRICS[2], label: t('experience.impact.metrics.clients.label'), sub: t('experience.impact.metrics.clients.sub') },
-    { ...METRICS[3], label: t('experience.impact.metrics.countries.label'), sub: t('experience.impact.metrics.countries.sub') },
-  ]
+  const metrics = useMemo<Metric[]>(() => {
+    const keys = ['years', 'projects', 'clients', 'countries'] as const
+    const fallbacks: Record<(typeof keys)[number], string> = {
+      years: '7+',
+      projects: '250+',
+      clients: '120+',
+      countries: '2',
+    }
+
+    return keys.map((key) => {
+      const raw = t(`experience.impact.metrics.${key}.value`)
+      const display =
+        !raw || raw === `experience.impact.metrics.${key}.value`
+          ? fallbacks[key]
+          : String(raw).trim()
+      const match = display.match(/^(-?\d+(?:\.\d+)?)(.*)$/)
+      const value = match ? Number.parseFloat(match[1]) : Number.parseFloat(display)
+      return {
+        value: Number.isFinite(value) ? value : 0,
+        suffix: match?.[2] ?? '',
+        label: t(`experience.impact.metrics.${key}.label`),
+        sub: t(`experience.impact.metrics.${key}.sub`),
+      }
+    })
+  }, [t])
   return (
     <section className="bg-sz-dark relative overflow-hidden py-14 lg:py-28" id="impact-story">
       <div

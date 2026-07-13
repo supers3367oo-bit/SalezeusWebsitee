@@ -11,6 +11,7 @@ import {
   Phone,
   LogOut,
   X,
+  Layers,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAdminAuth } from '../auth/AdminAuthContext'
@@ -20,6 +21,7 @@ import Logo from '../../components/ui/Logo'
 const NAV = [
   { to: '/admin', end: true, icon: LayoutDashboard, labelEn: 'Overview', labelAr: 'نظرة عامة' },
   { to: '/admin/pages', end: false, icon: FileText, labelEn: 'Page copy', labelAr: 'نصوص الصفحات' },
+  { to: '/admin/case-studies', end: false, icon: Layers, labelEn: 'Case studies', labelAr: 'دراسة الحالات' },
   { to: '/admin/media', end: false, icon: ImageIcon, labelEn: 'Site images', labelAr: 'صور الموقع' },
   { to: '/admin/team', end: false, icon: Users, labelEn: 'Team', labelAr: 'الفريق' },
   { to: '/admin/services', end: false, icon: Briefcase, labelEn: 'Services', labelAr: 'الخدمات' },

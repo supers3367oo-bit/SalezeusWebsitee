@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import BilingualField from '../components/BilingualField'
 import PageSectionPreview from '../components/PageSectionPreview'
@@ -20,6 +20,11 @@ export default function PageCopyEditor() {
     [section],
   )
 
+  const allFields = useMemo(
+    () => content?.pageSections.flatMap((s) => s.fields) ?? [],
+    [content],
+  )
+
   useEffect(() => {
     if (!groups.length) {
       setActiveRoot(null)
@@ -29,6 +34,10 @@ export default function PageCopyEditor() {
       current && groups.some((g) => g.root === current) ? current : groups[0].root,
     )
   }, [groups, pageKey])
+
+  if (pageKey === 'caseStudies') {
+    return <Navigate to="/admin/case-studies" replace />
+  }
 
   if (!content || !pageKey) return null
 
@@ -60,8 +69,8 @@ export default function PageCopyEditor() {
         <h2 className="font-heading text-xl font-semibold">{section.label}</h2>
         <p className="mt-1 text-sm text-sz-primary/55">
           {isAr
-            ? `${groups.length} أقسام · اختر قسماً وعدّل نصوصه مع معاينة مباشرة`
-            : `${groups.length} sections · pick a section and edit with a live preview`}
+            ? `${groups.length} أقسام · معاينة مطابقة للموقع`
+            : `${groups.length} sections · site-matching preview`}
         </p>
       </div>
 
@@ -90,8 +99,8 @@ export default function PageCopyEditor() {
         </div>
       ) : null}
 
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
-        <div className="space-y-4">
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,40%)] xl:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
+        <div className="order-2 min-w-0 space-y-4 lg:order-1">
           {activeGroup ? (
             <div className="rounded-2xl border border-sz-border bg-white px-4 py-3 sm:px-5">
               <p className="text-sm font-semibold text-sz-dark">
@@ -132,10 +141,11 @@ export default function PageCopyEditor() {
         </div>
 
         {activeGroup ? (
-          <div className="xl:sticky xl:top-24">
+          <div className="order-1 min-w-0 lg:order-2 lg:sticky lg:top-24">
             <PageSectionPreview
               root={activeGroup.root}
               fields={section.fields}
+              allFields={allFields}
               previewLocale={previewLocale}
               onPreviewLocaleChange={setPreviewLocale}
               isArUi={isAr}

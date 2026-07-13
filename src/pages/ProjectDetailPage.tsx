@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import ProjectDetailHero from '../components/projects/detail/ProjectDetailHero'
 import ProjectBehanceGallery from '../components/projects/detail/ProjectBehanceGallery'
+import ProjectBodyBlocks from '../components/projects/detail/ProjectBodyBlocks'
 import ProjectMoreWork from '../components/projects/detail/ProjectMoreWork'
 import { ProjectGalleryProvider } from '../components/projects/detail/ProjectGalleryContext'
 import { collectProjectGalleryImages } from '../lib/collectProjectGalleryImages'
@@ -17,19 +18,21 @@ export default function ProjectDetailPage() {
   const related = useRelatedProjects(slug)
   const galleryImages = useMemo(
     () => (project ? collectProjectGalleryImages(project) : []),
-    [project]
+    [project],
   )
+  const bodyBlocks = project?.bodyBlocks ?? []
+  const useStackedBody = bodyBlocks.length > 0
 
   useEffect(() => {
     requestAnimationFrame(() => refreshLocomotiveScroll())
-  }, [slug])
+  }, [slug, useStackedBody])
 
   if (!project) {
     return (
-      <section className="section-surface min-h-[60vh] flex items-center pt-28">
-        <div className="section-container text-center w-full">
+      <section className="section-surface flex min-h-[60vh] items-center pt-28">
+        <div className="section-container w-full text-center">
           <h1
-            className="text-sz-dark mb-4"
+            className="mb-4 text-sz-dark"
             style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: 600 }}
           >
             {t('errors.projectNotFound')}
@@ -39,6 +42,16 @@ export default function ProjectDetailPage() {
           </Button>
         </div>
       </section>
+    )
+  }
+
+  if (useStackedBody) {
+    return (
+      <>
+        <ProjectDetailHero project={project} />
+        <ProjectBodyBlocks blocks={bodyBlocks} />
+        <ProjectMoreWork project={project} related={related} />
+      </>
     )
   }
 

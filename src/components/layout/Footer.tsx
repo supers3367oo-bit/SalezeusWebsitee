@@ -9,7 +9,7 @@ import { useLocale } from '../../providers/LocaleProvider'
 
 export default function Footer() {
   const { t } = useLocale()
-  const { email } = useCmsContact()
+  const { email, socialLinks } = useCmsContact()
 
   const services = [
     { label: t('services.branding'), to: '/services/branding' },
@@ -29,11 +29,11 @@ export default function Footer() {
   ]
 
   const socials = [
-    { Icon: Linkedin, href: '#', label: t('footer.linkedin') },
-    { Icon: Instagram, href: '#', label: t('footer.instagram') },
-    { Icon: Twitter, href: '#', label: t('footer.twitter') },
-    { Icon: Youtube, href: '#', label: t('footer.youtube') },
-  ]
+    { Icon: Linkedin, href: socialLinks.linkedin, label: t('footer.linkedin') },
+    { Icon: Instagram, href: socialLinks.instagram, label: t('footer.instagram') },
+    { Icon: Twitter, href: socialLinks.twitter, label: t('footer.twitter') },
+    { Icon: Youtube, href: socialLinks.youtube, label: t('footer.youtube') },
+  ].filter((item) => Boolean(item.href?.trim()))
 
   const legal = [
     t('footer.privacy'),
@@ -61,18 +61,22 @@ export default function Footer() {
               {t('footer.tagline')}
             </p>
 
-            <div className="flex gap-3">
-              {socials.map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-9 h-9 rounded-card border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all duration-200"
-                >
-                  <Icon size={15} />
-                </a>
-              ))}
-            </div>
+            {socials.length > 0 ? (
+              <div className="flex gap-3">
+                {socials.map(({ Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="w-9 h-9 rounded-card border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all duration-200"
+                  >
+                    <Icon size={15} />
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div>

@@ -1,12 +1,15 @@
-import { useRef, useLayoutEffect, useState, useCallback } from 'react'
+import { useRef, useLayoutEffect, useState, useCallback, useMemo } from 'react'
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { getLocomotiveInstance, refreshLocomotiveScroll } from '../../lib/locomotive'
 import Button from '../ui/Button'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLocale } from '../../providers/LocaleProvider'
 import { useSiteAsset } from '../../providers/SiteAssetsProvider'
+import { useAdminPreview } from '../../providers/AdminPreviewContext'
+import { useCmsContentOptional } from '../../cms/CmsContentProvider'
+import { featuredCasesFromCms } from '../../cms/adapters'
+import { useDraftFeaturedCases } from '../../providers/DraftFeaturedCasesContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -75,11 +78,13 @@ function ArchiveCard({
         <img
           src={c.image}
           alt={`${c.client} — ${c.title}`}
-          className="absolute inset-0 w-full h-full object-cover rounded-card transition-transform duration-700 group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover rounded-card transition-transform duration-700 group-hover:scale-[1.03]"
           loading="lazy"
         />
       </div>
-        <div className={`mt-4 flex items-end justify-between gap-3 ${side === 'right' ? 'flex-row-reverse text-end' : 'text-start'}`}>
+      <div
+        className={`mt-4 flex items-end justify-between gap-3 ${side === 'right' ? 'flex-row-reverse text-end' : 'text-start'}`}
+      >
         <div>
           <p className="text-sz-dark font-medium" style={{ fontFamily: 'var(--font-heading)', fontSize: 15 }}>
             {c.client}
@@ -101,6 +106,7 @@ function ArchiveCard({
 }
 
 function useScrollGalleryEnabled() {
+  const isAdminPreview = useAdminPreview()
   const [enabled] = useState(() => {
     if (typeof window === 'undefined') return false
     return (
@@ -108,7 +114,7 @@ function useScrollGalleryEnabled() {
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches
     )
   })
-  return enabled
+  return enabled && !isAdminPreview
 }
 
 function SectionCTAs({ className = '' }: { className?: string }) {
@@ -125,50 +131,56 @@ function SectionCTAs({ className = '' }: { className?: string }) {
   )
 }
 
-export default function FeaturedSuccess() {
-  const { t, dir, locale } = useLocale()
-  const isRtl = dir === 'rtl'
+function useFeaturedCases(): CaseData[] {
+  const { locale } = useLocale()
+  const cms = useCmsContentOptional()
+  const draftCases = useDraftFeaturedCases()
   const pandaImage = useSiteAsset('cases.pandaKunefe')
   const arkImage = useSiteAsset('cases.arkOto')
   const cakeImage = useSiteAsset('cases.cakeStation')
-  const CASES: CaseData[] = [
-    {
-      client: 'Panda',
-      title: 'Premium Künefe',
-      service: 'Branding + Packaging',
-      image: pandaImage,
-    },
-    {
-      client: 'Ark Oto',
-      title: 'Farklı Dokun',
-      service: 'Marketing Campaign',
-      image: arkImage,
-    },
-    {
-      client: 'Cake Station',
-      title: 'Coffee Identity',
-      service: 'Brand Identity',
-      image: cakeImage,
-    },
-    {
-      client: 'Panda',
-      title: 'Premium Künefe',
-      service: 'Branding + Packaging',
-      image: pandaImage,
-    },
-    {
-      client: 'Ark Oto',
-      title: 'Farklı Dokun',
-      service: 'Marketing Campaign',
-      image: arkImage,
-    },
-    {
-      client: 'Cake Station',
-      title: 'Coffee Identity',
-      service: 'Brand Identity',
-      image: cakeImage,
-    },
-  ]
+
+  return useMemo(() => {
+    const source =
+      draftCases?.length
+        ? draftCases
+        : cms?.content?.featuredCases?.length
+          ? cms.content.featuredCases
+          : null
+
+    const fromCms = source ? featuredCasesFromCms(source, locale) : null
+
+    const base =
+      fromCms ??
+      ([
+        {
+          client: 'Panda',
+          title: 'Premium Künefe',
+          service: 'Branding + Packaging',
+          image: pandaImage,
+        },
+        {
+          client: 'Ark Oto',
+          title: 'Farklı Dokun',
+          service: 'Marketing Campaign',
+          image: arkImage,
+        },
+        {
+          client: 'Cake Station',
+          title: 'Coffee Identity',
+          service: 'Brand Identity',
+          image: cakeImage,
+        },
+      ] satisfies CaseData[])
+
+    return [...base, ...base]
+  }, [draftCases, cms?.content?.featuredCases, locale, pandaImage, arkImage, cakeImage])
+}
+
+export default function FeaturedSuccess() {
+  const { t, dir, locale } = useLocale()
+  const isRtl = dir === 'rtl'
+  const isAdminPreview = useAdminPreview()
+  const CASES = useFeaturedCases()
   const archiveSubtitleStyle = {
     fontFamily: 'var(--font-body)',
     fontSize: 'clamp(14px, 3.8vw, 15px)',
@@ -177,6 +189,7 @@ export default function FeaturedSuccess() {
   const [active, setActive] = useState(0)
   const total = CASES.length
   const galleryEnabled = useScrollGalleryEnabled()
+  const uniqueCases = CASES.slice(0, Math.max(1, Math.ceil(CASES.length / 2)))
 
   useLayoutEffect(() => {
     setActive(0)
@@ -200,7 +213,7 @@ export default function FeaturedSuccess() {
         window.scrollTo({ top, behavior: 'smooth' })
       }
     },
-    [total]
+    [total],
   )
 
   useLayoutEffect(() => {
@@ -244,7 +257,7 @@ export default function FeaturedSuccess() {
             ease: 'none',
             duration: 1,
           },
-          i * 0.28
+          i * 0.28,
         )
       })
 
@@ -260,7 +273,6 @@ export default function FeaturedSuccess() {
     })
 
     window.addEventListener('resize', refresh)
-
     requestAnimationFrame(() => refreshLocomotiveScroll())
 
     return () => {
@@ -268,7 +280,7 @@ export default function FeaturedSuccess() {
       scrollTriggerRef.current = null
       ctx.revert()
     }
-  }, [galleryEnabled, total, locale, dir])
+  }, [galleryEnabled, total, locale, dir, CASES.length])
 
   const prev = () => {
     const step = isRtl ? 1 : -1
@@ -296,98 +308,105 @@ export default function FeaturedSuccess() {
       id="success"
       aria-label={t('featured.aria')}
     >
-      <div
-        ref={pinRef}
-        className={`relative h-screen w-full overflow-hidden ${galleryEnabled ? 'hidden lg:block' : 'hidden'}`}
-      >
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none px-[min(30vw,280px)]">
-          <div className="text-center max-w-md">
-            <p className="label-tag mb-4 block" style={{ letterSpacing: '0.2em' }}>
-              {t('featuredSuccess.caseStudies')}
-            </p>
-            <h2
-              className="text-sz-dark uppercase leading-[1.08] tracking-[-0.02em]"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(22px, 2.6vw, 40px)',
-                fontWeight: 600,
-              }}
-            >
-              {t('featuredSuccess.archiveLine1')}
-              <br />
-              {t('featuredSuccess.archiveLine2')}
-              <br />
-              <span
-                className="mt-1 inline-block text-sz-dark normal-case"
-                style={{ lineHeight: 1.35, letterSpacing: isRtl ? 0 : undefined }}
+      {!isAdminPreview && (
+        <div
+          ref={pinRef}
+          className={`relative h-screen w-full overflow-hidden ${galleryEnabled ? 'hidden lg:block' : 'hidden'}`}
+        >
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none px-[min(30vw,280px)]">
+            <div className="text-center max-w-md">
+              <p className="label-tag mb-4 block" style={{ letterSpacing: '0.2em' }}>
+                {t('featuredSuccess.caseStudies')}
+              </p>
+              <h2
+                className="text-sz-dark uppercase leading-[1.08] tracking-[-0.02em]"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(22px, 2.6vw, 40px)',
+                  fontWeight: 600,
+                }}
               >
-                {t('featuredSuccess.archiveByline')}
-              </span>
-            </h2>
-            <p
-              className="mt-5 text-sz-dark/75 text-sm max-w-md mx-auto"
-              style={archiveSubtitleStyle}
+                {t('featuredSuccess.archiveLine1')}
+                <br />
+                {t('featuredSuccess.archiveLine2')}
+                <br />
+                <span
+                  className="mt-1 inline-block text-sz-dark normal-case"
+                  style={{ lineHeight: 1.35, letterSpacing: isRtl ? 0 : undefined }}
+                >
+                  {t('featuredSuccess.archiveByline')}
+                </span>
+              </h2>
+              <p
+                className="mt-5 text-sz-dark/75 text-sm max-w-md mx-auto"
+                style={archiveSubtitleStyle}
+              >
+                {t('featuredSuccess.archiveSubtitle')}
+              </p>
+              <SectionCTAs className="mt-8 pointer-events-auto" />
+            </div>
+          </div>
+
+          <div className="absolute top-8 end-8 z-30 flex gap-2">
+            <button
+              onClick={prev}
+              aria-label={t('featuredSuccess.previousProject')}
+              className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
             >
-              {t('featuredSuccess.archiveSubtitle')}
-            </p>
-            <SectionCTAs className="mt-8 pointer-events-auto" />
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={next}
+              aria-label={t('featuredSuccess.nextProject')}
+              className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {CASES.map((caseData, i) => {
+            const side = i % 2 === 0 ? 'left' : 'right'
+            return (
+              <div
+                key={`${caseData.client}-${i}`}
+                ref={(el) => {
+                  cardRefs.current[i] = el
+                }}
+                className={`absolute top-1/2 will-change-transform ${
+                  side === 'left' ? 'start-[8%]' : 'end-[8%]'
+                }`}
+                style={{ zIndex: 10 + i }}
+              >
+                <ArchiveCard
+                  c={caseData}
+                  index={i}
+                  side={side}
+                  compact
+                  viewWorkLabel={t('featuredSuccess.viewWork')}
+                />
+              </div>
+            )
+          })}
+
+          <div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 pointer-events-none"
+            style={{ fontFamily: 'var(--font-mono)' }}
+          >
+            <span className="text-[10px] uppercase tracking-[0.22em] text-sz-secondary">
+              {t('featuredSuccess.scroll')}
+            </span>
+            <span className="w-px h-8 bg-gradient-to-b from-sz-secondary/50 to-transparent" />
           </div>
         </div>
+      )}
 
-        <div className="absolute top-8 end-8 z-30 flex gap-2">
-          <button
-            onClick={prev}
-            aria-label={t('featuredSuccess.previousProject')}
-            className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            onClick={next}
-            aria-label={t('featuredSuccess.nextProject')}
-            className="w-10 h-10 rounded-full border border-sz-border bg-white/80 backdrop-blur-sm flex items-center justify-center text-sz-primary hover:border-sz-interaction hover:text-sz-interaction transition-colors"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
-
-        {CASES.map((caseData, i) => {
-          const side = i % 2 === 0 ? 'left' : 'right'
-          return (
-            <div
-              key={`${caseData.client}-${i}`}
-              ref={(el) => {
-                cardRefs.current[i] = el
-              }}
-              className={`absolute top-1/2 will-change-transform ${
-                side === 'left' ? 'start-[8%]' : 'end-[8%]'
-              }`}
-              style={{ zIndex: 10 + i }}
-            >
-              <ArchiveCard c={caseData} index={i} side={side} compact viewWorkLabel={t('featuredSuccess.viewWork')} />
-            </div>
-          )
-        })}
-
-        <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 pointer-events-none"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
-          <span className="text-[10px] uppercase tracking-[0.22em] text-sz-secondary">{t('featuredSuccess.scroll')}</span>
-          <span className="w-px h-8 bg-gradient-to-b from-sz-secondary/50 to-transparent" />
-        </div>
-      </div>
-
-      {!galleryEnabled && (
+      {!galleryEnabled && !isAdminPreview && (
         <div className="hidden lg:block section-padding">
           <div className="section-container">
             <div className="text-center section-header">
               <span className="label-tag mb-3 block">{t('featuredSuccess.caseStudies')}</span>
               <h2 className="heading-lg text-sz-dark">{t('featuredSuccess.archiveHeading')}</h2>
-              <p
-                className="mx-auto mt-4 max-w-md text-sz-dark/75"
-                style={archiveSubtitleStyle}
-              >
+              <p className="mx-auto mt-4 max-w-md text-sz-dark/75" style={archiveSubtitleStyle}>
                 {t('featuredSuccess.archiveSubtitle')}
               </p>
               <SectionCTAs className="mt-8" />
@@ -395,7 +414,12 @@ export default function FeaturedSuccess() {
             <div className="space-y-16 max-w-lg mx-auto">
               {CASES.map((caseData, i) => (
                 <div key={`${caseData.client}-${i}`} className={i % 2 === 1 ? 'ms-auto' : ''}>
-                  <ArchiveCard c={caseData} index={i} side={i % 2 === 0 ? 'left' : 'right'} viewWorkLabel={t('featuredSuccess.viewWork')} />
+                  <ArchiveCard
+                    c={caseData}
+                    index={i}
+                    side={i % 2 === 0 ? 'left' : 'right'}
+                    viewWorkLabel={t('featuredSuccess.viewWork')}
+                  />
                 </div>
               ))}
             </div>
@@ -403,7 +427,9 @@ export default function FeaturedSuccess() {
         </div>
       )}
 
-      <div className="lg:hidden -mt-4 pb-8 pt-0 sm:-mt-2 sm:pb-10">
+      <div
+        className={`${isAdminPreview ? 'block' : 'lg:hidden'} -mt-4 pb-8 pt-0 sm:-mt-2 sm:pb-10`}
+      >
         <div className="section-container">
           <div className="mb-2 text-center sm:mb-3">
             <span className="label-tag mb-1 block">{t('featuredSuccess.caseStudies')}</span>
@@ -412,17 +438,14 @@ export default function FeaturedSuccess() {
               <br />
               {t('featuredSuccess.archiveLine2')}
             </h2>
-            <p
-              className="mx-auto mt-2 max-w-md text-sz-dark/75"
-              style={archiveSubtitleStyle}
-            >
+            <p className="mx-auto mt-2 max-w-md text-sz-dark/75" style={archiveSubtitleStyle}>
               {t('featuredSuccess.archiveSubtitle')}
             </p>
             <SectionCTAs className="mt-3" />
           </div>
 
           <div className="space-y-8">
-            {CASES.map((caseData, i) => (
+            {(isAdminPreview ? uniqueCases : CASES).map((caseData, i) => (
               <ArchiveCard
                 key={`${caseData.client}-${i}`}
                 c={caseData}
@@ -436,7 +459,7 @@ export default function FeaturedSuccess() {
         </div>
       </div>
 
-      {galleryEnabled && (
+      {galleryEnabled && !isAdminPreview && (
         <div className="hidden lg:flex justify-center gap-2 pb-10 pt-2">
           {CASES.map((_, i) => (
             <button

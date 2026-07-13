@@ -12,6 +12,7 @@ import { ar } from '../../i18n/ar'
 import type {
   AdminContentBlock,
   AdminContentState,
+  AdminFeaturedCase,
   AdminInsight,
   AdminProject,
   AdminProjectImage,
@@ -25,6 +26,7 @@ import type { ContentBlock } from '../../types/insights'
 import type { ProjectDetail, ProjectVisual } from '../../types/projectDetail'
 import { bi, rich } from '../utils/richText'
 import { createDefaultSiteAssets } from '../siteAssets/registry'
+import { migrateProjectImagesToBlocks } from '../utils/createEmpty'
 
 function pushVisual(list: ProjectVisual[], visual: ProjectVisual | undefined) {
   if (visual?.src) list.push(visual)
@@ -125,12 +127,14 @@ function seedServices(): AdminService[] {
 function seedProjects(): AdminProject[] {
   return PROJECT_DETAILS.map((project, index) => {
     const arProject = PROJECT_DETAILS_AR.find((p) => p.slug === project.slug) ?? project
+    const images = seedProjectImages(project, arProject)
     return {
       id: project.id,
       slug: project.slug,
       image: project.image,
       heroImage: project.heroImage,
-      images: seedProjectImages(project, arProject),
+      images,
+      blocks: migrateProjectImagesToBlocks(images, undefined),
       year: project.year,
       service: project.service,
       showOnHome: index < 4,
@@ -327,7 +331,23 @@ function seedInsights(): AdminInsight[] {
 
 const PAGE_SECTION_META: { key: string; label: string; roots: string[] }[] = [
   { key: 'nav', label: 'Navigation', roots: ['nav', 'floating'] },
-  { key: 'home', label: 'Home', roots: ['hero', 'trustedBy', 'impact', 'solutions', 'reviews', 'featured', 'featuredSuccess', 'portfolio', 'why', 'insights', 'faq', 'closing'] },
+  {
+    key: 'home',
+    label: 'Home',
+    roots: [
+      'hero',
+      'trustedBy',
+      'impact',
+      'solutions',
+      'reviews',
+      'portfolio',
+      'why',
+      'insights',
+      'faq',
+      'closing',
+    ],
+  },
+  { key: 'caseStudies', label: 'Case Studies', roots: ['featured', 'featuredSuccess'] },
   { key: 'about', label: 'About', roots: ['experience'] },
   { key: 'services', label: 'Services', roots: ['services', 'serviceDetail'] },
   { key: 'portfolio', label: 'Portfolio', roots: ['portfolioPage'] },
@@ -335,6 +355,33 @@ const PAGE_SECTION_META: { key: string; label: string; roots: string[] }[] = [
   { key: 'contact', label: 'Contact', roots: ['contact'] },
   { key: 'footer', label: 'Footer & Common', roots: ['footer', 'common', 'errors'] },
 ]
+
+export function seedFeaturedCases(siteAssets?: Record<string, string>): AdminFeaturedCase[] {
+  const assets = siteAssets ?? createDefaultSiteAssets()
+  return [
+    {
+      id: 'panda',
+      client: bi('Panda', 'باندا'),
+      title: bi('Premium Künefe', 'كنافة فاخرة'),
+      service: bi('Branding + Packaging', 'هوية وتغليف'),
+      image: assets['cases.pandaKunefe'] || '/images/cases/panda-kunefe.png',
+    },
+    {
+      id: 'ark-oto',
+      client: bi('Ark Oto', 'أرك أوتو'),
+      title: bi('Farklı Dokun', 'لمسة مختلفة'),
+      service: bi('Marketing Campaign', 'حملة تسويقية'),
+      image: assets['cases.arkOto'] || '/images/cases/ark-oto.png',
+    },
+    {
+      id: 'cake-station',
+      client: bi('Cake Station', 'كيك ستيشن'),
+      title: bi('Coffee Identity', 'هوية القهوة'),
+      service: bi('Brand Identity', 'هوية العلامة'),
+      image: assets['cases.cakeStation'] || '/images/cases/cake-station.png',
+    },
+  ]
+}
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -388,6 +435,61 @@ function seedPageSections(): PageCopySection[] {
   })
 }
 
+/** Merge newly seeded i18n leaves into existing CMS pageSections without overwriting edits. */
+export function mergeMissingPageCopyFields(
+  sections: PageCopySection[],
+): PageCopySection[] {
+  const seeded = seedPageSections()
+  const byKey = new Map(sections.map((s) => [s.key, s]))
+
+  const foldLegacySuffix = (fields: PageCopyField[]): PageCopyField[] => {
+    const byPath = new Map(fields.map((f) => [f.path, { ...f }]))
+    for (const field of fields) {
+      if (!field.path.endsWith('.suffix')) continue
+      const valuePath = field.path.replace(/\.suffix$/, '.value')
+      const valueField = byPath.get(valuePath)
+      if (!valueField) continue
+      const appendIfNeeded = (current: string, suffix: string) => {
+        if (!suffix) return current
+        if (current.endsWith(suffix)) return current
+        if (/[^\d.\s-]$/.test(current.trim())) return current
+        return `${current.trim()}${suffix}`
+      }
+      valueField.en = appendIfNeeded(valueField.en, field.en)
+      valueField.ar = appendIfNeeded(valueField.ar, field.ar)
+      byPath.set(valuePath, valueField)
+      byPath.delete(field.path)
+    }
+    return [...byPath.values()]
+  }
+
+  const merged = seeded.map((seedSection) => {
+    const existing = byKey.get(seedSection.key)
+    if (!existing) return seedSection
+
+    const folded = foldLegacySuffix(existing.fields)
+    // Drop removed i18n leaves (e.g. legacy *.suffix fields)
+    const seedPaths = new Set(seedSection.fields.map((f) => f.path))
+    const kept = folded.filter((f) => seedPaths.has(f.path))
+    const existingPaths = new Set(kept.map((f) => f.path))
+    const missing = seedSection.fields.filter((f) => !existingPaths.has(f.path))
+
+    return {
+      ...existing,
+      fields: [...kept, ...missing],
+    }
+  })
+
+  // Keep any custom sections not in the seed meta
+  for (const section of sections) {
+    if (!seeded.some((s) => s.key === section.key)) {
+      merged.push(section)
+    }
+  }
+
+  return merged
+}
+
 export function createSeedContent(): AdminContentState {
   return {
     team: seedTeam(),
@@ -411,8 +513,15 @@ export function createSeedContent(): AdminContentState {
           phoneDisplay: CONTACT_OFFICES[1].phoneDisplay,
         },
       ],
+      socialLinks: {
+        linkedin: '',
+        instagram: '',
+        twitter: '',
+        youtube: '',
+      },
     },
     pageSections: seedPageSections(),
     siteAssets: createDefaultSiteAssets(),
+    featuredCases: seedFeaturedCases(),
   }
 }

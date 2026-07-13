@@ -104,9 +104,11 @@ export default function ContactLocation() {
                     <Phone size={15} strokeWidth={2} className="shrink-0 opacity-70" />
                     <span>
                       <span className="block text-white/35 text-xs mb-0.5">
-                        {t(`contact.offices.${office.id}`)}
+                        {office.label}
                       </span>
-                      {office.phoneDisplay}
+                      <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+                        {office.phoneDisplay}
+                      </span>
                     </span>
                   </a>
                 )

@@ -10,6 +10,7 @@ import { useLocale } from '../../providers/LocaleProvider'
 const TITLES: Record<string, { en: string; ar: string }> = {
   '/admin': { en: 'Overview', ar: 'نظرة عامة' },
   '/admin/pages': { en: 'Page copy', ar: 'نصوص الصفحات' },
+  '/admin/case-studies': { en: 'Case studies', ar: 'دراسة الحالات' },
   '/admin/media': { en: 'Site images', ar: 'صور الموقع' },
   '/admin/team': { en: 'Team', ar: 'الفريق' },
   '/admin/services': { en: 'Services', ar: 'الخدمات' },

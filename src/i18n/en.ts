@@ -83,11 +83,31 @@ export const en: TranslationTree = {
     title: 'Numbers That Tell Our Story',
     subtitle: 'Scroll to watch each milestone stack into our journey.',
     stats: {
-      experience: { label: 'Years of Experience', desc: 'Building brands since 2017' },
-      projects: { label: 'Projects Delivered', desc: 'Across diverse industries' },
-      clients: { label: 'Happy Clients', desc: 'Long-term partnerships' },
-      countries: { label: 'Countries', desc: 'Turkey & Syria' },
-      satisfaction: { label: 'Satisfaction Rate', desc: 'Client-verified feedback' },
+      experience: {
+        value: '7+',
+        label: 'Years of Experience',
+        desc: 'Building brands since 2017',
+      },
+      projects: {
+        value: '250+',
+        label: 'Projects Delivered',
+        desc: 'Across diverse industries',
+      },
+      clients: {
+        value: '120+',
+        label: 'Happy Clients',
+        desc: 'Long-term partnerships',
+      },
+      countries: {
+        value: '2',
+        label: 'Countries',
+        desc: 'Turkey & Syria',
+      },
+      satisfaction: {
+        value: '98%',
+        label: 'Satisfaction Rate',
+        desc: 'Client-verified feedback',
+      },
     },
   },
   solutions: {
@@ -213,10 +233,10 @@ export const en: TranslationTree = {
       title: 'Our Impact',
       subtitle: 'The numbers are not the story. They are proof the story works.',
       metrics: {
-        years: { label: 'Years', sub: 'Building since 2017' },
-        projects: { label: 'Projects', sub: 'Delivered across industries' },
-        clients: { label: 'Clients', sub: 'Long-term partnerships' },
-        countries: { label: 'Countries', sub: 'Turkey and Syria' },
+        years: { value: '7+', label: 'Years', sub: 'Building since 2017' },
+        projects: { value: '250+', label: 'Projects', sub: 'Delivered across industries' },
+        clients: { value: '120+', label: 'Clients', sub: 'Long-term partnerships' },
+        countries: { value: '2', label: 'Countries', sub: 'Turkey and Syria' },
       },
     },
     borders: {

@@ -66,14 +66,10 @@ function createBlock(type: AdminContentBlock['type']): AdminContentBlock {
 const ADD_TYPES: AdminContentBlock['type'][] = [
   'paragraph',
   'heading',
-  'list',
   'image',
+  'list',
   'pullquote',
   'note',
-  'callout',
-  'stat',
-  'gallery',
-  'code',
 ]
 
 function BlockIcon({ type }: { type: AdminContentBlock['type'] }) {

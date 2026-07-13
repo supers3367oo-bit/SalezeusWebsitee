@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardHome from './pages/DashboardHome'
 import PagesIndex from './pages/PagesIndex'
 import PageCopyEditor from './pages/PageCopyEditor'
+import CaseStudiesEditor from './pages/CaseStudiesEditor'
 import SiteAssetsEditor from './pages/SiteAssetsEditor'
 import TeamList from './pages/TeamList'
 import TeamEditor from './pages/TeamEditor'
@@ -35,6 +36,7 @@ export default function AdminApp() {
           <Route index element={<DashboardHome />} />
           <Route path="pages" element={<PagesIndex />} />
           <Route path="pages/:pageKey" element={<PageCopyEditor />} />
+          <Route path="case-studies" element={<CaseStudiesEditor />} />
           <Route path="media" element={<SiteAssetsEditor />} />
           <Route path="team" element={<TeamList />} />
           <Route path="team/:id" element={<TeamEditor />} />

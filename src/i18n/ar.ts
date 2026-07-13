@@ -83,11 +83,31 @@ export const ar: TranslationTree = {
     title: 'أرقام تحكي قصتنا',
     subtitle: 'مرّر لترى كل محطة تتراكم في رحلتنا.',
     stats: {
-      experience: { label: 'سنوات الخبرة', desc: 'نبني العلامات منذ 2017' },
-      projects: { label: 'مشروع منجز', desc: 'في قطاعات متنوعة' },
-      clients: { label: 'عميل سعيد', desc: 'شراكات طويلة الأمد' },
-      countries: { label: 'دولة', desc: 'تركيا وسوريا' },
-      satisfaction: { label: 'نسبة الرضا', desc: 'تقييمات موثقة من العملاء' },
+      experience: {
+        value: '7+',
+        label: 'سنوات الخبرة',
+        desc: 'نبني العلامات منذ 2017',
+      },
+      projects: {
+        value: '250+',
+        label: 'مشروع منجز',
+        desc: 'في قطاعات متنوعة',
+      },
+      clients: {
+        value: '120+',
+        label: 'عميل سعيد',
+        desc: 'شراكات طويلة الأمد',
+      },
+      countries: {
+        value: '2',
+        label: 'دولة',
+        desc: 'تركيا وسوريا',
+      },
+      satisfaction: {
+        value: '98%',
+        label: 'نسبة الرضا',
+        desc: 'تقييمات موثقة من العملاء',
+      },
     },
   },
   solutions: {
@@ -213,10 +233,10 @@ export const ar: TranslationTree = {
       title: 'أثرنا',
       subtitle: 'الأرقام ليست القصة، بل الدليل على أن القصة تعمل.',
       metrics: {
-        years: { label: 'سنوات', sub: 'نبني منذ 2017' },
-        projects: { label: 'مشاريع', sub: 'تم تنفيذها عبر قطاعات متنوعة' },
-        clients: { label: 'عملاء', sub: 'شراكات طويلة الأمد' },
-        countries: { label: 'دول', sub: 'تركيا وسوريا' },
+        years: { value: '7+', label: 'سنوات', sub: 'نبني منذ 2017' },
+        projects: { value: '250+', label: 'مشاريع', sub: 'تم تنفيذها عبر قطاعات متنوعة' },
+        clients: { value: '120+', label: 'عملاء', sub: 'شراكات طويلة الأمد' },
+        countries: { value: '2', label: 'دول', sub: 'تركيا وسوريا' },
       },
     },
     borders: {

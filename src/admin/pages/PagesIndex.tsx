@@ -15,7 +15,9 @@ export default function PagesIndex() {
           : 'Pick a section to edit titles and copy in both languages.'}
       </p>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {content.pageSections.map((section) => (
+        {content.pageSections
+          .filter((section) => section.key !== 'caseStudies')
+          .map((section) => (
           <Link
             key={section.key}
             to={`/admin/pages/${section.key}`}

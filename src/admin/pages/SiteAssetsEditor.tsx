@@ -10,7 +10,7 @@ import {
   groupSiteAssets,
 } from '../siteAssets/registry'
 
-const GROUPS: SiteAssetGroup[] = ['brand', 'home', 'about', 'clients', 'cases']
+const GROUPS: SiteAssetGroup[] = ['brand', 'home', 'about', 'clients']
 
 function GroupPreview({
   group,

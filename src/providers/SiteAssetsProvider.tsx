@@ -77,3 +77,32 @@ export function useSiteAssets() {
   }
   return ctx
 }
+
+/** Nested draft assets for admin live previews (e.g. case study images). */
+export function DraftSiteAssetsProvider({
+  assets: draftAssets,
+  children,
+}: {
+  assets: Record<string, string>
+  children: ReactNode
+}) {
+  const assets = useMemo(
+    () =>
+      ({
+        ...createDefaultSiteAssets(),
+        ...draftAssets,
+      }) as Record<SiteAssetKey, string>,
+    [draftAssets],
+  )
+
+  const getAsset = useCallback(
+    (key: SiteAssetKey) => resolveSiteAsset(key, assets),
+    [assets],
+  )
+
+  const value = useMemo(() => ({ getAsset, assets }), [getAsset, assets])
+
+  return (
+    <SiteAssetsContext.Provider value={value}>{children}</SiteAssetsContext.Provider>
+  )
+}

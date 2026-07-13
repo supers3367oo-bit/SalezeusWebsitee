@@ -2,6 +2,7 @@ import type { Locale, TranslationTree } from '../i18n/types'
 import type {
   AdminContentBlock,
   AdminContentState,
+  AdminFeaturedCase,
   AdminInsight,
   AdminProject,
   AdminService,
@@ -13,11 +14,12 @@ import type {
 import type { TeamMember } from '../data/team'
 import type { Service, ServiceDetail } from '../types/services'
 import type { ContentBlock, InsightArticle, InlineSpan } from '../types/insights'
-import type { ProjectDetail, ProjectListItem } from '../types/projectDetail'
+import type { ProjectBodyBlock, ProjectDetail, ProjectListItem } from '../types/projectDetail'
 import { getServiceBySlug } from '../data/serviceDetails'
 import { getProjectBySlug } from '../data/projectDetails'
 import type { HomeVisibilityState } from '../lib/homeVisibility'
 import { createDefaultSiteAssets } from '../admin/siteAssets/registry'
+import { migrateProjectImagesToBlocks } from '../admin/utils/createEmpty'
 
 function pickBi(value: BilingualText, locale: Locale): string {
   return locale === 'ar' ? value.ar || value.en : value.en || value.ar
@@ -155,29 +157,79 @@ export function projectDetailFromCms(
   locale: Locale,
 ): ProjectDetail {
   const fallback = getProjectBySlug(project.slug, locale)
+  const blocks = migrateProjectImagesToBlocks(project.images ?? [], project.blocks)
+  const bodyBlocks: ProjectBodyBlock[] = blocks
+    .map((block): ProjectBodyBlock | null => {
+      switch (block.type) {
+        case 'image':
+          if (!block.src) return null
+          return {
+            id: block.id,
+            type: 'image',
+            src: block.src,
+            alt: pickBi(block.alt, locale) || pickBi(project.client, locale),
+          }
+        case 'text': {
+          const body = pickBi(block.body, locale)
+          const title = block.title ? pickBi(block.title, locale) : ''
+          if (!body && !title) return null
+          return {
+            id: block.id,
+            type: 'text',
+            title: title || undefined,
+            body,
+          }
+        }
+        case 'video':
+          if (!block.url.trim()) return null
+          return {
+            id: block.id,
+            type: 'video',
+            url: block.url.trim(),
+            caption: block.caption ? pickBi(block.caption, locale) || undefined : undefined,
+          }
+        case 'link':
+          if (!block.url.trim()) return null
+          return {
+            id: block.id,
+            type: 'link',
+            url: block.url.trim(),
+            title: pickBi(block.title, locale),
+            description: block.description
+              ? pickBi(block.description, locale) || undefined
+              : undefined,
+          }
+        default:
+          return null
+      }
+    })
+    .filter((b): b is ProjectBodyBlock => Boolean(b))
+
   const galleryImages =
-    project.images.length > 0
-      ? project.images.map((img) => ({
-          src: img.src,
-          alt: pickBi(img.alt, locale) || pickBi(project.client, locale),
-        }))
-      : undefined
+    bodyBlocks.filter((b) => b.type === 'image').length > 0
+      ? bodyBlocks
+          .filter((b): b is Extract<ProjectBodyBlock, { type: 'image' }> => b.type === 'image')
+          .map((img) => ({ src: img.src, alt: img.alt }))
+      : project.images.length > 0
+        ? project.images.map((img) => ({
+            src: img.src,
+            alt: pickBi(img.alt, locale) || pickBi(project.client, locale),
+          }))
+        : undefined
 
   const syntheticWork = {
     type: 'branding' as const,
     title: pickBi(project.client, locale),
     primaryLogo: {
-      src: project.images[0]?.src ?? project.image,
-      alt: project.images[0]
-        ? pickBi(project.images[0].alt, locale)
-        : pickBi(project.client, locale),
+      src: galleryImages?.[0]?.src ?? project.image,
+      alt: galleryImages?.[0]?.alt ?? pickBi(project.client, locale),
     },
     logoVariants: [],
     colorPalette: [],
     typography: { display: 'Heading', body: 'Body' },
-    stationery: project.images.slice(1).map((img) => ({
+    stationery: (galleryImages ?? []).slice(1).map((img) => ({
       src: img.src,
-      alt: pickBi(img.alt, locale),
+      alt: img.alt,
     })),
     inContext: {
       src: project.heroImage || project.image,
@@ -205,6 +257,7 @@ export function projectDetailFromCms(
     work: fallback?.work ?? syntheticWork,
     relatedSlugs: fallback?.relatedSlugs ?? [],
     galleryImages,
+    bodyBlocks: bodyBlocks.length > 0 ? bodyBlocks : undefined,
   }
 }
 
@@ -327,4 +380,16 @@ export function siteAssetsFromCms(content: AdminContentState): Record<string, st
     ...createDefaultSiteAssets(),
     ...(content.siteAssets ?? {}),
   }
+}
+
+export function featuredCasesFromCms(
+  cases: AdminFeaturedCase[],
+  locale: Locale,
+): { client: string; title: string; service: string; image: string }[] {
+  return cases.map((item) => ({
+    client: pickBi(item.client, locale),
+    title: pickBi(item.title, locale),
+    service: pickBi(item.service, locale),
+    image: item.image,
+  }))
 }

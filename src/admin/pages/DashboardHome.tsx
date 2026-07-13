@@ -8,12 +8,8 @@ import {
   FileText,
   Phone,
   ArrowUpRight,
-  RotateCcw,
   ImageIcon,
   Sparkles,
-  Server,
-  CheckCircle2,
-  CircleAlert,
   type LucideIcon,
 } from 'lucide-react'
 import StatCard from '../components/StatCard'
@@ -28,7 +24,7 @@ type QuickLink = {
 }
 
 export default function DashboardHome() {
-  const { content, uiLocale, reset, dirty } = useAdminContent()
+  const { content, uiLocale } = useAdminContent()
   const isAr = uiLocale === 'ar'
   if (!content) return null
 
@@ -111,52 +107,19 @@ export default function DashboardHome() {
           />
         </div>
 
-        <div className="relative flex flex-wrap items-end justify-between gap-5">
-          <div className="max-w-xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-white/85 backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-sz-accent" />
-              {isAr ? 'لوحة محتوى Salezeus' : 'Salezeus content studio'}
-            </div>
-            <h2 className="font-heading text-2xl font-semibold tracking-tight sm:text-3xl">
-              {isAr ? 'مرحباً بك في لوحة التحكم' : 'Welcome to your control center'}
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-white/65">
-              {isAr
-                ? 'عدّل نصوص وصور ومحتوى الموقع بالعربي والإنجليزي من مكان واحد، مع معاينة مباشرة قبل الحفظ.'
-                : 'Edit bilingual copy, media, and site content from one place — with live previews before you save.'}
-            </p>
+        <div className="relative max-w-xl">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-white/85 backdrop-blur-sm">
+            <Sparkles className="h-3.5 w-3.5 text-sz-accent" />
+            {isAr ? 'لوحة محتوى Salezeus' : 'Salezeus content studio'}
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
-                dirty
-                  ? 'bg-sz-accent text-sz-dark'
-                  : 'border border-white/15 bg-white/10 text-white/80'
-              }`}
-            >
-              {dirty ? (
-                <CircleAlert className="h-3.5 w-3.5" />
-              ) : (
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
-              )}
-              {dirty
-                ? isAr
-                  ? 'تغييرات غير محفوظة'
-                  : 'Unsaved changes'
-                : isAr
-                  ? 'كل شيء محفوظ'
-                  : 'All changes saved'}
-            </span>
-            <button
-              type="button"
-              onClick={() => void reset()}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-sm transition hover:bg-white/15"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              {isAr ? 'إعادة لبيانات الموقع' : 'Reset to site seed'}
-            </button>
-          </div>
+          <h2 className="font-heading text-2xl font-semibold tracking-tight sm:text-3xl">
+            {isAr ? 'مرحباً بك في لوحة التحكم' : 'Welcome to your control center'}
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-white/65">
+            {isAr
+              ? 'عدّل نصوص وصور ومحتوى الموقع بالعربي والإنجليزي من مكان واحد، مع معاينة مباشرة قبل الحفظ.'
+              : 'Edit bilingual copy, media, and site content from one place — with live previews before you save.'}
+          </p>
         </div>
       </motion.section>
 
@@ -303,30 +266,6 @@ export default function DashboardHome() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.18 }}
-            className="relative overflow-hidden rounded-2xl border border-sz-border bg-gradient-to-br from-sz-interaction-soft/80 via-white to-sz-accent/15 p-5"
-          >
-            <div className="pointer-events-none absolute -end-8 -top-8 h-28 w-28 rounded-full bg-sz-interaction/10 blur-2xl" />
-            <div className="relative flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sz-dark text-white">
-                <Server className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-sz-dark">
-                  {isAr ? 'سيرفر Node.js للـ CMS' : 'Node.js CMS server'}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-sz-primary/65">
-                  {isAr
-                    ? 'الحفظ يتم على السيرفر (server/). شغّل npm run dev:server مع الواجهة أثناء التطوير.'
-                    : 'Saves go to the CMS server (server/). Keep npm run dev:server running with the UI in development.'}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.22 }}
             className="rounded-2xl border border-dashed border-sz-border/80 bg-white/70 px-5 py-4"
           >
             <p className="text-xs font-semibold uppercase tracking-wider text-sz-primary/45">

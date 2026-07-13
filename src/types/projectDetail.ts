@@ -93,6 +93,12 @@ export type ProjectListItem = {
   image: string
 }
 
+export type ProjectBodyBlock =
+  | { id: string; type: 'image'; src: string; alt: string }
+  | { id: string; type: 'text'; title?: string; body: string }
+  | { id: string; type: 'video'; url: string; caption?: string }
+  | { id: string; type: 'link'; url: string; title: string; description?: string }
+
 export type ProjectDetail = ProjectListItem & {
   year: number
   heroImage: string
@@ -105,6 +111,8 @@ export type ProjectDetail = ProjectListItem & {
   relatedSlugs: string[]
   /** When set (CMS), Behance gallery uses these images as the source of truth */
   galleryImages?: ProjectVisual[]
+  /** Ordered Behance body blocks from CMS */
+  bodyBlocks?: ProjectBodyBlock[]
 }
 
 export const SERVICE_SLUG_LABEL: Record<ProjectServiceSlug, ProjectServiceLabel> = {

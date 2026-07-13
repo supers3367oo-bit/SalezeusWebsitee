@@ -58,7 +58,7 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
           className="hidden lg:block"
         >
-          <img src={adminMark} alt="Salezeus" className="mb-8 h-14 w-14 object-contain" />
+          <img src={adminMark} alt="Salezeus" className="mb-3 h-40 w-40 object-contain" />
           <p className="font-heading text-4xl font-semibold leading-tight tracking-tight xl:text-5xl">
             Salezeus
             <span className="mt-2 block text-sz-accent">Admin</span>
@@ -76,7 +76,7 @@ export default function LoginPage() {
           className="mx-auto w-full max-w-md"
         >
           <div className="mb-8 text-center lg:hidden">
-            <img src={adminMark} alt="Salezeus" className="mx-auto mb-4 h-12 w-12 object-contain" />
+            <img src={adminMark} alt="Salezeus" className="mx-auto mb-2 h-32 w-32 object-contain" />
             <h1 className="font-heading text-2xl font-semibold">Salezeus Admin</h1>
           </div>
 
@@ -100,7 +100,8 @@ export default function LoginPage() {
                     autoComplete="username"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-sz-border bg-white py-2.5 pe-3 ps-10 text-sm outline-none transition focus:border-sz-interaction focus:ring-2 focus:ring-sz-interaction/20"
+                    placeholder="admin@salezeus.com"
+                    className="w-full rounded-xl border border-sz-border bg-white py-2.5 pe-3 ps-10 text-sm outline-none transition placeholder:text-sz-primary/35 focus:border-sz-interaction focus:ring-2 focus:ring-sz-interaction/20"
                   />
                 </div>
               </label>
@@ -117,7 +118,8 @@ export default function LoginPage() {
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-sz-border bg-white py-2.5 pe-10 ps-10 text-sm outline-none transition focus:border-sz-interaction focus:ring-2 focus:ring-sz-interaction/20"
+                    placeholder="Enter your password"
+                    className="w-full rounded-xl border border-sz-border bg-white py-2.5 pe-10 ps-10 text-sm outline-none transition placeholder:text-sz-primary/35 focus:border-sz-interaction focus:ring-2 focus:ring-sz-interaction/20"
                   />
                   <button
                     type="button"

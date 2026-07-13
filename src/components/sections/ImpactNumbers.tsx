@@ -58,46 +58,32 @@ export default function ImpactNumbers() {
   const { t, locale } = useLocale()
   const isArabic = locale === 'ar'
 
-  const stats = useMemo<Stat[]>(
-    () => [
-      {
-        key: 'experience',
-        value: 7,
-        suffix: '+',
-        label: t('impact.stats.experience.label'),
-        desc: t('impact.stats.experience.desc'),
-      },
-      {
-        key: 'projects',
-        value: 250,
-        suffix: '+',
-        label: t('impact.stats.projects.label'),
-        desc: t('impact.stats.projects.desc'),
-      },
-      {
-        key: 'clients',
-        value: 120,
-        suffix: '+',
-        label: t('impact.stats.clients.label'),
-        desc: t('impact.stats.clients.desc'),
-      },
-      {
-        key: 'countries',
-        value: 2,
-        suffix: '',
-        label: t('impact.stats.countries.label'),
-        desc: t('impact.stats.countries.desc'),
-      },
-      {
-        key: 'satisfaction',
-        value: 98,
-        suffix: '%',
-        label: t('impact.stats.satisfaction.label'),
-        desc: t('impact.stats.satisfaction.desc'),
-      },
-    ],
-    [t]
-  )
+  const stats = useMemo<Stat[]>(() => {
+    const keys = ['experience', 'projects', 'clients', 'countries', 'satisfaction'] as const
+    const fallbacks: Record<(typeof keys)[number], string> = {
+      experience: '7+',
+      projects: '250+',
+      clients: '120+',
+      countries: '2',
+      satisfaction: '98%',
+    }
+
+    return keys.map((key) => {
+      const raw = t(`impact.stats.${key}.value`)
+      const display =
+        !raw || raw === `impact.stats.${key}.value` ? fallbacks[key] : String(raw).trim()
+      const match = display.match(/^(-?\d+(?:\.\d+)?)(.*)$/)
+      const value = match ? Number.parseFloat(match[1]) : Number.parseFloat(display)
+      const suffix = match?.[2] ?? ''
+      return {
+        key,
+        value: Number.isFinite(value) ? value : 0,
+        suffix,
+        label: t(`impact.stats.${key}.label`),
+        desc: t(`impact.stats.${key}.desc`),
+      }
+    })
+  }, [t])
 
   return (
     <section className="relative isolate z-10 overflow-x-clip bg-sz-dark" id="impact">
