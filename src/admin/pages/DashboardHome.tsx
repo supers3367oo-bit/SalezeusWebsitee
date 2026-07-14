@@ -22,7 +22,7 @@ type QuickLink = {
   desc: string
   icon: LucideIcon
   tone: string
-  span?: string
+  featured?: boolean
 }
 
 export default function DashboardHome() {
@@ -43,7 +43,7 @@ export default function DashboardHome() {
       desc: isAr ? 'عناوين وفقرات مع معاينة مباشرة' : 'Titles & copy with live preview',
       icon: FileText,
       tone: 'bg-sz-interaction text-white',
-      span: 'sm:col-span-2',
+      featured: true,
     },
     {
       to: '/admin/case-studies',
@@ -106,34 +106,34 @@ export default function DashboardHome() {
       >
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -start-24 -top-28 h-72 w-72 rounded-full bg-sz-interaction/45 blur-3xl" />
-          <div className="absolute -bottom-32 end-[-10%] h-80 w-80 rounded-full bg-sz-accent/20 blur-3xl" />
+          <div className="absolute -bottom-32 end-[-8%] h-80 w-80 rounded-full bg-sz-accent/20 blur-3xl" />
           <div
-            className="absolute inset-0 opacity-[0.12]"
+            className="absolute inset-0 opacity-[0.1]"
             style={{
               backgroundImage:
                 'linear-gradient(rgba(255,255,255,.45) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.45) 1px, transparent 1px)',
-              backgroundSize: '42px 42px',
-              maskImage: 'radial-gradient(ellipse 70% 80% at 30% 20%, black, transparent)',
+              backgroundSize: '40px 40px',
+              maskImage: 'radial-gradient(ellipse 70% 80% at 25% 20%, black, transparent)',
             }}
           />
         </div>
 
-        <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+        <div className="relative grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:items-end">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-white/85 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-sz-accent" />
-              {isAr ? 'Salezeus Content Studio' : 'Salezeus Content Studio'}
+              {isAr ? 'لوحة محتوى Salezeus' : 'Salezeus content studio'}
             </div>
             <h2 className="max-w-xl font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
               {isAr ? (
                 <>
-                  لوحة تحكم
-                  <span className="mt-1 block text-white">لمحتوى الموقع بالكامل</span>
+                  مرحباً بك
+                  <span className="mt-1 block text-white/50">في لوحة التحكم</span>
                 </>
               ) : (
                 <>
-                  Design the site
-                  <span className="mt-1 block text-white/55">from one calm workspace</span>
+                  Welcome to your
+                  <span className="mt-1 block text-white/50">content command center</span>
                 </>
               )}
             </h2>
@@ -144,19 +144,18 @@ export default function DashboardHome() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+          <div className="grid grid-cols-3 gap-2.5">
             {[
               { label: isAr ? 'فريق' : 'Team', value: content.team.length },
-              { label: isAr ? 'خدمات' : 'Services', value: content.services.length },
               { label: isAr ? 'مشاريع' : 'Projects', value: content.projects.length },
-              { label: isAr ? 'مقالات' : 'Insights', value: content.insights.length },
+              { label: isAr ? 'أقسام' : 'Sections', value: content.pageSections.length },
             ].map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08 + i * 0.05 }}
-                className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3.5 backdrop-blur-sm"
+                transition={{ delay: 0.1 + i * 0.05 }}
+                className="rounded-2xl border border-white/10 bg-white/[0.07] px-3.5 py-3.5 backdrop-blur-sm"
               >
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40">
                   {item.label}
@@ -210,7 +209,7 @@ export default function DashboardHome() {
               <h2 className="font-heading text-lg font-semibold text-sz-dark">
                 {isAr ? 'اختصارات سريعة' : 'Quick workspace'}
               </h2>
-              <p className="mt-0.5 text-xs text-sz-primary/50">
+              <p className="mt-0.5 text-xs text-sz-primary/45">
                 {isAr ? 'انتقل مباشرة لأقسام المحتوى' : 'Jump into any content area'}
               </p>
             </div>
@@ -223,25 +222,48 @@ export default function DashboardHome() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.03 * i }}
-                className={item.span}
+                className={item.featured ? 'sm:col-span-2' : undefined}
               >
                 <Link
                   to={item.to}
-                  className="group relative flex h-full min-h-[7.5rem] flex-col justify-between overflow-hidden rounded-[1.35rem] border border-white bg-white p-5 shadow-[0_12px_36px_-28px_rgba(15,23,42,0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_48px_-28px_rgba(50,88,164,0.4)]"
+                  className={
+                    item.featured
+                      ? 'group relative flex min-h-[8rem] items-end overflow-hidden rounded-[1.35rem] bg-sz-dark p-5 text-white shadow-[0_18px_48px_-28px_rgba(15,23,42,0.55)] transition duration-300 hover:-translate-y-1'
+                      : 'group relative flex h-full min-h-[7.25rem] flex-col justify-between overflow-hidden rounded-[1.35rem] border border-white bg-white p-5 shadow-[0_12px_36px_-28px_rgba(15,23,42,0.4)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_48px_-28px_rgba(50,88,164,0.35)]'
+                  }
                 >
-                  <div className="pointer-events-none absolute -end-8 -top-8 h-28 w-28 rounded-full bg-sz-interaction/[0.05] transition duration-500 group-hover:scale-125" />
-                  <div className="relative flex items-start justify-between gap-3">
-                    <span
-                      className={`flex h-10 w-10 items-center justify-center rounded-2xl ${item.tone}`}
-                    >
-                      <item.icon className="h-4 w-4" />
-                    </span>
-                    <ArrowUpRight className="h-4 w-4 text-sz-primary/25 transition group-hover:text-sz-interaction rtl:-scale-x-100" />
-                  </div>
-                  <div className="relative mt-5">
-                    <p className="font-heading text-base font-semibold text-sz-dark">{item.label}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-sz-primary/50">{item.desc}</p>
-                  </div>
+                  {item.featured ? (
+                    <>
+                      <div className="pointer-events-none absolute inset-0">
+                        <div className="absolute -end-10 -top-10 h-40 w-40 rounded-full bg-sz-interaction/40 blur-3xl" />
+                        <div className="absolute -bottom-12 start-0 h-32 w-32 rounded-full bg-sz-accent/20 blur-3xl" />
+                      </div>
+                      <div className="relative flex w-full items-end justify-between gap-4">
+                        <div>
+                          <span className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl ${item.tone}`}>
+                            <item.icon className="h-5 w-5" />
+                          </span>
+                          <p className="font-heading text-xl font-semibold">{item.label}</p>
+                          <p className="mt-1 max-w-sm text-xs leading-relaxed text-white/50">{item.desc}</p>
+                        </div>
+                        <ArrowUpRight className="mb-1 h-5 w-5 text-white/35 transition group-hover:text-white rtl:-scale-x-100" />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="pointer-events-none absolute -end-8 -top-8 h-28 w-28 rounded-full bg-sz-interaction/[0.05] transition duration-500 group-hover:scale-125" />
+                      <div className="relative flex items-start justify-between gap-3">
+                        <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${item.tone}`}>
+                          <item.icon className="h-4 w-4" />
+                        </span>
+                        <ArrowUpRight className="h-4 w-4 text-sz-primary/25 transition group-hover:text-sz-interaction rtl:-scale-x-100" />
+                      </div>
+                      <div className="relative mt-5">
+                        <p className="font-heading text-base font-semibold text-sz-dark">{item.label}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-sz-primary/50">{item.desc}</p>
+                      </div>
+                    </>
+                  )}
                 </Link>
               </motion.div>
             ))}
@@ -311,7 +333,7 @@ export default function DashboardHome() {
             transition={{ duration: 0.35, delay: 0.18 }}
             className="rounded-[1.35rem] border border-dashed border-sz-interaction/30 bg-sz-interaction/[0.04] px-5 py-5"
           >
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sz-primary/45">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sz-primary/40">
               {isAr ? 'أقسام النصوص' : 'Copy sections'}
             </p>
             <p className="mt-1 font-heading text-3xl font-semibold text-sz-dark">

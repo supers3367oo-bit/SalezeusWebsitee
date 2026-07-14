@@ -66,7 +66,7 @@ function NavGroup({
   return (
     <div className="space-y-0.5">
       {title ? (
-        <p className="px-3.5 pb-2 pt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+        <p className="px-3.5 pb-2 pt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-sz-primary/35">
           {title}
         </p>
       ) : (
@@ -87,15 +87,26 @@ function NavGroup({
               clsx(
                 'group relative mx-2 flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-gradient-to-r from-sz-interaction to-[#3f6bbc] text-white shadow-[0_10px_28px_-14px_rgba(50,88,164,0.95)]'
-                  : 'text-white/55 hover:bg-white/[0.06] hover:text-white',
+                  ? 'bg-gradient-to-r from-sz-interaction to-[#3f6bbc] text-white shadow-[0_10px_28px_-14px_rgba(50,88,164,0.85)]'
+                  : 'text-sz-primary/60 hover:bg-sz-interaction/[0.07] hover:text-sz-dark',
               )
             }
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-current transition group-aria-[current=page]:bg-white/15">
-              <item.icon className="h-4 w-4" aria-hidden />
-            </span>
-            <span className="truncate">{isAr ? item.labelAr : item.labelEn}</span>
+            {({ isActive }) => (
+              <>
+                <span
+                  className={clsx(
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition',
+                    isActive
+                      ? 'bg-white/15 text-white'
+                      : 'bg-sz-interaction/[0.08] text-sz-interaction group-hover:bg-sz-interaction/15',
+                  )}
+                >
+                  <item.icon className="h-4 w-4" aria-hidden />
+                </span>
+                <span className="truncate">{isAr ? item.labelAr : item.labelEn}</span>
+              </>
+            )}
           </NavLink>
         </motion.div>
       ))}
@@ -111,22 +122,22 @@ export default function AdminSidebar({ open, onClose }: Props) {
   const sidebarBody = (
     <div className="relative flex h-full flex-col">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -start-16 top-10 h-44 w-44 rounded-full bg-sz-interaction/30 blur-3xl" />
-        <div className="absolute bottom-20 -end-10 h-36 w-36 rounded-full bg-sz-accent/15 blur-3xl" />
+        <div className="absolute -start-16 top-10 h-44 w-44 rounded-full bg-sz-interaction/[0.08] blur-3xl" />
+        <div className="absolute bottom-20 -end-10 h-36 w-36 rounded-full bg-sz-accent/10 blur-3xl" />
       </div>
 
       <div className="relative flex items-center justify-between gap-2 px-5 pb-4 pt-6">
         <div className="min-w-0">
-          <div className="inline-flex rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2.5 backdrop-blur">
-            <Logo variant="dark" height={26} className="max-w-[138px]" />
+          <div className="inline-flex rounded-2xl border border-sz-border/70 bg-white px-3 py-2.5 shadow-sm">
+            <Logo variant="light" height={26} className="max-w-[138px]" />
           </div>
-          <p className="mt-3 px-1 text-[11px] font-medium tracking-[0.14em] text-white/35 uppercase">
+          <p className="mt-3 px-1 text-[11px] font-medium tracking-[0.14em] text-sz-primary/40 uppercase">
             {isAr ? 'استوديو المحتوى' : 'Content studio'}
           </p>
         </div>
         <button
           type="button"
-          className="rounded-xl p-2 text-white/45 transition hover:bg-white/10 hover:text-white lg:hidden"
+          className="rounded-xl p-2 text-sz-primary/45 transition hover:bg-sz-interaction/10 hover:text-sz-dark lg:hidden"
           onClick={onClose}
           aria-label="Close menu"
         >
@@ -134,7 +145,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
         </button>
       </div>
 
-      <nav className="admin-scroll-dark relative flex-1 overflow-y-auto pb-4">
+      <nav className="admin-scroll relative flex-1 overflow-y-auto pb-4">
         <NavGroup items={NAV_PRIMARY} isAr={isAr} onClose={onClose} />
         <NavGroup
           title={isAr ? 'المحتوى' : 'Content'}
@@ -152,17 +163,17 @@ export default function AdminSidebar({ open, onClose }: Props) {
         />
       </nav>
 
-      <div className="relative mx-3 mb-4 space-y-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur">
+      <div className="relative mx-3 mb-4 space-y-2 rounded-2xl border border-sz-border/80 bg-white p-3 shadow-sm">
         <div className="min-w-0 px-1">
-          <p className="truncate text-xs font-medium text-white/80">{email || 'admin'}</p>
-          <p className="mt-0.5 text-[10px] text-white/35">
+          <p className="truncate text-xs font-medium text-sz-dark">{email || 'admin'}</p>
+          <p className="mt-0.5 text-[10px] text-sz-primary/45">
             {isAr ? 'مشرف النظام' : 'System admin'}
           </p>
         </div>
         <button
           type="button"
           onClick={logout}
-          className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium text-white/50 transition hover:bg-red-500/15 hover:text-red-300"
+          className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium text-sz-primary/50 transition hover:bg-red-50 hover:text-red-600"
         >
           <LogOut className="h-4 w-4" />
           {isAr ? 'تسجيل الخروج' : 'Sign out'}
@@ -173,7 +184,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
 
   return (
     <>
-      <aside className="fixed inset-y-0 start-0 z-40 hidden w-[18rem] lg:block">
+      <aside className="fixed inset-y-0 start-0 z-40 hidden w-[18rem] border-e border-sz-border/50 bg-[#eef1f6]/95 backdrop-blur-xl lg:block">
         {sidebarBody}
       </aside>
 
@@ -185,7 +196,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/55 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
               aria-label="Close overlay"
               onClick={onClose}
             />
@@ -194,7 +205,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
               animate={{ x: 0 }}
               exit={{ x: isAr ? 320 : -320 }}
               transition={{ type: 'spring', stiffness: 340, damping: 34 }}
-              className="absolute inset-y-0 start-0 w-[min(100%,18rem)] border-e border-white/10 bg-[#0a0d14] shadow-2xl"
+              className="absolute inset-y-0 start-0 w-[min(100%,18rem)] border-e border-sz-border/70 bg-[#eef1f6] shadow-2xl"
             >
               {sidebarBody}
             </motion.aside>
